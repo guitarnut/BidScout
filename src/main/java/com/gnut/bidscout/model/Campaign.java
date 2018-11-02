@@ -1,10 +1,12 @@
 package com.gnut.bidscout.model;
 
-import java.util.Date;
+import org.springframework.data.annotation.Id;
+
 import java.util.Set;
 
 public class Campaign {
-    private long id;
+    @Id
+    private String id;
     private Set<String> publishers;
     private String cid;
     private String name;
@@ -16,13 +18,13 @@ public class Campaign {
     private Requirements requirements;
     private Statistics statistics;
     private String nurl;
-    private String impression;
+    private long impressionExpiry;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -114,11 +116,11 @@ public class Campaign {
         this.nurl = nurl;
     }
 
-    public String getImpression() {
-        return impression;
+    public long getImpressionExpiry() {
+        return impressionExpiry;
     }
 
-    public void setImpression(String impression) {
-        this.impression = impression;
+    public void setImpressionExpiry(long impressionExpiry) {
+        this.impressionExpiry = impressionExpiry;
     }
 }

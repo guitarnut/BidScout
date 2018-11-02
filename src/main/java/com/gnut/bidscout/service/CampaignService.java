@@ -76,7 +76,7 @@ public class CampaignService {
         campaign.setSeat("16_13324");
         campaign.setCreatives(new HashSet<>());
         campaign.getCreatives().add(creative);
-        campaign.setImpression("http://foo.com/imp");
+        campaign.setImpressionExpiry(60 * 1000 * 15);
         campaign.setRequirements(requirements);
 
         Set<String> publishers = new HashSet<>();

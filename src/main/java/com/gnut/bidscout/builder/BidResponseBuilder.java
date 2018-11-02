@@ -26,7 +26,13 @@ public class BidResponseBuilder {
         this.adMarkup = adMarkup;
     }
 
-    public BidResponse buildBidResponse(BigDecimal price, BidRequest bidRequest, Imp selectedImpression, Campaign campaign, Creative creative) {
+    public BidResponse buildBidResponse(
+            BigDecimal price,
+            BidRequest bidRequest,
+            Imp selectedImpression,
+            Campaign campaign,
+            Creative creative
+    ) {
         final Bid bid = new Bid();
         bid.setId(selectedImpression.getId());
         bid.setImpid(selectedImpression.getId());
@@ -39,7 +45,7 @@ public class BidResponseBuilder {
         bid.setW(creative.getW());
         bid.setH(creative.getH());
         bid.setPrice(price);
-        bid.setAdm(adMarkup.generateMarkup(campaign, creative));
+        bid.setAdm(adMarkup.generateMarkup(price, bidRequest.getId(), campaign, creative));
 
         final SeatBid seatBid = new SeatBid();
         seatBid.setSeat(campaign.getSeat());
@@ -55,6 +61,8 @@ public class BidResponseBuilder {
             bidResponse.setNbr(4);
         } else {
             bidResponse.setSeatbid(seatBids);
+            bidResponse.setBidid(bidRequest.getId());
+            bidResponse.setCur("USD");
         }
 
         return bidResponse;

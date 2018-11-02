@@ -1,6 +1,7 @@
 package com.gnut.bidscout.service;
 
 import com.gnut.bidscout.builder.BidResponseBuilder;
+import com.gnut.bidscout.model.AuctionRecord;
 import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.Creative;
 import com.iab.openrtb.request.BidRequest;
@@ -20,8 +21,13 @@ public class BidResponseService {
         this.builder = builder;
     }
 
-    public BidResponse buildBidResponse(BigDecimal price, BidRequest bidRequest, Imp selectedImpression, Campaign campaign, Creative creative) {
-        final BidResponse bidResponse = builder.buildBidResponse(price, bidRequest, selectedImpression, campaign, creative);
-        return bidResponse;
+    public BidResponse buildBidResponse(
+            BigDecimal price,
+            BidRequest bidRequest,
+            Imp selectedImpression,
+            Campaign campaign,
+            Creative creative
+    ) {
+        return builder.buildBidResponse(price, bidRequest, selectedImpression, campaign, creative);
     }
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gnut.bidscout.db.AuctionDao;
+import com.gnut.bidscout.model.AuctionRecord;
 import com.gnut.bidscout.model.Creative;
 import com.gnut.bidscout.model.EligibleCampaignData;
 import com.gnut.bidscout.rtb.BidRequestValidator;
@@ -29,6 +31,7 @@ public class BidRequestService {
     private final CampaignService campaignService;
     private final BidResponseService bidResponseService;
     private final BidRequestValidator bidRequestValidator;
+    private final AuctionDao auctionDao;
 
     static {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -36,23 +39,38 @@ public class BidRequestService {
     }
 
     @Autowired
-    public BidRequestService(CampaignService campaignService, BidResponseService bidResponseService, BidRequestValidator bidRequestValidator) {
+    public BidRequestService(
+            CampaignService campaignService,
+            BidResponseService bidResponseService,
+            BidRequestValidator bidRequestValidator,
+            AuctionDao auctionDao
+    ) {
         this.campaignService = campaignService;
         this.bidResponseService = bidResponseService;
-        this.bidRequestValidator =  bidRequestValidator;
+        this.bidRequestValidator = bidRequestValidator;
+        this.auctionDao = auctionDao;
     }
 
     public String handleRequest(String bidder, String publisher, HttpServletRequest request, HttpServletResponse response) {
         final BidRequest bidRequest;
+        AuctionRecord record = new AuctionRecord();
         try {
             bidRequest = objectMapper.readValue(stringifyPostData(request), BidRequest.class);
+            record.setRequestTimestamp(System.currentTimeMillis());
+            record.setIp(request.getRemoteUser());
+            record.setUserAgent(request.getHeader("User-Agent"));
+            record.setCookies(request.getHeader("Cookie"));
+            record.setxForwardedFor(request.getHeader("X-Forwarded-For"));
+            record.setHost(request.getHeader("Host"));
+            record.setBidRequest(bidRequest);
+            record.setBidRequestId(bidRequest.getId());
         } catch (IOException ex) {
-            return "";
+            return generateNoContentResponse(response);
         }
 
         Set<BidRequestValidator.Violation> violations = bidRequestValidator.validateBidRequest();
 
-        if(violations.isEmpty()) {
+        if (violations.isEmpty()) {
             final Optional<EligibleCampaignData> data = campaignService.targetCampaign(publisher, bidRequest);
 
             if (data.isPresent() && !data.get().getCreatives().isEmpty()) {
@@ -65,24 +83,25 @@ public class BidRequestService {
                             price, bidRequest, bidRequest.getImp().get(0), data.get().getCampaign(), creative
                     );
 
+                    record.setResponseTimestamp(System.currentTimeMillis());
+                    record.setBidResponse(bidResponse);
+                    if(bidResponse.getSeatbid() != null) {
+                        record.setMarkup(bidResponse.getSeatbid().get(0).getBid().get(0).getAdm());
+                    }
+                    auctionDao.save(record);
                     try {
                         return objectMapper.writeValueAsString(bidResponse);
                     } catch (JsonProcessingException ex) {
-                        response.setStatus(204);
-                        return "";
+                        //
                     }
                 }
-
             }
-        } else {
-
         }
 
-        response.setStatus(204);
-        return "";
+        return generateNoContentResponse(response);
     }
 
-    public String handleRequest(int client, int campaign, HttpServletRequest request, HttpServletResponse response) {
+    private String generateNoContentResponse(HttpServletResponse response) {
         response.setStatus(204);
         return "";
     }
