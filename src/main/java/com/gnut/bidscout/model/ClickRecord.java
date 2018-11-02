@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id;
 
 import java.util.Set;
 
-public class ImpressionRecord {
+public class ClickRecord {
     @Id
     private String id;
     private String bidRequestId;
@@ -12,9 +12,7 @@ public class ImpressionRecord {
     private long cb;
     private String ip;
     private String userAgent;
-    private long impressionTimestamp;
-    private float cp;
-    private float bidPrice;
+    private long clickTimestamp;
     private String url;
     private String cookies;
     private String host;
@@ -69,28 +67,12 @@ public class ImpressionRecord {
         this.userAgent = userAgent;
     }
 
-    public long getImpressionTimestamp() {
-        return impressionTimestamp;
+    public long getClickTimestamp() {
+        return clickTimestamp;
     }
 
-    public void setImpressionTimestamp(long impressionTimestamp) {
-        this.impressionTimestamp = impressionTimestamp;
-    }
-
-    public float getCp() {
-        return cp;
-    }
-
-    public void setCp(float cp) {
-        this.cp = cp;
-    }
-
-    public float getBidPrice() {
-        return bidPrice;
-    }
-
-    public void setBidPrice(float bidPrice) {
-        this.bidPrice = bidPrice;
+    public void setClickTimestamp(long clickTimestamp) {
+        this.clickTimestamp = clickTimestamp;
     }
 
     public String getUrl() {
@@ -135,16 +117,14 @@ public class ImpressionRecord {
 
     @Override
     public String toString() {
-        return "ImpressionRecord{" +
+        return "ClickRecord{" +
                 "id='" + id + '\'' +
                 ", bidRequestId='" + bidRequestId + '\'' +
                 ", campaign='" + campaign + '\'' +
                 ", cb=" + cb +
                 ", ip='" + ip + '\'' +
                 ", userAgent='" + userAgent + '\'' +
-                ", impressionTimestamp=" + impressionTimestamp +
-                ", cp=" + cp +
-                ", bidPrice=" + bidPrice +
+                ", clickTimestamp=" + clickTimestamp +
                 ", url='" + url + '\'' +
                 ", cookies='" + cookies + '\'' +
                 ", host='" + host + '\'' +
