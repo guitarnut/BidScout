@@ -19,6 +19,7 @@ public class Campaign {
     private Statistics statistics;
     private String nurl;
     private long impressionExpiry;
+    private boolean syncUsers;
 
     public String getId() {
         return id;
@@ -122,5 +123,13 @@ public class Campaign {
 
     public void setImpressionExpiry(long impressionExpiry) {
         this.impressionExpiry = impressionExpiry;
+    }
+
+    public boolean isSyncUsers() {
+        return syncUsers;
+    }
+
+    public void setSyncUsers(boolean syncUsers) {
+        this.syncUsers = syncUsers;
     }
 }

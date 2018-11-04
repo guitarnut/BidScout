@@ -22,6 +22,7 @@ public class Creative {
     private Statistics statistics;
     private float minBid;
     private float maxBid;
+    private boolean syncUsers;
 
     public long getId() {
         return id;
@@ -173,5 +174,13 @@ public class Creative {
 
     public void setMaxBid(float maxBid) {
         this.maxBid = maxBid;
+    }
+
+    public boolean isSyncUsers() {
+        return syncUsers;
+    }
+
+    public void setSyncUsers(boolean syncUsers) {
+        this.syncUsers = syncUsers;
     }
 }

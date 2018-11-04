@@ -11,10 +11,15 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class ImpressionService {
     private final ImpressionDao impressionDao;
+    private final SyncService syncService;
 
     @Autowired
-    public ImpressionService(ImpressionDao impressionDao) {
+    public ImpressionService(
+            ImpressionDao impressionDao,
+            SyncService syncService
+    ) {
         this.impressionDao = impressionDao;
+        this.syncService = syncService;
     }
 
     public void handleRequest(
@@ -40,6 +45,7 @@ public class ImpressionService {
         record.setBidPrice(Float.valueOf(bidPrice));
         record.setUrl(request.getRequestURL().toString());
 
+        syncService.updateUserImpressionCount(request, response);
         impressionDao.save(record);
         response.setStatus(204);
     }

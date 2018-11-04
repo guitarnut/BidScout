@@ -21,6 +21,7 @@ public class RequestTargetingData {
     private List<Integer> btype;
     private boolean secure;
     private float bidfloor;
+    private boolean userMatch;
 
     public String getPublisher() {
         return publisher;
@@ -132,5 +133,13 @@ public class RequestTargetingData {
 
     public void setBtype(List<Integer> btype) {
         this.btype = btype;
+    }
+
+    public boolean isUserMatch() {
+        return userMatch;
+    }
+
+    public void setUserMatch(boolean userMatch) {
+        this.userMatch = userMatch;
     }
 }

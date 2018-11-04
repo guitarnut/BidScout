@@ -71,7 +71,7 @@ public class BidRequestService {
         Set<BidRequestValidator.Violation> violations = bidRequestValidator.validateBidRequest();
 
         if (violations.isEmpty()) {
-            final Optional<EligibleCampaignData> data = campaignService.targetCampaign(publisher, bidRequest);
+            final Optional<EligibleCampaignData> data = campaignService.targetCampaign(publisher, bidRequest, request);
 
             if (data.isPresent() && !data.get().getCreatives().isEmpty()) {
                 final Creative creative = data.get().getCreatives().iterator().next();

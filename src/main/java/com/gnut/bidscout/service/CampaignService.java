@@ -3,17 +3,25 @@ package com.gnut.bidscout.service;
 import com.gnut.bidscout.model.*;
 import com.google.common.base.Strings;
 import com.iab.openrtb.request.BidRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class CampaignService {
+    private SyncService syncService;
 
-    public Optional<EligibleCampaignData> targetCampaign(String publisher, BidRequest bidRequest) {
+    @Autowired
+    public CampaignService(SyncService syncService) {
+        this.syncService = syncService;
+    }
+
+    public Optional<EligibleCampaignData> targetCampaign(String publisher, BidRequest bidRequest, HttpServletRequest request) {
         final Campaign campaign = selectCampaign(bidRequest);
-        final RequestTargetingData targetingData = generateTargetingData(publisher, bidRequest);
+        final RequestTargetingData targetingData = generateTargetingData(publisher, bidRequest, request);
 
         if (campaignIsEligible(targetingData, campaign)) {
             final EligibleCampaignData campaignData = new EligibleCampaignData();
@@ -26,8 +34,9 @@ public class CampaignService {
         }
     }
 
-    private RequestTargetingData generateTargetingData(String publisher, BidRequest bidRequest) {
+    private RequestTargetingData generateTargetingData(String publisher, BidRequest bidRequest, HttpServletRequest request) {
         final RequestTargetingData data = new RequestTargetingData();
+        final String userId = syncService.getUserCookieValue(request);
 
         data.setPublisher(publisher);
 
@@ -41,7 +50,13 @@ public class CampaignService {
             data.setPublisherId(bidRequest.getSite().getPublisher().getId());
         }
 
-        data.setBuyeruid(bidRequest.getUser().getBuyeruid());
+        if (!Strings.isNullOrEmpty(bidRequest.getUser().getBuyeruid())) {
+            data.setBuyeruid(bidRequest.getUser().getBuyeruid());
+            data.setUserMatch(true);
+        } else if (!Strings.isNullOrEmpty(userId)) {
+            data.setUserMatch(true);
+        }
+
         data.setWidths(Arrays.asList(bidRequest.getImp().get(0).getBanner().getW()));
         data.setHeights(Arrays.asList(bidRequest.getImp().get(0).getBanner().getH()));
         data.setSecure(bidRequest.getImp().get(0).getSecure() == 1);
@@ -55,7 +70,9 @@ public class CampaignService {
 
     private Campaign selectCampaign(BidRequest bidRequest) {
         Requirements requirements = new Requirements();
+        // Todo: Temp targeting
         requirements.setInapp(true);
+        requirements.setUserMatch(true);
 
         Creative creative = new Creative();
         creative.setAdDomain(Arrays.asList("mcdonalds.com"));
@@ -70,8 +87,10 @@ public class CampaignService {
         creative.setMinBid(0.01f);
         creative.setMaxBid(5.00f);
         creative.setRequirements(requirements);
+        creative.setSyncUsers(true);
 
         Campaign campaign = new Campaign();
+        campaign.setId("1");
         campaign.setCid("campaign_1");
         campaign.setSeat("16_13324");
         campaign.setCreatives(new HashSet<>());
@@ -87,7 +106,9 @@ public class CampaignService {
     }
 
     private boolean campaignIsEligible(RequestTargetingData targetingData, Campaign campaign) {
-        return campaign.getPublishers().contains(targetingData.getPublisher().toLowerCase())
+        return (
+                campaign.getPublishers().isEmpty()
+                        || campaign.getPublishers().contains(targetingData.getPublisher().toLowerCase()))
                 && isEligible(targetingData, campaign.getRequirements());
     }
 
@@ -144,6 +165,10 @@ public class CampaignService {
 
     private boolean isEligible(RequestTargetingData targetingData, Requirements filter) {
         final Date now = new Date();
+
+        if(filter.isUserMatch() && !targetingData.isUserMatch()) {
+            return false;
+        }
 
         if (filter.getStartDate() != null && filter.getStartDate().getTime() < now.getTime()) {
             return false;
