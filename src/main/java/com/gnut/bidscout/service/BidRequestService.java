@@ -5,9 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gnut.bidscout.db.AuctionDao;
-import com.gnut.bidscout.model.AuctionRecord;
-import com.gnut.bidscout.model.Creative;
-import com.gnut.bidscout.model.EligibleCampaignData;
+import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.rtb.BidRequestValidator;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
@@ -29,6 +27,7 @@ import java.util.Set;
 public class BidRequestService {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final CampaignService campaignService;
+    private final CreativeService creativeService;
     private final BidResponseService bidResponseService;
     private final BidRequestValidator bidRequestValidator;
     private final AuctionDao auctionDao;
@@ -41,11 +40,13 @@ public class BidRequestService {
     @Autowired
     public BidRequestService(
             CampaignService campaignService,
+            CreativeService creativeService,
             BidResponseService bidResponseService,
             BidRequestValidator bidRequestValidator,
             AuctionDao auctionDao
     ) {
         this.campaignService = campaignService;
+        this.creativeService = creativeService;
         this.bidResponseService = bidResponseService;
         this.bidRequestValidator = bidRequestValidator;
         this.auctionDao = auctionDao;
@@ -74,14 +75,38 @@ public class BidRequestService {
             final Optional<EligibleCampaignData> data = campaignService.targetCampaign(publisher, bidRequest, request);
 
             if (data.isPresent() && !data.get().getCreatives().isEmpty()) {
+                final Campaign campaign = data.get().getCampaign();
                 final Creative creative = data.get().getCreatives().iterator().next();
                 final double bp = Math.random() * (creative.getMaxBid() - creative.getMinBid()) + creative.getMinBid();
                 final BigDecimal price = new BigDecimal(bp).setScale(2, RoundingMode.HALF_UP);
 
+                Statistics campaignStats = campaign.getStatistics();
+                if(campaignStats == null) {
+                    campaignStats = new Statistics();
+                }
+
+                Statistics creativeStats = creative.getStatistics();
+                if(creativeStats == null) {
+                    creativeStats = new Statistics();
+                }
+
+                campaignStats.setRequests(campaignStats.getRequests() + 1);
+                creativeStats.setRequests(creativeStats.getRequests() + 1);
+
                 if (Float.valueOf(price.toString()) >= data.get().getData().getBidfloor()) {
+                    campaignStats.setBids(campaignStats.getBids() + 1);
+                    campaignStats.setBidPriceTotal(campaignStats.getBidPriceTotal() + Float.valueOf(price.toString())/1000);
+                    creativeStats.setBids(creativeStats.getBids() + 1);
+                    creativeStats.setBidPriceTotal(creativeStats.getBidPriceTotal() + Float.valueOf(price.toString())/1000);
+
                     BidResponse bidResponse = bidResponseService.buildBidResponse(
                             price, bidRequest, bidRequest.getImp().get(0), data.get().getCampaign(), creative
                     );
+
+                    if(bidResponse.getNbr() != null) {
+                        campaignStats.setNbr(campaignStats.getNbr() + 1);
+                        creativeStats.setNbr(creativeStats.getNbr() + 1);
+                    }
 
                     record.setResponseTimestamp(System.currentTimeMillis());
                     record.setBidResponse(bidResponse);
@@ -89,6 +114,10 @@ public class BidRequestService {
                         record.setMarkup(bidResponse.getSeatbid().get(0).getBid().get(0).getAdm());
                     }
                     auctionDao.save(record);
+                    campaign.setStatistics(campaignStats);
+                    campaignService.saveCampaign(campaign);
+                    creative.setStatistics(creativeStats);
+                    creativeService.saveCreative(creative);
                     try {
                         return objectMapper.writeValueAsString(bidResponse);
                     } catch (JsonProcessingException ex) {

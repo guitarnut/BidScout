@@ -3,11 +3,14 @@ package com.gnut.bidscout.model;
 public class Statistics {
     private String id;
     private long bids;
+    private long nbr;
     private long impressions;
     private long duplicateImpressions;
     private long expiredImpressions;
     private long revenue;
     private float ecpm;
+    private long requests;
+    private float bidPriceTotal;
 
     public String getId() {
         return id;
@@ -23,6 +26,14 @@ public class Statistics {
 
     public void setBids(long bids) {
         this.bids = bids;
+    }
+
+    public long getNbr() {
+        return nbr;
+    }
+
+    public void setNbr(long nbr) {
+        this.nbr = nbr;
     }
 
     public long getImpressions() {
@@ -63,5 +74,21 @@ public class Statistics {
 
     public void setEcpm(float ecpm) {
         this.ecpm = ecpm;
+    }
+
+    public long getRequests() {
+        return requests;
+    }
+
+    public void setRequests(long requests) {
+        this.requests = requests;
+    }
+
+    public float getBidPriceTotal() {
+        return bidPriceTotal;
+    }
+
+    public void setBidPriceTotal(float bidPriceTotal) {
+        this.bidPriceTotal = bidPriceTotal;
     }
 }

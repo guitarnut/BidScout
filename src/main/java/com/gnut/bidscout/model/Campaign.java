@@ -15,7 +15,6 @@ public class Campaign {
     private Limits limits;
     private Flags flags;
     private List<String> creatives;
-    private AuctionStats auctionStats;
     private Requirements requirements;
     private Statistics statistics;
     private String nurl;
@@ -92,14 +91,6 @@ public class Campaign {
 
     public void setCreatives(List<String> creatives) {
         this.creatives = creatives;
-    }
-
-    public AuctionStats getAuctionStats() {
-        return auctionStats;
-    }
-
-    public void setAuctionStats(AuctionStats auctionStats) {
-        this.auctionStats = auctionStats;
     }
 
     public Requirements getRequirements() {
