@@ -1,5 +1,6 @@
 package com.gnut.bidscout.service;
 
+import com.gnut.bidscout.db.CampaignDao;
 import com.gnut.bidscout.model.*;
 import com.google.common.base.Strings;
 import com.iab.openrtb.request.BidRequest;
@@ -12,11 +13,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class CampaignService {
-    private SyncService syncService;
+    private final SyncService syncService;
+    private final CampaignDao campaignDao;
 
     @Autowired
-    public CampaignService(SyncService syncService) {
+    public CampaignService(SyncService syncService, CampaignDao campaignDao) {
         this.syncService = syncService;
+        this.campaignDao = campaignDao;
     }
 
     public Optional<EligibleCampaignData> targetCampaign(String publisher, BidRequest bidRequest, HttpServletRequest request) {
@@ -32,6 +35,10 @@ public class CampaignService {
         } else {
             return Optional.empty();
         }
+    }
+
+    public Campaign saveCampaign(Campaign campaign) {
+        return campaignDao.save(campaign);
     }
 
     private RequestTargetingData generateTargetingData(String publisher, BidRequest bidRequest, HttpServletRequest request) {
@@ -93,22 +100,19 @@ public class CampaignService {
         campaign.setId("1");
         campaign.setCid("campaign_1");
         campaign.setSeat("16_13324");
-        campaign.setCreatives(new HashSet<>());
+        campaign.setCreatives(new ArrayList<>());
         campaign.getCreatives().add(creative);
         campaign.setImpressionExpiry(60 * 1000 * 15);
         campaign.setRequirements(requirements);
-
-        List<String> publishers = new ArrayList<>();
-        publishers.add("bfio");
-        campaign.setPublishers(publishers);
+        campaign.setPublisher("bfio");
 
         return campaign;
     }
 
     private boolean campaignIsEligible(RequestTargetingData targetingData, Campaign campaign) {
         return (
-                campaign.getPublishers().isEmpty()
-                        || campaign.getPublishers().contains(targetingData.getPublisher().toLowerCase()))
+                Strings.isNullOrEmpty(campaign.getPublisher())
+                        || campaign.getPublisher().toLowerCase().contains(targetingData.getPublisher().toLowerCase()))
                 && isEligible(targetingData, campaign.getRequirements());
     }
 
@@ -182,7 +186,7 @@ public class CampaignService {
                 return false;
             } else if (!listContainsValue(filter.getBundleWhitelist(), targetingData.getPublisherId())) {
                 return false;
-            } else if (!listDoesNotContainValue(filter.getBundleBlacklist(), targetingData.getPublisherId())) {
+            } else if (!listContainsValue(filter.getBundleBlacklist(), targetingData.getPublisherId())) {
                 return false;
             }
         } else if (targetingData.getPlatform().equals(RequestTargetingData.Platform.DESKTOP)) {
@@ -190,7 +194,7 @@ public class CampaignService {
                 return false;
             } else if (!listContainsValue(filter.getDomainWhitelist(), targetingData.getPublisherId())) {
                 return false;
-            } else if (!listDoesNotContainValue(filter.getDomainBlacklist(), targetingData.getPublisherId())) {
+            } else if (!listContainsValue(filter.getDomainBlacklist(), targetingData.getPublisherId())) {
                 return false;
             }
         } else if (targetingData.getPlatform().equals(RequestTargetingData.Platform.MOBILE)) {
@@ -198,7 +202,7 @@ public class CampaignService {
                 return false;
             } else if (!listContainsValue(filter.getDomainWhitelist(), targetingData.getPublisherId())) {
                 return false;
-            } else if (!listDoesNotContainValue(filter.getDomainBlacklist(), targetingData.getPublisherId())) {
+            } else if (!listContainsValue(filter.getDomainBlacklist(), targetingData.getPublisherId())) {
                 return false;
             }
         } else if (targetingData.getPlatform().equals(RequestTargetingData.Platform.CTV)) {
@@ -212,7 +216,7 @@ public class CampaignService {
         // publisher white and black lists
         if (!listContainsValue(filter.getPublisherWhitelist(), targetingData.getPublisherId())) {
             return false;
-        } else if (!listDoesNotContainValue(filter.getDomainBlacklist(), targetingData.getPublisherId())) {
+        } else if (!listContainsValue(filter.getDomainBlacklist(), targetingData.getPublisherId())) {
             return false;
         }
 
@@ -224,17 +228,9 @@ public class CampaignService {
         return true;
     }
 
-    private boolean listContainsValue(String list, String val) {
-        if (Strings.isNullOrEmpty(list)) {
-            return true;
-        } else {
-            return list.contains(val.toLowerCase());
-        }
-    }
-
-    private boolean listDoesNotContainValue(String list, String val) {
-        if (Strings.isNullOrEmpty(list)) {
-            return true;
+    private boolean listContainsValue(List<String> list, String val) {
+        if (list.isEmpty()) {
+            return false;
         } else {
             return list.contains(val.toLowerCase());
         }

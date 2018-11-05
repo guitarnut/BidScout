@@ -1,7 +1,7 @@
 package com.gnut.bidscout.model;
 
 public class Statistics {
-    private long id;
+    private String id;
     private long bids;
     private long impressions;
     private long duplicateImpressions;
@@ -9,11 +9,11 @@ public class Statistics {
     private long revenue;
     private float ecpm;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

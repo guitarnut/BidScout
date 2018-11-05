@@ -2,27 +2,25 @@ package com.gnut.bidscout.model;
 
 import org.springframework.data.annotation.Id;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 public class Campaign {
     @Id
     private String id;
-    private List<String> publishers;
+    private boolean enabled;
+    private String publisher;
     private String cid;
     private String name;
     private String seat;
     private Limits limits;
     private Flags flags;
-    private Set<Creative> creatives;
+    private List<Creative> creatives;
     private AuctionStats auctionStats;
     private Requirements requirements;
     private Statistics statistics;
     private String nurl;
     private long impressionExpiry;
     private boolean syncUsers;
-    private Date startDate;
 
     public String getId() {
         return id;
@@ -32,12 +30,20 @@ public class Campaign {
         this.id = id;
     }
 
-    public List<String> getPublishers() {
-        return publishers;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setPublishers(List<String> publishers) {
-        this.publishers = publishers;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
 
     public String getCid() {
@@ -80,11 +86,11 @@ public class Campaign {
         this.flags = flags;
     }
 
-    public Set<Creative> getCreatives() {
+    public List<Creative> getCreatives() {
         return creatives;
     }
 
-    public void setCreatives(Set<Creative> creatives) {
+    public void setCreatives(List<Creative> creatives) {
         this.creatives = creatives;
     }
 

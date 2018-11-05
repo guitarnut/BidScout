@@ -1,17 +1,18 @@
 package com.gnut.bidscout.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Requirements {
-    private long id;
+    private String id;
     private boolean userMatch;
     private boolean secure;
-    private String publisherWhitelist;
-    private String domainWhitelist;
-    private String bundleWhitelist;
-    private String publisherBlacklist;
-    private String domainBlacklist;
-    private String bundleBlacklist;
+    private List<String> publisherWhitelist;
+    private List<String> domainWhitelist;
+    private List<String> bundleWhitelist;
+    private List<String> publisherBlacklist;
+    private List<String> domainBlacklist;
+    private List<String> bundleBlacklist;
     private boolean mobile;
     private boolean desktop;
     private boolean inapp;
@@ -19,11 +20,11 @@ public class Requirements {
     private Date startDate;
     private Date endDate;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -43,51 +44,51 @@ public class Requirements {
         this.secure = secure;
     }
 
-    public String getPublisherWhitelist() {
+    public List<String> getPublisherWhitelist() {
         return publisherWhitelist;
     }
 
-    public void setPublisherWhitelist(String publisherWhitelist) {
+    public void setPublisherWhitelist(List<String> publisherWhitelist) {
         this.publisherWhitelist = publisherWhitelist;
     }
 
-    public String getDomainWhitelist() {
+    public List<String> getDomainWhitelist() {
         return domainWhitelist;
     }
 
-    public void setDomainWhitelist(String domainWhitelist) {
+    public void setDomainWhitelist(List<String> domainWhitelist) {
         this.domainWhitelist = domainWhitelist;
     }
 
-    public String getBundleWhitelist() {
+    public List<String> getBundleWhitelist() {
         return bundleWhitelist;
     }
 
-    public void setBundleWhitelist(String bundleWhitelist) {
+    public void setBundleWhitelist(List<String> bundleWhitelist) {
         this.bundleWhitelist = bundleWhitelist;
     }
 
-    public String getPublisherBlacklist() {
+    public List<String> getPublisherBlacklist() {
         return publisherBlacklist;
     }
 
-    public void setPublisherBlacklist(String publisherBlacklist) {
+    public void setPublisherBlacklist(List<String> publisherBlacklist) {
         this.publisherBlacklist = publisherBlacklist;
     }
 
-    public String getDomainBlacklist() {
+    public List<String> getDomainBlacklist() {
         return domainBlacklist;
     }
 
-    public void setDomainBlacklist(String domainBlacklist) {
+    public void setDomainBlacklist(List<String> domainBlacklist) {
         this.domainBlacklist = domainBlacklist;
     }
 
-    public String getBundleBlacklist() {
+    public List<String> getBundleBlacklist() {
         return bundleBlacklist;
     }
 
-    public void setBundleBlacklist(String bundleBlacklist) {
+    public void setBundleBlacklist(List<String> bundleBlacklist) {
         this.bundleBlacklist = bundleBlacklist;
     }
 

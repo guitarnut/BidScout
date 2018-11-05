@@ -1,18 +1,18 @@
 package com.gnut.bidscout.model;
 
 public class Limits {
-    private long id;
+    private String id;
     private long requestLimit;
     private long bidRate;
     private long bidLimit;
     private long impressionLimit;
     private float revenueLimit;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
