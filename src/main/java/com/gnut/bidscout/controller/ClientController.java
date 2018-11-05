@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -38,11 +39,37 @@ public class ClientController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/campaign/all", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, String> getCampaigns(
+            HttpServletResponse response
+    ) {
+        return service.getCampaignNames();
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/campaign/add/creative", method = RequestMethod.POST, produces = "application/json")
+    public void addCreativeToCampaign(
+            @RequestParam String campaignId,
+            @RequestParam String creativeId,
+            HttpServletResponse response
+    ) {
+        service.addCreativeToCampaign(campaignId, creativeId);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/creative/create", method = RequestMethod.POST, produces = "application/json")
     public String saveCampaign(
             @RequestBody Creative creative,
             HttpServletResponse response
     ) {
         return service.saveCreative(creative);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/creative/all", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, String> getCreatives(
+            HttpServletResponse response
+    ) {
+        return service.getCreativeNames();
     }
 }

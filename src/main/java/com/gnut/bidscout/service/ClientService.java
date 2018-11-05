@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Component
 public class ClientService {
@@ -63,6 +64,14 @@ public class ClientService {
         return "";
     }
 
+    public Map<String, String> getCampaignNames() {
+        return campaignService.getCampaignNames();
+    }
+
+    public Map<String, String> getCreativeNames() {
+        return creativeService.getCreativeNames();
+    }
+
     public String getBid(String id) {
         AuctionRecord record = auctionDao.findFirstByBidRequestId(id);
         if (record != null) {
@@ -73,5 +82,9 @@ public class ClientService {
             }
         }
         return "";
+    }
+
+    public void addCreativeToCampaign(String campaignId, String creativeId) {
+        campaignService.addCreativeToCampaign(campaignId, creativeId);
     }
 }

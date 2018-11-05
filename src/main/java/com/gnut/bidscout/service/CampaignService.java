@@ -15,33 +15,66 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CampaignService {
     private final SyncService syncService;
     private final CampaignDao campaignDao;
+    private final CreativeService creativeService;
 
     @Autowired
-    public CampaignService(SyncService syncService, CampaignDao campaignDao) {
+    public CampaignService(SyncService syncService, CampaignDao campaignDao, CreativeService creativeService) {
         this.syncService = syncService;
         this.campaignDao = campaignDao;
+        this.creativeService = creativeService;
+    }
+
+    public void addCreativeToCampaign(String campaignId, String creativeId) {
+        Optional<Campaign> campaign = campaignDao.findById(campaignId);
+        if(campaign.isPresent()) {
+            Optional<Creative> creative = creativeService.getCreative(creativeId);
+            if(creative.isPresent()) {
+                List<String> c = campaign.get().getCreatives();
+                if(c == null) {
+                    c = new ArrayList<>();
+                }
+                c.add(creative.get().getId());
+                campaign.get().setCreatives(c);
+                campaignDao.save(campaign.get());
+            }
+        }
     }
 
     public Optional<EligibleCampaignData> targetCampaign(String publisher, BidRequest bidRequest, HttpServletRequest request) {
-        final Campaign campaign = selectCampaign(bidRequest);
-        final RequestTargetingData targetingData = generateTargetingData(publisher, bidRequest, request);
+        final Optional<Campaign> campaign = selectCampaign(bidRequest);
+        if(campaign.isPresent()) {
+            final RequestTargetingData targetingData = generateTargetingData(publisher, bidRequest, request);
 
-        if (campaignIsEligible(targetingData, campaign)) {
-            final EligibleCampaignData campaignData = new EligibleCampaignData();
-            campaignData.setCampaign(campaign);
-            campaignData.setCreatives(getEligibleCampaignCreatives(targetingData, campaign));
-            campaignData.setData(targetingData);
-            return Optional.of(campaignData);
-        } else {
-            return Optional.empty();
+            if (campaignIsEligible(targetingData, campaign.get())) {
+                final EligibleCampaignData campaignData = new EligibleCampaignData();
+                campaignData.setCampaign(campaign.get());
+                campaignData.setCreatives(getEligibleCampaignCreatives(targetingData, campaign.get()));
+                campaignData.setData(targetingData);
+                return Optional.of(campaignData);
+            }
         }
+        return Optional.empty();
     }
 
     public Campaign saveCampaign(Campaign campaign) {
         return campaignDao.save(campaign);
     }
 
+    public Map<String, String> getCampaignNames() {
+        List<Campaign> campaigns = campaignDao.findAll();
+        if(campaigns.isEmpty()) {
+            return Collections.emptyMap();
+        } else {
+            final Map<String, String> results = new HashMap<>();
+            campaigns.forEach(c->{
+                results.put(c.getId(), c.getName());
+            });
+            return results;
+        }
+    }
+
     private RequestTargetingData generateTargetingData(String publisher, BidRequest bidRequest, HttpServletRequest request) {
+        // Todo: Move
         final RequestTargetingData data = new RequestTargetingData();
         final String userId = syncService.getUserCookieValue(request);
 
@@ -75,51 +108,24 @@ public class CampaignService {
         return data;
     }
 
-    private Campaign selectCampaign(BidRequest bidRequest) {
-        Requirements requirements = new Requirements();
-        // Todo: Temp targeting
-        requirements.setInapp(true);
-        requirements.setUserMatch(true);
-
-        Creative creative = new Creative();
-        creative.setAdDomain(Arrays.asList("mcdonalds.com"));
-        creative.setAdId("mc_01");
-        creative.setCreativeUrl("http://foo.com/img.jpg");
-        creative.setCrid("mc100_oc");
-        creative.setW(300);
-        creative.setH(250);
-        creative.setAttr(Arrays.asList(1));
-        creative.setBtype(Arrays.asList(1));
-        creative.setIabCategories(Arrays.asList("IAB1-1"));
-        creative.setMinBid(0.01f);
-        creative.setMaxBid(5.00f);
-        creative.setRequirements(requirements);
-        creative.setSyncUsers(true);
-
-        Campaign campaign = new Campaign();
-        campaign.setId("1");
-        campaign.setCid("campaign_1");
-        campaign.setSeat("16_13324");
-        campaign.setCreatives(new ArrayList<>());
-        campaign.getCreatives().add(creative);
-        campaign.setImpressionExpiry(60 * 1000 * 15);
-        campaign.setRequirements(requirements);
-        campaign.setPublisher("bfio");
-
-        return campaign;
+    private Optional<Campaign> selectCampaign(BidRequest bidRequest) {
+        // Todo: Target off of request
+        List<Campaign> campaigns = campaignDao.findAllByEnabled(true);
+        if(campaigns.isEmpty()) {
+            return null;
+        }
+        return Optional.of(campaigns.get(0));
     }
 
     private boolean campaignIsEligible(RequestTargetingData targetingData, Campaign campaign) {
-        return (
-                Strings.isNullOrEmpty(campaign.getPublisher())
-                        || campaign.getPublisher().toLowerCase().contains(targetingData.getPublisher().toLowerCase()))
-                && isEligible(targetingData, campaign.getRequirements());
+        return isEligible(targetingData, campaign.getRequirements());
     }
 
+    // Todo: Move
     private Set<Creative> getEligibleCampaignCreatives(RequestTargetingData targetingData, Campaign campaign) {
         final Set<Creative> eligible = new HashSet<>();
-
-        for (Creative c : campaign.getCreatives()) {
+        final Iterable<Creative> creatives = creativeService.getCreatives(campaign.getCreatives());
+        for (Creative c : creatives) {
             final Requirements filter = c.getRequirements();
 
             if (!isEligible(targetingData, filter)) {
@@ -167,6 +173,7 @@ public class CampaignService {
         return eligible;
     }
 
+    // Todo: Move
     private boolean isEligible(RequestTargetingData targetingData, Requirements filter) {
         final Date now = new Date();
 
@@ -230,7 +237,7 @@ public class CampaignService {
 
     private boolean listContainsValue(List<String> list, String val) {
         if (list.isEmpty()) {
-            return false;
+            return true;
         } else {
             return list.contains(val.toLowerCase());
         }

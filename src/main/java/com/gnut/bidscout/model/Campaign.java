@@ -14,7 +14,7 @@ public class Campaign {
     private String seat;
     private Limits limits;
     private Flags flags;
-    private List<Creative> creatives;
+    private List<String> creatives;
     private AuctionStats auctionStats;
     private Requirements requirements;
     private Statistics statistics;
@@ -86,11 +86,11 @@ public class Campaign {
         this.flags = flags;
     }
 
-    public List<Creative> getCreatives() {
+    public List<String> getCreatives() {
         return creatives;
     }
 
-    public void setCreatives(List<Creative> creatives) {
+    public void setCreatives(List<String> creatives) {
         this.creatives = creatives;
     }
 
