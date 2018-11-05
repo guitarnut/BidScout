@@ -2,12 +2,14 @@ package com.gnut.bidscout.model;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public class Campaign {
     @Id
     private String id;
-    private Set<String> publishers;
+    private List<String> publishers;
     private String cid;
     private String name;
     private String seat;
@@ -20,6 +22,7 @@ public class Campaign {
     private String nurl;
     private long impressionExpiry;
     private boolean syncUsers;
+    private Date startDate;
 
     public String getId() {
         return id;
@@ -29,11 +32,11 @@ public class Campaign {
         this.id = id;
     }
 
-    public Set<String> getPublishers() {
+    public List<String> getPublishers() {
         return publishers;
     }
 
-    public void setPublishers(Set<String> publishers) {
+    public void setPublishers(List<String> publishers) {
         this.publishers = publishers;
     }
 

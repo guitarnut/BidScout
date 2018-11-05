@@ -16,8 +16,9 @@ public class SyncService {
     private static final int COOKIE_TTL = 3600;
 
     public void sync(HttpServletRequest request, HttpServletResponse response) {
+        updateUserSyncCount(request);
         // a valid user should always have all three
-        if (!isValidUserRefreshedExistingCookies(request)) {
+        if (!isValidUserRefreshedExistingCookies(request, response)) {
             addUserCookies(response);
         }
         response.setStatus(204);
@@ -30,18 +31,35 @@ public class SyncService {
         response.setStatus(204);
     }
 
-    public void updateUserImpressionCount(HttpServletRequest request, HttpServletResponse response) {
+    public void updateUserImpressionCount(HttpServletRequest request) {
         if (cookiesPresent(request)) {
             for (Cookie c : request.getCookies()) {
-                if (c.getName().equals(COOKIE_SYNC_COUNT_NAME)) {
-                    int impCount = Integer.valueOf(c.getValue());
-                    impCount ++;
-                    c.setValue(String.valueOf(impCount));
-                    c.setMaxAge(COOKIE_TTL);
-                    response.addCookie(c);
+                if (c.getName().equals(COOKIE_IMP_COUNT_NAME)) {
+                    incrementCookieValue(c);
                 }
             }
         }
+    }
+
+    private void updateUserSyncCount(HttpServletRequest request) {
+        if (cookiesPresent(request)) {
+            for (Cookie c : request.getCookies()) {
+                if (c.getName().equals(COOKIE_SYNC_COUNT_NAME)) {
+                    incrementCookieValue(c);
+                }
+            }
+        }
+    }
+
+    private void incrementCookieValue(Cookie c) {
+        int count = 0;
+        try {
+            count = Integer.valueOf(c.getValue());
+        } catch (NumberFormatException ex) {
+            //
+        }
+        count++;
+        c.setValue(String.valueOf(count));
     }
 
     public String getUserCookieValue(HttpServletRequest request) {
@@ -55,7 +73,29 @@ public class SyncService {
         return "";
     }
 
-    private boolean isValidUserRefreshedExistingCookies(HttpServletRequest request) {
+    public String getSyncCookieValue(HttpServletRequest request) {
+        if (cookiesPresent(request)) {
+            for (Cookie c : request.getCookies()) {
+                if (c.getName().equals(COOKIE_NAME)) {
+                    return c.getValue();
+                }
+            }
+        }
+        return "";
+    }
+
+    public String getImpCookieValue(HttpServletRequest request) {
+        if (cookiesPresent(request)) {
+            for (Cookie c : request.getCookies()) {
+                if (c.getName().equals(COOKIE_NAME)) {
+                    return c.getValue();
+                }
+            }
+        }
+        return "";
+    }
+
+    public boolean isValidUserRefreshedExistingCookies(HttpServletRequest request, HttpServletResponse response) {
         boolean userExists = false;
         boolean syncExists = false;
         boolean impExists = false;
@@ -64,16 +104,13 @@ public class SyncService {
             for (Cookie c : request.getCookies()) {
                 if (c.getName().equals(COOKIE_NAME)) {
                     userExists = true;
-                    c.setMaxAge(COOKIE_TTL);
+                    response.addCookie(generateCookie(COOKIE_NAME, c.getValue()));
                 } else if (c.getName().equals(COOKIE_SYNC_COUNT_NAME)) {
                     syncExists = true;
-                    int syncCount = Integer.valueOf(c.getValue());
-                    syncCount ++;
-                    c.setValue(String.valueOf(syncCount));
-                    c.setMaxAge(COOKIE_TTL);
+                    response.addCookie(generateCookie(COOKIE_SYNC_COUNT_NAME, c.getValue()));
                 } else if (c.getName().equals(COOKIE_IMP_COUNT_NAME)) {
                     impExists = true;
-                    c.setMaxAge(COOKIE_TTL);
+                    response.addCookie(generateCookie(COOKIE_IMP_COUNT_NAME, c.getValue()));
                 }
             }
         }
@@ -89,6 +126,7 @@ public class SyncService {
         Cookie c = new Cookie(n, v);
         c.setMaxAge(COOKIE_TTL);
         c.setDomain("localhost");
+        c.setPath("/");
         return c;
     }
 }

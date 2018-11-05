@@ -98,7 +98,7 @@ public class CampaignService {
         campaign.setImpressionExpiry(60 * 1000 * 15);
         campaign.setRequirements(requirements);
 
-        Set<String> publishers = new HashSet<>();
+        List<String> publishers = new ArrayList<>();
         publishers.add("bfio");
         campaign.setPublishers(publishers);
 

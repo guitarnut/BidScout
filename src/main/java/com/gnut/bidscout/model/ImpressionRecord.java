@@ -20,6 +20,10 @@ public class ImpressionRecord {
     private String host;
     private String xForwardedFor;
     private Set<String> violations;
+    private String userCookie;
+    private String impressionCookie;
+    private String syncCookie;
+    private boolean isValidKnownUser;
 
     public String getId() {
         return id;
@@ -133,23 +137,35 @@ public class ImpressionRecord {
         this.violations = violations;
     }
 
-    @Override
-    public String toString() {
-        return "ImpressionRecord{" +
-                "id='" + id + '\'' +
-                ", bidRequestId='" + bidRequestId + '\'' +
-                ", campaign='" + campaign + '\'' +
-                ", cb=" + cb +
-                ", ip='" + ip + '\'' +
-                ", userAgent='" + userAgent + '\'' +
-                ", impressionTimestamp=" + impressionTimestamp +
-                ", cp=" + cp +
-                ", bidPrice=" + bidPrice +
-                ", url='" + url + '\'' +
-                ", cookies='" + cookies + '\'' +
-                ", host='" + host + '\'' +
-                ", xForwardedFor='" + xForwardedFor + '\'' +
-                ", violations=" + violations +
-                '}';
+    public String getUserCookie() {
+        return userCookie;
+    }
+
+    public void setUserCookie(String userCookie) {
+        this.userCookie = userCookie;
+    }
+
+    public String getImpressionCookie() {
+        return impressionCookie;
+    }
+
+    public void setImpressionCookie(String impressionCookie) {
+        this.impressionCookie = impressionCookie;
+    }
+
+    public String getSyncCookie() {
+        return syncCookie;
+    }
+
+    public void setSyncCookie(String syncCookie) {
+        this.syncCookie = syncCookie;
+    }
+
+    public boolean isValidKnownUser() {
+        return isValidKnownUser;
+    }
+
+    public void setValidKnownUser(boolean validKnownUser) {
+        isValidKnownUser = validKnownUser;
     }
 }

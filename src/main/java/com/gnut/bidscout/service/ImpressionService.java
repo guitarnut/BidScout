@@ -40,12 +40,26 @@ public class ImpressionService {
         record.setHost(request.getHeader("Host"));
         record.setBidRequestId(bid);
         record.setCampaign(campaign);
-        record.setCb(Long.valueOf(cb));
-        record.setCp(Float.valueOf(cp));
         record.setBidPrice(Float.valueOf(bidPrice));
         record.setUrl(request.getRequestURL().toString());
+        record.setUserCookie(syncService.getUserCookieValue(request));
+        record.setSyncCookie(syncService.getSyncCookieValue(request));
+        record.setImpressionCookie(syncService.getImpCookieValue(request));
 
-        syncService.updateUserImpressionCount(request, response);
+        try {
+            record.setCb(Long.valueOf(cb));
+        } catch (NumberFormatException ex) {
+            record.setCb(-1);
+        }
+
+        try {
+            record.setCp(Float.valueOf(cp));
+            syncService.updateUserImpressionCount(request);
+        } catch (NumberFormatException ex) {
+            record.setCp(0);
+        }
+
+        record.setValidKnownUser(syncService.isValidUserRefreshedExistingCookies(request, response));
         impressionDao.save(record);
         response.setStatus(204);
     }
