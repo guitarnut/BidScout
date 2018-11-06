@@ -11,14 +11,15 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class ImpressionService {
     private final ImpressionDao impressionDao;
+    private final CampaignService campaignService;
+    private final CreativeService creativeService;
     private final SyncService syncService;
 
     @Autowired
-    public ImpressionService(
-            ImpressionDao impressionDao,
-            SyncService syncService
-    ) {
+    public ImpressionService(ImpressionDao impressionDao, CampaignService campaignService, CreativeService creativeService, SyncService syncService) {
         this.impressionDao = impressionDao;
+        this.campaignService = campaignService;
+        this.creativeService = creativeService;
         this.syncService = syncService;
     }
 
@@ -27,6 +28,7 @@ public class ImpressionService {
             HttpServletResponse response,
             String bid,
             String campaign,
+            String creative,
             String bidPrice,
             String cp,
             String cb
@@ -40,6 +42,7 @@ public class ImpressionService {
         record.setHost(request.getHeader("Host"));
         record.setBidRequestId(bid);
         record.setCampaign(campaign);
+        record.setCreative(creative);
         record.setBidPrice(Float.valueOf(bidPrice));
         record.setUrl(request.getRequestURL().toString());
         record.setUserCookie(syncService.getUserCookieValue(request));
@@ -49,7 +52,10 @@ public class ImpressionService {
         try {
             record.setCb(Long.valueOf(cb));
         } catch (NumberFormatException ex) {
+            // Todo: Handle invalid
             record.setCb(-1);
+            response.setStatus(204);
+            return;
         }
 
         try {
@@ -60,6 +66,14 @@ public class ImpressionService {
         }
 
         record.setValidKnownUser(syncService.isValidUserRefreshedExistingCookies(request, response));
+
+        if(campaignService.incrementImpressionAndCheckValidTTL(record.getCampaign(), record.getCb(), record.getCp())) {
+            creativeService.incrementImpression(record.getCreative(), record.getCp());
+        } else {
+            creativeService.incrementExpiredImpression(record.getCreative());
+            record.setExpired(true);
+        }
+
         impressionDao.save(record);
         response.setStatus(204);
     }

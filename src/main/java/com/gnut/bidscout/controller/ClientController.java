@@ -22,7 +22,7 @@ public class ClientController {
 
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/bid/{id}", method = RequestMethod.GET, produces = "application/json")
-    public String getBid(
+    @ResponseBody public String getBid(
             @PathVariable("id") String id,
             HttpServletResponse response
     ) {
@@ -31,7 +31,7 @@ public class ClientController {
 
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/campaign/create", method = RequestMethod.POST, produces = "application/json")
-    public String saveCampaign(
+    @ResponseBody public String saveCampaign(
             @RequestBody Campaign campaign,
             HttpServletResponse response
     ) {
@@ -40,7 +40,7 @@ public class ClientController {
 
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/campaign/all", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, String> getCampaigns(
+    @ResponseBody public Map<String, String> getCampaigns(
             HttpServletResponse response
     ) {
         return service.getCampaignNames();
@@ -58,7 +58,7 @@ public class ClientController {
 
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/campaign/get/{id}", method = RequestMethod.POST, produces = "application/json")
-    public String getCampaign(
+    @ResponseBody public String getCampaign(
             @PathVariable("id") String campaignId,
             HttpServletResponse response
     ) {
@@ -67,7 +67,7 @@ public class ClientController {
 
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/creative/create", method = RequestMethod.POST, produces = "application/json")
-    public String saveCampaign(
+    @ResponseBody public String saveCampaign(
             @RequestBody Creative creative,
             HttpServletResponse response
     ) {
@@ -76,7 +76,7 @@ public class ClientController {
 
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/creative/all", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, String> getCreatives(
+    @ResponseBody public Map<String, String> getCreatives(
             HttpServletResponse response
     ) {
         return service.getCreativeNames();
@@ -84,7 +84,7 @@ public class ClientController {
 
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/creative/get/{id}", method = RequestMethod.POST, produces = "application/json")
-    public String getCreative(
+    @ResponseBody public String getCreative(
             @PathVariable("id") String creativeId,
             HttpServletResponse response
     ) {

@@ -9,6 +9,7 @@ public class ImpressionRecord {
     private String id;
     private String bidRequestId;
     private String campaign;
+    private String creative;
     private long cb;
     private String ip;
     private String userAgent;
@@ -24,6 +25,7 @@ public class ImpressionRecord {
     private String impressionCookie;
     private String syncCookie;
     private boolean isValidKnownUser;
+    private boolean expired;
 
     public String getId() {
         return id;
@@ -47,6 +49,14 @@ public class ImpressionRecord {
 
     public void setCampaign(String campaign) {
         this.campaign = campaign;
+    }
+
+    public String getCreative() {
+        return creative;
+    }
+
+    public void setCreative(String creative) {
+        this.creative = creative;
     }
 
     public long getCb() {
@@ -167,5 +177,13 @@ public class ImpressionRecord {
 
     public void setValidKnownUser(boolean validKnownUser) {
         isValidKnownUser = validKnownUser;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }

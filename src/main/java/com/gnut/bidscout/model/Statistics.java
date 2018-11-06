@@ -7,10 +7,11 @@ public class Statistics {
     private long impressions;
     private long duplicateImpressions;
     private long expiredImpressions;
-    private long revenue;
+    private float revenue;
     private float ecpm;
     private long requests;
     private float bidPriceTotal;
+    private long clicks;
 
     public String getId() {
         return id;
@@ -60,11 +61,11 @@ public class Statistics {
         this.expiredImpressions = expiredImpressions;
     }
 
-    public long getRevenue() {
+    public float getRevenue() {
         return revenue;
     }
 
-    public void setRevenue(long revenue) {
+    public void setRevenue(float revenue) {
         this.revenue = revenue;
     }
 
@@ -90,5 +91,13 @@ public class Statistics {
 
     public void setBidPriceTotal(float bidPriceTotal) {
         this.bidPriceTotal = bidPriceTotal;
+    }
+
+    public long getClicks() {
+        return clicks;
+    }
+
+    public void setClicks(long clicks) {
+        this.clicks = clicks;
     }
 }

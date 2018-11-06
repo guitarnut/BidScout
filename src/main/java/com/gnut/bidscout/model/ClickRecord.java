@@ -9,6 +9,7 @@ public class ClickRecord {
     private String id;
     private String bidRequestId;
     private String campaign;
+    private String creative;
     private long cb;
     private String ip;
     private String userAgent;
@@ -41,6 +42,14 @@ public class ClickRecord {
 
     public void setCampaign(String campaign) {
         this.campaign = campaign;
+    }
+
+    public String getCreative() {
+        return creative;
+    }
+
+    public void setCreative(String creative) {
+        this.creative = creative;
     }
 
     public long getCb() {
@@ -113,23 +122,5 @@ public class ClickRecord {
 
     public void setViolations(Set<String> violations) {
         this.violations = violations;
-    }
-
-    @Override
-    public String toString() {
-        return "ClickRecord{" +
-                "id='" + id + '\'' +
-                ", bidRequestId='" + bidRequestId + '\'' +
-                ", campaign='" + campaign + '\'' +
-                ", cb=" + cb +
-                ", ip='" + ip + '\'' +
-                ", userAgent='" + userAgent + '\'' +
-                ", clickTimestamp=" + clickTimestamp +
-                ", url='" + url + '\'' +
-                ", cookies='" + cookies + '\'' +
-                ", host='" + host + '\'' +
-                ", xForwardedFor='" + xForwardedFor + '\'' +
-                ", violations=" + violations +
-                '}';
     }
 }

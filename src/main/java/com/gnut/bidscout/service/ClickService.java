@@ -11,10 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class ClickService {
     private final ClickDao clickDao;
+    private final CampaignService campaignService;
+    private final CreativeService creativeService;
 
     @Autowired
-    public ClickService(ClickDao clickDao) {
+    public ClickService(ClickDao clickDao, CampaignService campaignService, CreativeService creativeService) {
         this.clickDao = clickDao;
+        this.campaignService = campaignService;
+        this.creativeService = creativeService;
     }
 
     public void handleRequest(
@@ -22,6 +26,7 @@ public class ClickService {
             HttpServletResponse response,
             String bid,
             String campaign,
+            String creative,
             String cb
     ) {
         ClickRecord record = new ClickRecord();
@@ -33,9 +38,12 @@ public class ClickService {
         record.setHost(request.getHeader("Host"));
         record.setBidRequestId(bid);
         record.setCampaign(campaign);
+        record.setCreative(creative);
         record.setCb(Long.valueOf(cb));
         record.setUrl(request.getRequestURL().toString());
 
+        campaignService.incrementClick(record.getCampaign());
+        creativeService.incrementClick(record.getCreative());
         clickDao.save(record);
         response.setStatus(204);
     }

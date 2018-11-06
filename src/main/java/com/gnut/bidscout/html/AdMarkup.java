@@ -46,6 +46,8 @@ public class AdMarkup {
                 .append("/")
                 .append(campaign.getId())
                 .append("/")
+                .append(creative.getId())
+                .append("/")
                 .append(String.valueOf(price))
                 .append("/")
                 .append("${AUCTION_PRICE}")
@@ -59,6 +61,8 @@ public class AdMarkup {
                 .append(bidRequestId)
                 .append("/")
                 .append(campaign.getId())
+                .append("/")
+                .append(creative.getId())
                 .append("?cb=")
                 .append(System.currentTimeMillis())
                 .toString();

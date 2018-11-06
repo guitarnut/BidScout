@@ -29,13 +29,47 @@ public class CampaignService {
         this.eligibleService = eligibleService;
     }
 
+    public void incrementClick(String id) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            campaign.get().getStatistics().setClicks(campaign.get().getStatistics().getClicks() + 1);
+            campaignDao.save(campaign.get());
+        }
+    }
+
+    public boolean incrementImpressionAndCheckValidTTL(String id, long cb, float cp) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            if (System.currentTimeMillis() - cb > campaign.get().getImpressionExpiry() * 1000) {
+                campaign.get().getStatistics().setExpiredImpressions(campaign.get().getStatistics().getExpiredImpressions() + 1);
+                campaignDao.save(campaign.get());
+                return false;
+            } else {
+                campaign.get().getStatistics().setImpressions(campaign.get().getStatistics().getImpressions() + 1);
+                campaign.get().getStatistics().setRevenue(campaign.get().getStatistics().getRevenue() + cp / 1000);
+               // campaign.get().getStatistics().setEcpm((campaign.get().getStatistics().getEcpm() + cp)campaign.get().getStatistics().getImpressions());
+                campaignDao.save(campaign.get());
+                return true;
+            }
+        }
+        return true;
+    }
+
+    public void incrementExpiredImpression(String id) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            campaign.get().getStatistics().setExpiredImpressions(campaign.get().getStatistics().getExpiredImpressions() + 1);
+            campaignDao.save(campaign.get());
+        }
+    }
+
     public void addCreativeToCampaign(String campaignId, String creativeId) {
         Optional<Campaign> campaign = campaignDao.findById(campaignId);
-        if(campaign.isPresent()) {
+        if (campaign.isPresent()) {
             Optional<Creative> creative = creativeService.getCreative(creativeId);
-            if(creative.isPresent()) {
+            if (creative.isPresent()) {
                 List<String> c = campaign.get().getCreatives();
-                if(c == null) {
+                if (c == null) {
                     c = new ArrayList<>();
                 }
                 c.add(creative.get().getId());
@@ -47,7 +81,7 @@ public class CampaignService {
 
     public Optional<EligibleCampaignData> targetCampaign(String publisher, BidRequest bidRequest, HttpServletRequest request) {
         final Optional<Campaign> campaign = selectCampaign(bidRequest);
-        if(campaign.isPresent()) {
+        if (campaign.isPresent()) {
             final RequestTargetingData targetingData = targetingService.generateTargetingData(publisher, bidRequest, request);
 
             if (eligibleService.isEligible(targetingData, campaign.get().getRequirements())) {
@@ -71,11 +105,11 @@ public class CampaignService {
 
     public Map<String, String> getCampaignNames() {
         List<Campaign> campaigns = campaignDao.findAll();
-        if(campaigns.isEmpty()) {
+        if (campaigns.isEmpty()) {
             return Collections.emptyMap();
         } else {
             final Map<String, String> results = new HashMap<>();
-            campaigns.forEach(c->{
+            campaigns.forEach(c -> {
                 results.put(c.getId(), c.getName());
             });
             return results;
@@ -85,7 +119,7 @@ public class CampaignService {
     private Optional<Campaign> selectCampaign(BidRequest bidRequest) {
         // Todo: Target off of request
         List<Campaign> campaigns = campaignDao.findAllByEnabled(true);
-        if(campaigns.isEmpty()) {
+        if (campaigns.isEmpty()) {
             return null;
         }
         return Optional.of(campaigns.get(0));
