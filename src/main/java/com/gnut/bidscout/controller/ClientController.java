@@ -57,6 +57,15 @@ public class ClientController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/campaign/get/{id}", method = RequestMethod.POST, produces = "application/json")
+    public String getCampaign(
+            @PathVariable("id") String campaignId,
+            HttpServletResponse response
+    ) {
+        return service.getCampaign(campaignId);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/creative/create", method = RequestMethod.POST, produces = "application/json")
     public String saveCampaign(
             @RequestBody Creative creative,
@@ -71,5 +80,14 @@ public class ClientController {
             HttpServletResponse response
     ) {
         return service.getCreativeNames();
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/creative/get/{id}", method = RequestMethod.POST, produces = "application/json")
+    public String getCreative(
+            @PathVariable("id") String creativeId,
+            HttpServletResponse response
+    ) {
+        return service.getCreative(creativeId);
     }
 }

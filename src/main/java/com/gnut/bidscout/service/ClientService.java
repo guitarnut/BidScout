@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class ClientService {
@@ -86,5 +87,29 @@ public class ClientService {
 
     public void addCreativeToCampaign(String campaignId, String creativeId) {
         campaignService.addCreativeToCampaign(campaignId, creativeId);
+    }
+
+    public String getCampaign(String campaignId) {
+        Optional<Campaign> campaign = campaignService.getCampaign(campaignId);
+        if (campaign.isPresent()) {
+            try {
+                return objectMapper.writeValueAsString(campaign.get());
+            } catch (IOException ex) {
+                //
+            }
+        }
+        return "";
+    }
+
+    public String getCreative(String creativeId) {
+        Optional<Creative> creative = creativeService.getCreative(creativeId);
+        if (creative.isPresent()) {
+            try {
+                return objectMapper.writeValueAsString(creative.get());
+            } catch (IOException ex) {
+                //
+            }
+        }
+        return "";
     }
 }
