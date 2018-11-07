@@ -19,7 +19,6 @@ public class TargetingService {
     }
 
     public RequestTargetingData generateTargetingData(String publisher, BidRequest bidRequest, HttpServletRequest request) {
-        // Todo: Move
         final RequestTargetingData data = new RequestTargetingData();
         final String userId = syncService.getUserCookieValue(request);
 

@@ -27,7 +27,25 @@ public class EligibleService {
         final Set<Creative> eligible = new HashSet<>();
         final Iterable<Creative> creatives = creativeService.getCreatives(campaign.getCreatives());
         for (Creative c : creatives) {
+            if(!c.isEnabled()) {
+                continue;
+            }
+
             final Requirements filter = c.getRequirements();
+
+            // size targeting
+            if (targetingData.getWidths().contains(c.getW()) && targetingData.getHeights().contains(c.getH())) {
+                AtomicInteger matches = new AtomicInteger(0);
+                targetingData.getWidths().forEach(w -> {
+                    int index = targetingData.getWidths().indexOf(w);
+                    if (targetingData.getWidths().get(index) == c.getW() && targetingData.getHeights().get(index) == c.getH()) {
+                        matches.getAndIncrement();
+                    }
+                });
+                if (matches.get() == 0) {
+                    continue;
+                }
+            }
 
             if (!isEligible(targetingData, filter)) {
                 continue;
@@ -61,15 +79,7 @@ public class EligibleService {
                 }
             }
 
-            // final, size targeting
-            if (targetingData.getWidths().contains(c.getW()) && targetingData.getHeights().contains(c.getH())) {
-                targetingData.getWidths().forEach(w -> {
-                    int index = targetingData.getWidths().indexOf(w);
-                    if (targetingData.getWidths().get(index) == c.getW() && targetingData.getHeights().get(index) == c.getH()) {
-                        eligible.add(c);
-                    }
-                });
-            }
+            eligible.add(c);
         }
         return eligible;
     }
@@ -77,7 +87,7 @@ public class EligibleService {
     public boolean isEligible(RequestTargetingData targetingData, Requirements filter) {
         final Date now = new Date();
 
-        if(filter.isUserMatch() && !targetingData.isUserMatch()) {
+        if (filter.isUserMatch() && !targetingData.isUserMatch()) {
             return false;
         }
 

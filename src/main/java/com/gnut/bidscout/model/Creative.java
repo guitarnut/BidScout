@@ -7,7 +7,7 @@ public class Creative {
     private String name;
     private int w;
     private int h;
-    private boolean active;
+    private boolean enabled;
     private String type;
     private List<String> iabCategories;
     private List<Integer> attr;
@@ -56,14 +56,6 @@ public class Creative {
         this.h = h;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
     public String getType() {
         return type;
     }
@@ -74,6 +66,14 @@ public class Creative {
 
     public List<String> getIabCategories() {
         return iabCategories;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public void setIabCategories(List<String> iabCategories) {
