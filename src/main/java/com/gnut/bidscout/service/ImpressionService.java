@@ -1,5 +1,6 @@
 package com.gnut.bidscout.service;
 
+import com.gnut.bidscout.cache.ImpressionCache;
 import com.gnut.bidscout.db.ImpressionDao;
 import com.gnut.bidscout.model.ImpressionRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +15,21 @@ public class ImpressionService {
     private final CampaignService campaignService;
     private final CreativeService creativeService;
     private final SyncService syncService;
+    private final ImpressionCache impressionCache;
 
     @Autowired
-    public ImpressionService(ImpressionDao impressionDao, CampaignService campaignService, CreativeService creativeService, SyncService syncService) {
+    public ImpressionService(
+            ImpressionDao impressionDao,
+            CampaignService campaignService,
+            CreativeService creativeService,
+            SyncService syncService,
+            ImpressionCache impressionCache
+    ) {
         this.impressionDao = impressionDao;
         this.campaignService = campaignService;
         this.creativeService = creativeService;
         this.syncService = syncService;
+        this.impressionCache = impressionCache;
     }
 
     public void handleRequest(
@@ -66,12 +75,31 @@ public class ImpressionService {
         }
 
         record.setValidKnownUser(syncService.isValidUserRefreshedExistingCookies(request, response));
+        boolean validImpression = true;
 
-        if(campaignService.incrementImpressionAndCheckValidTTL(record.getCampaign(), record.getCb(), record.getCp())) {
-            creativeService.incrementImpression(record.getCreative(), record.getCp());
-        } else {
+        if (impressionCache.addImpression(record.getBidRequestId()) > 1) {
+            record.setDuplicate(true);
+            campaignService.incrementDuplicateImpression(record.getCampaign());
+            creativeService.incrementDuplicateImpression(record.getCreative());
+            validImpression = false;
+        }
+
+        if (record.getCp() <= 0) {
+            campaignService.incrementInvalidImpression(record.getCampaign());
+            creativeService.incrementInvalidImpression(record.getCreative());
+            validImpression = false;
+        }
+
+        if (!campaignService.isValidImpressionTTL(record.getCampaign(), record.getCb())) {
+            campaignService.incrementExpiredImpression(record.getCampaign());
             creativeService.incrementExpiredImpression(record.getCreative());
             record.setExpired(true);
+            validImpression = false;
+        }
+
+        if (validImpression) {
+            campaignService.incrementImpression(record.getCampaign(), record.getCp());
+            creativeService.incrementImpression(record.getCreative(), record.getCp());
         }
 
         impressionDao.save(record);

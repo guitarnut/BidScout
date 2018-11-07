@@ -26,6 +26,7 @@ public class ImpressionRecord {
     private String syncCookie;
     private boolean isValidKnownUser;
     private boolean expired;
+    private boolean duplicate;
 
     public String getId() {
         return id;
@@ -185,5 +186,13 @@ public class ImpressionRecord {
 
     public void setExpired(boolean expired) {
         this.expired = expired;
+    }
+
+    public boolean isDuplicate() {
+        return duplicate;
+    }
+
+    public void setDuplicate(boolean duplicate) {
+        this.duplicate = duplicate;
     }
 }

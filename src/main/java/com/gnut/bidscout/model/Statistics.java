@@ -7,6 +7,7 @@ public class Statistics {
     private long impressions;
     private long duplicateImpressions;
     private long expiredImpressions;
+    private long invalidImpressions;
     private float revenue;
     private float ecpm;
     private long requests;
@@ -59,6 +60,14 @@ public class Statistics {
 
     public void setExpiredImpressions(long expiredImpressions) {
         this.expiredImpressions = expiredImpressions;
+    }
+
+    public long getInvalidImpressions() {
+        return invalidImpressions;
+    }
+
+    public void setInvalidImpressions(long invalidImpressions) {
+        this.invalidImpressions = invalidImpressions;
     }
 
     public float getRevenue() {

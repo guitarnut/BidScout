@@ -37,29 +37,52 @@ public class CampaignService {
         }
     }
 
-    public boolean incrementImpressionAndCheckValidTTL(String id, long cb, float cp) {
+    public boolean isValidImpressionTTL(String id, long cb) {
         Optional<Campaign> campaign = campaignDao.findById(id);
         if (campaign.isPresent()) {
-            if (System.currentTimeMillis() - cb > campaign.get().getImpressionExpiry() * 1000) {
-                campaign.get().getStatistics().setExpiredImpressions(campaign.get().getStatistics().getExpiredImpressions() + 1);
-                campaignDao.save(campaign.get());
-                return false;
-            } else {
-                campaign.get().getStatistics().setImpressions(campaign.get().getStatistics().getImpressions() + 1);
-                campaign.get().getStatistics().setRevenue(campaign.get().getStatistics().getRevenue() + cp / 1000);
-               // campaign.get().getStatistics().setEcpm((campaign.get().getStatistics().getEcpm() + cp)campaign.get().getStatistics().getImpressions());
-                campaignDao.save(campaign.get());
+            Campaign c = campaign.get();
+            if (System.currentTimeMillis() - cb <= c.getImpressionExpiry() * 1000) {
                 return true;
             }
         }
-        return true;
+        return false;
+    }
+
+    public void incrementImpression(String id, float cp) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            Campaign c = campaign.get();
+            c.getStatistics().setImpressions(c.getStatistics().getImpressions() + 1);
+            c.getStatistics().setRevenue(c.getStatistics().getRevenue() + cp / 1000);
+            c.getStatistics().setEcpm(((c.getStatistics().getEcpm() + cp / 1000) / c.getStatistics().getImpressions()) * 1000);
+            campaignDao.save(c);
+        }
     }
 
     public void incrementExpiredImpression(String id) {
         Optional<Campaign> campaign = campaignDao.findById(id);
         if (campaign.isPresent()) {
-            campaign.get().getStatistics().setExpiredImpressions(campaign.get().getStatistics().getExpiredImpressions() + 1);
-            campaignDao.save(campaign.get());
+            Campaign c = campaign.get();
+            c.getStatistics().setExpiredImpressions(c.getStatistics().getExpiredImpressions() + 1);
+            campaignDao.save(c);
+        }
+    }
+
+    public void incrementInvalidImpression(String id) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            Campaign c = campaign.get();
+            c.getStatistics().setInvalidImpressions(c.getStatistics().getInvalidImpressions() + 1);
+            campaignDao.save(c);
+        }
+    }
+
+    public void incrementDuplicateImpression(String id) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            Campaign c = campaign.get();
+            c.getStatistics().setDuplicateImpressions(c.getStatistics().getDuplicateImpressions() + 1);
+            campaignDao.save(c);
         }
     }
 

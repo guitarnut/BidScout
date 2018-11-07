@@ -1,7 +1,6 @@
 package com.gnut.bidscout.service;
 
 import com.gnut.bidscout.db.CreativeDao;
-import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.Creative;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,17 +52,38 @@ public class CreativeService {
     public void incrementImpression(String id, float cp) {
         Optional<Creative> creative = creativeDao.findById(id);
         if (creative.isPresent()) {
-            creative.get().getStatistics().setImpressions(creative.get().getStatistics().getImpressions() + 1);
-            creative.get().getStatistics().setRevenue(creative.get().getStatistics().getRevenue() + cp / 1000);
-            creativeDao.save(creative.get());
+            Creative c = creative.get();
+            c.getStatistics().setImpressions(c.getStatistics().getImpressions() + 1);
+            c.getStatistics().setRevenue(c.getStatistics().getRevenue() + cp / 1000);
+            c.getStatistics().setEcpm(((c.getStatistics().getEcpm() + cp / 1000) / c.getStatistics().getImpressions()) * 1000);
+            creativeDao.save(c);
+        }
+    }
+
+    public void incrementInvalidImpression(String id) {
+        Optional<Creative> creative = creativeDao.findById(id);
+        if (creative.isPresent()) {
+            Creative c = creative.get();
+            c.getStatistics().setInvalidImpressions(c.getStatistics().getInvalidImpressions() + 1);
+            creativeDao.save(c);
+        }
+    }
+
+    public void incrementDuplicateImpression(String id) {
+        Optional<Creative> creative = creativeDao.findById(id);
+        if (creative.isPresent()) {
+            Creative c = creative.get();
+            c.getStatistics().setDuplicateImpressions(c.getStatistics().getDuplicateImpressions() + 1);
+            creativeDao.save(c);
         }
     }
 
     public void incrementExpiredImpression(String id) {
         Optional<Creative> creative = creativeDao.findById(id);
         if (creative.isPresent()) {
-            creative.get().getStatistics().setExpiredImpressions(creative.get().getStatistics().getExpiredImpressions() + 1);
-            creativeDao.save(creative.get());
+            Creative c = creative.get();
+            c.getStatistics().setExpiredImpressions(c.getStatistics().getExpiredImpressions() + 1);
+            creativeDao.save(c);
         }
     }
 }
