@@ -3,12 +3,15 @@ package com.gnut.bidscout.model;
 import java.util.List;
 
 public class Creative {
+    enum Type {
+       DISPLAY, VAST, VPAID
+    }
     private String id;
     private String name;
+    private Type type;
     private int w;
     private int h;
     private boolean enabled;
-    private String type;
     private List<String> iabCategories;
     private List<Integer> attr;
     private List<Integer> btype;
@@ -17,6 +20,7 @@ public class Creative {
     private String crid;
     private List<String> adDomain;
     private String creativeUrl;
+    private String xml;
     private Limits limits;
     private Requirements requirements;
     private Statistics statistics;
@@ -40,6 +44,14 @@ public class Creative {
         this.name = name;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     public int getW() {
         return w;
     }
@@ -54,14 +66,6 @@ public class Creative {
 
     public void setH(int h) {
         this.h = h;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public List<String> getIabCategories() {
@@ -134,6 +138,14 @@ public class Creative {
 
     public void setCreativeUrl(String creativeUrl) {
         this.creativeUrl = creativeUrl;
+    }
+
+    public String getXml() {
+        return xml;
+    }
+
+    public void setXml(String xml) {
+        this.xml = xml;
     }
 
     public Limits getLimits() {
