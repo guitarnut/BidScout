@@ -20,17 +20,16 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public Users login(
-            @RequestParam String username,
-            @RequestParam String password
+            @RequestBody Users user
     ) {
-        return service.login(username, password);
+        return service.login(user.getUsername());
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/create/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/create/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public Users create(
             @PathVariable("id") String id,
@@ -41,7 +40,7 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/get/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/get/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public Users get(
             @PathVariable("id") String id,
@@ -52,7 +51,7 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public void delete(
             @PathVariable("id") String id,
@@ -62,7 +61,7 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public Users update(
             @PathVariable("id") String id,

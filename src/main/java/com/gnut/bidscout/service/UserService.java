@@ -17,7 +17,7 @@ public class UserService {
         this.usersDao = usersDao;
     }
 
-    public Users login(String username, String password) {
+    public Users login(String username) {
         return usersDao.findByUsername(username);
     }
 
