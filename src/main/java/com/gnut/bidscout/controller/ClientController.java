@@ -23,7 +23,7 @@ public class ClientController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/bid/{id}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/bid/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody public String getBid(
             @PathVariable("id") String id,
             HttpServletResponse response

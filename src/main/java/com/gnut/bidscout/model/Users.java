@@ -23,30 +23,30 @@ public class Users {
     }
 
     @Id
-    private ObjectId _id;
+    private String id;
     private String username;
     private String password;
-    private ArrayList<Role> roles;
+    private List<Role> roles;
     private boolean enabled;
-    private Date created;
-    private Date lastLogin;
-    private String Address;
-    private String City;
-    private String State;
+    private long created;
+    private long lastLogin;
+    private String address;
+    private String city;
+    private String state;
     private String zip;
     private String email;
     private String phone;
-    private List<ArrayList> ipAccess;
-    private List<ArrayList> uaAccess;
-    private List<ArrayList> dateAccess;
+    private List<String> ipAccess;
+    private List<String> uaAccess;
+    private List<Long> dateAccess;
     private int failedLoginAttemptCount;
 
-    public ObjectId get_id() {
-        return _id;
+    public String getId() {
+        return id;
     }
 
-    public void set_id(ObjectId _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -65,11 +65,11 @@ public class Users {
         this.password = password;
     }
 
-    public ArrayList<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(ArrayList<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
@@ -81,44 +81,44 @@ public class Users {
         this.enabled = enabled;
     }
 
-    public Date getCreated() {
+    public long getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(long created) {
         this.created = created;
     }
 
-    public Date getLastLogin() {
+    public long getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(Date lastLogin) {
+    public void setLastLogin(long lastLogin) {
         this.lastLogin = lastLogin;
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
     public void setAddress(String address) {
-        Address = address;
+        this.address = address;
     }
 
     public String getCity() {
-        return City;
+        return city;
     }
 
     public void setCity(String city) {
-        City = city;
+        this.city = city;
     }
 
     public String getState() {
-        return State;
+        return state;
     }
 
     public void setState(String state) {
-        State = state;
+        this.state = state;
     }
 
     public String getZip() {
@@ -145,27 +145,27 @@ public class Users {
         this.phone = phone;
     }
 
-    public List<ArrayList> getIpAccess() {
+    public List<String> getIpAccess() {
         return ipAccess;
     }
 
-    public void setIpAccess(List<ArrayList> ipAccess) {
+    public void setIpAccess(List<String> ipAccess) {
         this.ipAccess = ipAccess;
     }
 
-    public List<ArrayList> getUaAccess() {
+    public List<String> getUaAccess() {
         return uaAccess;
     }
 
-    public void setUaAccess(List<ArrayList> uaAccess) {
+    public void setUaAccess(List<String> uaAccess) {
         this.uaAccess = uaAccess;
     }
 
-    public List<ArrayList> getDateAccess() {
+    public List<Long> getDateAccess() {
         return dateAccess;
     }
 
-    public void setDateAccess(List<ArrayList> dateAccess) {
+    public void setDateAccess(List<Long> dateAccess) {
         this.dateAccess = dateAccess;
     }
 
