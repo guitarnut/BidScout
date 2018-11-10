@@ -1,6 +1,5 @@
 package com.gnut.bidscout.config;
 
-import com.gnut.bidscout.model.Users;
 import com.gnut.bidscout.service.MongoUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -22,10 +21,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                //.authorizeRequests().anyRequest().hasRole(Users.Role.ADMIN.getValue())
-                .authorizeRequests().antMatchers("/bid/**").authenticated()
-                //.antMatchers("/**").access("hasRole('" + Users.Role.ADMIN.getValue() + "')")
-                //.anyRequest().authenticated()
+                .authorizeRequests().antMatchers("/api/**").authenticated()
+                .and()
+                .authorizeRequests().antMatchers("/user/**").authenticated()
                 .and().httpBasic()
                 .and().sessionManagement().disable();
     }
@@ -45,6 +43,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 /**
  * @Override protected void configure(HttpSecurity http) throws Exception {
  * <p>
+ *     //                .and()
+ * //                .authorizeRequests().antMatchers("/bid/**").hasRole(Users.Role.ADMIN.getValue())
+ *
+ *                 //.antMatchers("/**").access("hasRole('" + Users.Role.ADMIN.getValue() + "')")
+ *                 //.anyRequest().authenticated()
  * http.authorizeRequests()
  * .antMatchers("/login**").permitAll()
  * .antMatchers("/healthcheck**").permitAll()

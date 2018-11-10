@@ -1,7 +1,6 @@
 package com.gnut.bidscout.service;
 
 import com.gnut.bidscout.builder.BidResponseBuilder;
-import com.gnut.bidscout.model.AuctionRecord;
 import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.Creative;
 import com.iab.openrtb.request.BidRequest;

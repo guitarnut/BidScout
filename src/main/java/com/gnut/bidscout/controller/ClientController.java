@@ -4,6 +4,7 @@ import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.Creative;
 import com.gnut.bidscout.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@PreAuthorize("hasRole('ROLE_USER')")
 public class ClientController {
 
     private final ClientService service;
