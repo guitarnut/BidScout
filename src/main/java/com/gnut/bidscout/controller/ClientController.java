@@ -68,6 +68,16 @@ public class ClientController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/campaign/getby/{property}/{value}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody public Campaign getCampaignByValue(
+            @PathVariable("property") String property,
+            @PathVariable("value") String value,
+            HttpServletResponse response
+    ) {
+        return service.getCampaignByProperty(property, value);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/creative/create", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody public String saveCampaign(
             @RequestBody Creative creative,
@@ -82,6 +92,15 @@ public class ClientController {
             HttpServletResponse response
     ) {
         return service.getCreativeNames();
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/creative/all/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody public Map<String, String> getCreativesByCampaign(
+            @PathVariable("id") String campaignId,
+            HttpServletResponse response
+    ) {
+        return service.getCreativeNamesByCampaign(campaignId);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)

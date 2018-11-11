@@ -122,6 +122,10 @@ public class CampaignService {
         return campaignDao.findById(id);
     }
 
+    public Campaign getCampaignWithCreative(String id) {
+        return campaignDao.findByCreativesContains(id);
+    }
+
     public Campaign saveCampaign(Campaign campaign) {
         return campaignDao.save(campaign);
     }

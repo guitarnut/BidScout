@@ -1,5 +1,6 @@
 package com.gnut.bidscout.controller;
 
+import com.gnut.bidscout.model.UserProfile;
 import com.gnut.bidscout.model.Users;
 import com.gnut.bidscout.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +43,12 @@ public class UserController {
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/get/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public Users get(
+    public UserProfile get(
             @PathVariable("id") String id,
             @RequestBody Users user,
             HttpServletResponse response
     ) {
-        return service.getUser(id);
+        return service.getUser(id, user);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)

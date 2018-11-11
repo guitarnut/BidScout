@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CampaignDao extends MongoRepository<Campaign, String> {
     List<Campaign> findAllByEnabled(boolean val);
+    Campaign findByCreativesContains(String id);
 }

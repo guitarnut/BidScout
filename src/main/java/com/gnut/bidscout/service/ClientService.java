@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,6 +41,8 @@ public class ClientService {
         this.campaignService = campaignService;
         this.creativeService = creativeService;
     }
+
+    // Todo: Remove objectmapper
 
     public String saveCampaign(Campaign campaign) {
         Campaign savedCampaign = campaignService.saveCampaign(campaign);
@@ -112,4 +115,27 @@ public class ClientService {
         }
         return "";
     }
+
+    public Map<String, String> getCreativeNamesByCampaign(String campaignId) {
+        Optional<Campaign> campaign = campaignService.getCampaign(campaignId);
+        final Map<String, String> results = new HashMap<>();
+        if(campaign.isPresent()) {
+            campaign.get().getCreatives().forEach(creativeId->{
+                Optional<Creative> creative = creativeService.getCreative(creativeId);
+                if (creative.isPresent()) {
+                    results.put(creative.get().getId(), creative.get().getName());
+                }
+            });
+        }
+        return results;
+    }
+
+    public Campaign getCampaignByProperty(String property, String value) {
+        switch(property) {
+            case "creative":
+                return campaignService.getCampaignWithCreative(value);
+        }
+        return null;
+    }
 }
+

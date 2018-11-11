@@ -1,36 +1,13 @@
 package com.gnut.bidscout.model;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class Users {
-    public enum Role {
-        ADMIN("ADMIN"), USER("USER");
-
-        private String value;
-
-        Role(String v) {
-            value = v;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
-    @Id
+public class UserProfile {
     private String id;
     private String username;
-    private String password;
     private String firstName;
     private String lastName;
-    private List<Role> roles;
-    private boolean enabled;
-    private long created;
+    private List<Users.Role> roles;
     private long lastLogin;
     private String address;
     private String city;
@@ -38,10 +15,21 @@ public class Users {
     private String zip;
     private String email;
     private String phone;
-    private List<String> ipAccess;
-    private List<String> uaAccess;
-    private List<Long> dateAccess;
-    private int failedLoginAttemptCount;
+
+    public UserProfile(Users u) {
+        id = u.getId();
+        username = u.getUsername();
+        firstName = u.getFirstName();
+        lastName = u.getLastName();
+        roles = u.getRoles();
+        lastLogin = u.getLastLogin();
+        address = u.getAddress();
+        city = u.getCity();
+        state = u.getState();
+        zip = u.getZip();
+        email = u.getEmail();
+        phone = u.getPhone();
+    }
 
     public String getId() {
         return id;
@@ -57,14 +45,6 @@ public class Users {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFirstName() {
@@ -83,28 +63,12 @@ public class Users {
         this.lastName = lastName;
     }
 
-    public List<Role> getRoles() {
+    public List<Users.Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(List<Users.Role> roles) {
         this.roles = roles;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public long getCreated() {
-        return created;
-    }
-
-    public void setCreated(long created) {
-        this.created = created;
     }
 
     public long getLastLogin() {
@@ -161,37 +125,5 @@ public class Users {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public List<String> getIpAccess() {
-        return ipAccess;
-    }
-
-    public void setIpAccess(List<String> ipAccess) {
-        this.ipAccess = ipAccess;
-    }
-
-    public List<String> getUaAccess() {
-        return uaAccess;
-    }
-
-    public void setUaAccess(List<String> uaAccess) {
-        this.uaAccess = uaAccess;
-    }
-
-    public List<Long> getDateAccess() {
-        return dateAccess;
-    }
-
-    public void setDateAccess(List<Long> dateAccess) {
-        this.dateAccess = dateAccess;
-    }
-
-    public int getFailedLoginAttemptCount() {
-        return failedLoginAttemptCount;
-    }
-
-    public void setFailedLoginAttemptCount(int failedLoginAttemptCount) {
-        this.failedLoginAttemptCount = failedLoginAttemptCount;
     }
 }

@@ -1,7 +1,9 @@
 package com.gnut.bidscout.service;
 
 import com.gnut.bidscout.db.UsersDao;
+import com.gnut.bidscout.model.UserProfile;
 import com.gnut.bidscout.model.Users;
+import com.iab.openrtb.request.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +34,9 @@ public class UserService {
         return user;
     }
 
-    public Users getUser(String id) {
+    public UserProfile getUser(String id, Users u) {
         Optional<Users> user =  usersDao.findById(id);
-        return user.isPresent() ? user.get() : null;
+        // Todo: Verify user object with found user record
+        return user.isPresent() ? new UserProfile(user.get()) : null;
     }
 }
