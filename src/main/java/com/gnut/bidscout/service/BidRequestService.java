@@ -72,13 +72,17 @@ public class BidRequestService {
         Set<BidRequestValidator.Violation> violations = bidRequestValidator.validateBidRequest();
 
         if (violations.isEmpty()) {
-            final Optional<EligibleCampaignData> data = campaignService.targetCampaign(publisher, bidRequest, request);
+            final Optional<EligibleCampaignData> data = campaignService.targetCampaign(bidder, publisher, bidRequest, request);
 
             if (data.isPresent() && !data.get().getCreatives().isEmpty()) {
                 final Campaign campaign = data.get().getCampaign();
                 final Creative creative = data.get().getCreatives().iterator().next();
                 final double bp = Math.random() * (creative.getMaxBid() - creative.getMinBid()) + creative.getMinBid();
                 final BigDecimal price = new BigDecimal(bp).setScale(2, RoundingMode.HALF_UP);
+
+                record.setOwner(campaign.getOwner());
+                record.setCampaign(campaign.getId());
+                record.setCreative(creative.getId());
 
                 Statistics campaignStats = campaign.getStatistics();
                 if(campaignStats == null) {

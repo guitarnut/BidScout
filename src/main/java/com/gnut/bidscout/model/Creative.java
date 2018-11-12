@@ -7,6 +7,7 @@ public class Creative {
        DISPLAY, VAST, VPAID
     }
     private String id;
+    private String owner;
     private String name;
     private Type type;
     private int w;
@@ -34,6 +35,14 @@ public class Creative {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public String getName() {

@@ -16,6 +16,9 @@ public class UserProfile {
     private String email;
     private String phone;
 
+    public UserProfile() {
+    }
+
     public UserProfile(Users u) {
         id = u.getId();
         username = u.getUsername();

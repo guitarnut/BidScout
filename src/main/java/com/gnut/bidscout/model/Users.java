@@ -1,5 +1,6 @@
 package com.gnut.bidscout.model;
 
+import com.iab.openrtb.request.User;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
@@ -42,6 +43,18 @@ public class Users {
     private List<String> uaAccess;
     private List<Long> dateAccess;
     private int failedLoginAttemptCount;
+
+    public void update(UserProfile newData) {
+        username = newData.getUsername();
+        firstName = newData.getFirstName();
+        lastName = newData.getLastName();
+        address = newData.getAddress();
+        city = newData.getCity();
+        state = newData.getState();
+        zip = newData.getZip();
+        email = newData.getEmail();
+        phone = newData.getPhone();
+    }
 
     public String getId() {
         return id;

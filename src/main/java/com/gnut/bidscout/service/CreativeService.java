@@ -20,16 +20,16 @@ public class CreativeService {
         return creativeDao.save(creative);
     }
 
-    public Optional<Creative> getCreative(String id) {
-        return creativeDao.findById(id);
+    public Creative getCreative(String account, String id) {
+        return creativeDao.findByIdAndOwner(id, account);
     }
 
     public Iterable<Creative> getCreatives(List<String> ids) {
         return creativeDao.findAllById(ids);
     }
 
-    public Map<String, String> getCreativeNames() {
-        List<Creative> creatives = creativeDao.findAll();
+    public Map<String, String> getCreativeNames(String account) {
+        List<Creative> creatives = creativeDao.findAllByOwner(account);
         if (creatives.isEmpty()) {
             return Collections.emptyMap();
         } else {

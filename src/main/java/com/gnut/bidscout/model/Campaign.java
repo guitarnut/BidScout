@@ -7,6 +7,7 @@ import java.util.List;
 public class Campaign {
     @Id
     private String id;
+    private String owner;
     private boolean enabled;
     private String publisher;
     private String cid;
@@ -27,6 +28,14 @@ public class Campaign {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public boolean isEnabled() {

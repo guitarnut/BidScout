@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 public class AuctionRecord {
     @Id
     private String id;
+    private String owner;
     private String ip;
     private String userAgent;
     private long requestTimestamp;
@@ -19,6 +20,8 @@ public class AuctionRecord {
     private String cookies;
     private String host;
     private String xForwardedFor;
+    private String campaign;
+    private String creative;
 
     public String getId() {
         return id;
@@ -26,6 +29,14 @@ public class AuctionRecord {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public String getIp() {
@@ -124,22 +135,19 @@ public class AuctionRecord {
         this.xForwardedFor = xForwardedFor;
     }
 
-    @Override
-    public String toString() {
-        return "AuctionRecord{" +
-                "id='" + id + '\'' +
-                ", ip='" + ip + '\'' +
-                ", userAgent='" + userAgent + '\'' +
-                ", requestTimestamp=" + requestTimestamp +
-                ", responseTimestamp=" + responseTimestamp +
-                ", impressionTimestamp=" + impressionTimestamp +
-                ", bidRequestId='" + bidRequestId + '\'' +
-                ", bidRequest=" + bidRequest +
-                ", bidResponse=" + bidResponse +
-                ", markup='" + markup + '\'' +
-                ", cookies='" + cookies + '\'' +
-                ", host='" + host + '\'' +
-                ", xForwardedFor='" + xForwardedFor + '\'' +
-                '}';
+    public String getCampaign() {
+        return campaign;
+    }
+
+    public void setCampaign(String campaign) {
+        this.campaign = campaign;
+    }
+
+    public String getCreative() {
+        return creative;
+    }
+
+    public void setCreative(String creative) {
+        this.creative = creative;
     }
 }

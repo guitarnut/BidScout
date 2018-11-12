@@ -28,9 +28,13 @@ public class UserService {
     public void deleteUser(String id) {
     }
 
-    public Users updateUser(String id, Users user) {
-        usersDao.save(user);
-        return user;
+    public UserProfile updateUser(String id, UserProfile updatedUser) {
+        Optional<Users> user = usersDao.findById(id);
+        if(user.isPresent()) {
+            user.get().update(updatedUser);
+            usersDao.save(user.get());
+        }
+        return updatedUser;
     }
 
     public UserProfile getUser(String id, Users u) {

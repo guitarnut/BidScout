@@ -64,9 +64,9 @@ public class UserController {
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public Users update(
+    public UserProfile update(
             @PathVariable("id") String id,
-            @RequestBody Users user,
+            @RequestBody UserProfile user,
             HttpServletResponse response
     ) {
         return service.updateUser(id, user);

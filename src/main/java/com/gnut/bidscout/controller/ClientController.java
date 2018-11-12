@@ -23,92 +23,113 @@ public class ClientController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/bid/{id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/bid/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody public String getBid(
             @PathVariable("id") String id,
+            @PathVariable("account") String account,
             HttpServletResponse response
     ) {
-        return service.getBid(id);
+        return service.getBid(account, id);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/campaign/create", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/campaign/create/{account}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody public String saveCampaign(
+            @PathVariable("account") String account,
             @RequestBody Campaign campaign,
             HttpServletResponse response
     ) {
-        return service.saveCampaign(campaign);
+        return service.saveCampaign(account, campaign);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/campaign/all", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/campaign/all/{account}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody public Map<String, String> getCampaigns(
+            @PathVariable("account") String account,
             HttpServletResponse response
     ) {
-        return service.getCampaignNames();
+        return service.getCampaignNames(account);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/campaign/add/creative", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/campaign/add/creative/{account}/{campaignId}/{creativeId}", method = RequestMethod.POST, produces = "application/json")
     public void addCreativeToCampaign(
-            @RequestParam String campaignId,
-            @RequestParam String creativeId,
+            @PathVariable("account") String account,
+            @PathVariable("campaignId") String campaignId,
+            @PathVariable("creativeId") String creativeId,
             HttpServletResponse response
     ) {
-        service.addCreativeToCampaign(campaignId, creativeId);
+        service.addCreativeToCampaign(account, campaignId, creativeId);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/campaign/get/{id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/campaign/remove/creative/{account}/{campaignId}/{creativeId}", method = RequestMethod.POST, produces = "application/json")
+    public Campaign removeCreativeFromCampaign(
+            @PathVariable("account") String account,
+            @PathVariable("campaignId") String campaignId,
+            @PathVariable("creativeId") String creativeId,
+            HttpServletResponse response
+    ) {
+        return service.removeCreativeFromCampaign(account, campaignId, creativeId);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/campaign/get/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody public String getCampaign(
+            @PathVariable("account") String account,
             @PathVariable("id") String campaignId,
             HttpServletResponse response
     ) {
-        return service.getCampaign(campaignId);
+        return service.getCampaign(account, campaignId);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/campaign/getby/{property}/{value}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/campaign/getby/{account}/{property}/{value}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody public Campaign getCampaignByValue(
+            @PathVariable("account") String account,
             @PathVariable("property") String property,
             @PathVariable("value") String value,
             HttpServletResponse response
     ) {
-        return service.getCampaignByProperty(property, value);
+        return service.getCampaignByProperty(account, property, value);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/creative/create", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/creative/create/{account}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody public String saveCampaign(
             @RequestBody Creative creative,
+            @PathVariable("account") String account,
             HttpServletResponse response
     ) {
-        return service.saveCreative(creative);
+        return service.saveCreative(account, creative);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/creative/all", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/creative/all/{account}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody public Map<String, String> getCreatives(
+            @PathVariable("account") String account,
             HttpServletResponse response
     ) {
-        return service.getCreativeNames();
+        return service.getCreativeNames(account);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/creative/all/{id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/creative/all/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody public Map<String, String> getCreativesByCampaign(
             @PathVariable("id") String campaignId,
+            @PathVariable("account") String account,
             HttpServletResponse response
     ) {
-        return service.getCreativeNamesByCampaign(campaignId);
+        return service.getCreativeNamesByCampaign(account, campaignId);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/creative/get/{id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/creative/get/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody public String getCreative(
             @PathVariable("id") String creativeId,
+            @PathVariable("account") String account,
             HttpServletResponse response
     ) {
-        return service.getCreative(creativeId);
+        return service.getCreative(account, creativeId);
     }
 }

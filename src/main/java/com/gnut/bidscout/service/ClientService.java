@@ -44,7 +44,8 @@ public class ClientService {
 
     // Todo: Remove objectmapper
 
-    public String saveCampaign(Campaign campaign) {
+    public String saveCampaign(String account, Campaign campaign) {
+        campaign.setOwner(account);
         Campaign savedCampaign = campaignService.saveCampaign(campaign);
         if (savedCampaign != null) {
             try {
@@ -56,7 +57,8 @@ public class ClientService {
         return "";
     }
 
-    public String saveCreative(Creative creative) {
+    public String saveCreative(String account, Creative creative) {
+        creative.setOwner(account);
         Creative savedCreative = creativeService.saveCreative(creative);
         if (savedCreative != null) {
             try {
@@ -68,17 +70,17 @@ public class ClientService {
         return "";
     }
 
-    public Map<String, String> getCampaignNames() {
-        return campaignService.getCampaignNames();
+    public Map<String, String> getCampaignNames(String owner) {
+        return campaignService.getCampaignNames(owner);
     }
 
-    public Map<String, String> getCreativeNames() {
-        return creativeService.getCreativeNames();
+    public Map<String, String> getCreativeNames(String account) {
+        return creativeService.getCreativeNames(account);
     }
 
-    public String getBid(String id) {
-        AuctionRecord record = auctionDao.findFirstByBidRequestId(id);
-        if (record != null) {
+    public String getBid(String account, String id) {
+        AuctionRecord record = auctionDao.findFirstByBidRequestIdAndOwner(id, account);
+        if (record != null && record.getOwner().equals(account)) {
             try {
                 return objectMapper.writeValueAsString(record);
             } catch (IOException ex) {
@@ -88,15 +90,19 @@ public class ClientService {
         return "";
     }
 
-    public void addCreativeToCampaign(String campaignId, String creativeId) {
-        campaignService.addCreativeToCampaign(campaignId, creativeId);
+    public void addCreativeToCampaign(String owner, String campaignId, String creativeId) {
+        campaignService.addCreativeToCampaign(owner, campaignId, creativeId);
     }
 
-    public String getCampaign(String campaignId) {
-        Optional<Campaign> campaign = campaignService.getCampaign(campaignId);
-        if (campaign.isPresent()) {
+    public Campaign removeCreativeFromCampaign(String owner, String campaignId, String creativeId) {
+        return campaignService.removeCreativeFromCampaign(owner, campaignId, creativeId);
+    }
+
+    public String getCampaign(String account, String campaignId) {
+        Campaign campaign = campaignService.getCampaign(account, campaignId);
+        if (campaign != null) {
             try {
-                return objectMapper.writeValueAsString(campaign.get());
+                return objectMapper.writeValueAsString(campaign);
             } catch (IOException ex) {
                 //
             }
@@ -104,11 +110,11 @@ public class ClientService {
         return "";
     }
 
-    public String getCreative(String creativeId) {
-        Optional<Creative> creative = creativeService.getCreative(creativeId);
-        if (creative.isPresent()) {
+    public String getCreative(String account, String creativeId) {
+        Creative creative = creativeService.getCreative(account, creativeId);
+        if (creative != null) {
             try {
-                return objectMapper.writeValueAsString(creative.get());
+                return objectMapper.writeValueAsString(creative);
             } catch (IOException ex) {
                 //
             }
@@ -116,24 +122,24 @@ public class ClientService {
         return "";
     }
 
-    public Map<String, String> getCreativeNamesByCampaign(String campaignId) {
-        Optional<Campaign> campaign = campaignService.getCampaign(campaignId);
+    public Map<String, String> getCreativeNamesByCampaign(String account, String campaignId) {
+        Campaign campaign = campaignService.getCampaign(account, campaignId);
         final Map<String, String> results = new HashMap<>();
-        if(campaign.isPresent()) {
-            campaign.get().getCreatives().forEach(creativeId->{
-                Optional<Creative> creative = creativeService.getCreative(creativeId);
-                if (creative.isPresent()) {
-                    results.put(creative.get().getId(), creative.get().getName());
+        if(campaign != null) {
+            campaign.getCreatives().forEach(creativeId->{
+                Creative creative = creativeService.getCreative(account, creativeId);
+                if (creative != null) {
+                    results.put(creative.getId(), creative.getName());
                 }
             });
         }
         return results;
     }
 
-    public Campaign getCampaignByProperty(String property, String value) {
+    public Campaign getCampaignByProperty(String account, String property, String value) {
         switch(property) {
             case "creative":
-                return campaignService.getCampaignWithCreative(value);
+                return campaignService.getCampaignWithCreative(account, value);
         }
         return null;
     }

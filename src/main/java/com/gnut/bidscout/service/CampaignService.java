@@ -86,24 +86,35 @@ public class CampaignService {
         }
     }
 
-    public void addCreativeToCampaign(String campaignId, String creativeId) {
-        Optional<Campaign> campaign = campaignDao.findById(campaignId);
-        if (campaign.isPresent()) {
-            Optional<Creative> creative = creativeService.getCreative(creativeId);
-            if (creative.isPresent()) {
-                List<String> c = campaign.get().getCreatives();
+    public void addCreativeToCampaign(String owner, String campaignId, String creativeId) {
+        Campaign campaign = campaignDao.findByIdAndOwner(campaignId, owner);
+        if (campaign != null) {
+            Creative creative = creativeService.getCreative(owner, creativeId);
+            if (creative != null) {
+                List<String> c = campaign.getCreatives();
                 if (c == null) {
                     c = new ArrayList<>();
                 }
-                c.add(creative.get().getId());
-                campaign.get().setCreatives(c);
-                campaignDao.save(campaign.get());
+                c.add(creative.getId());
+                campaign.setCreatives(c);
+                campaignDao.save(campaign);
             }
         }
     }
 
-    public Optional<EligibleCampaignData> targetCampaign(String publisher, BidRequest bidRequest, HttpServletRequest request) {
-        final Optional<Campaign> campaign = selectCampaign(bidRequest);
+    public Campaign removeCreativeFromCampaign(String owner, String campaignId, String creativeId) {
+        Campaign campaign = campaignDao.findByIdAndOwner(campaignId, owner);
+        if (campaign != null) {
+            if(campaign.getCreatives() != null) {
+                campaign.getCreatives().remove(creativeId);
+                campaignDao.save(campaign);
+            }
+        }
+        return campaign;
+    }
+
+    public Optional<EligibleCampaignData> targetCampaign(String owner, String publisher, BidRequest bidRequest, HttpServletRequest request) {
+        final Optional<Campaign> campaign = selectCampaign(owner, bidRequest);
         if (campaign.isPresent()) {
             final RequestTargetingData targetingData = targetingService.generateTargetingData(publisher, bidRequest, request);
 
@@ -118,20 +129,20 @@ public class CampaignService {
         return Optional.empty();
     }
 
-    public Optional<Campaign> getCampaign(String id) {
-        return campaignDao.findById(id);
+    public Campaign getCampaign(String account, String id) {
+        return campaignDao.findByIdAndOwner(id, account);
     }
 
-    public Campaign getCampaignWithCreative(String id) {
-        return campaignDao.findByCreativesContains(id);
+    public Campaign getCampaignWithCreative(String owner, String id) {
+        return campaignDao.findByCreativesContainsAndOwner(id, owner);
     }
 
     public Campaign saveCampaign(Campaign campaign) {
         return campaignDao.save(campaign);
     }
 
-    public Map<String, String> getCampaignNames() {
-        List<Campaign> campaigns = campaignDao.findAll();
+    public Map<String, String> getCampaignNames(String owner) {
+        List<Campaign> campaigns = campaignDao.findAllByOwner(owner);
         if (campaigns.isEmpty()) {
             return Collections.emptyMap();
         } else {
@@ -143,13 +154,12 @@ public class CampaignService {
         }
     }
 
-    private Optional<Campaign> selectCampaign(BidRequest bidRequest) {
+    private Optional<Campaign> selectCampaign(String owner, BidRequest bidRequest) {
         // Todo: Target off of request
-        List<Campaign> campaigns = campaignDao.findAllByEnabled(true);
+        List<Campaign> campaigns = campaignDao.findAllByEnabledAndOwner(true, owner);
         if (campaigns.isEmpty()) {
             return null;
         }
         return Optional.of(campaigns.get(0));
     }
-
 }
