@@ -3,11 +3,9 @@ package com.gnut.bidscout.service;
 import com.gnut.bidscout.db.UsersDao;
 import com.gnut.bidscout.model.UserProfile;
 import com.gnut.bidscout.model.Users;
-import com.iab.openrtb.request.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Component
@@ -31,6 +29,7 @@ public class UserService {
     }
 
     public Users updateUser(String id, Users user) {
+        usersDao.save(user);
         return user;
     }
 

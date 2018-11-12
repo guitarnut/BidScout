@@ -20,6 +20,4 @@ Logout
 
 Add application state for login/out state
 
-Add conditional for data views in campaign and creative
-
 Add timeout in api to wipe login creds
