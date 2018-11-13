@@ -30,18 +30,17 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/create/{id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public Users create(
-            @PathVariable("id") String id,
             @RequestBody Users user,
             HttpServletResponse response
     ) {
-        return service.createUser(id, user);
+        return service.createUser(user, response);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/get/{id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/account/get/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public UserProfile get(
             @PathVariable("id") String id,
@@ -52,7 +51,7 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/account/delete/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public void delete(
             @PathVariable("id") String id,
@@ -62,7 +61,7 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/update/{id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/account/update/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public UserProfile update(
             @PathVariable("id") String id,
