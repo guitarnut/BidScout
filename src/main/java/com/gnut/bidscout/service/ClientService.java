@@ -3,14 +3,13 @@ package com.gnut.bidscout.service;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gnut.bidscout.db.AuctionDao;
-import com.gnut.bidscout.model.AuctionRecord;
-import com.gnut.bidscout.model.Campaign;
-import com.gnut.bidscout.model.Creative;
+import com.gnut.bidscout.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -142,6 +141,14 @@ public class ClientService {
                 return campaignService.getCampaignWithCreative(account, value);
         }
         return null;
+    }
+
+    public List<ClickRecord> getClicks(String account, String bidId) {
+        return clickService.getClicks(account, bidId);
+    }
+
+    public List<ImpressionRecord> getImpressions(String account, String bidId) {
+        return impressionService.getImpressions(account, bidId);
     }
 }
 

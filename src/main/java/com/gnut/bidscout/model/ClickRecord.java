@@ -7,6 +7,7 @@ import java.util.Set;
 public class ClickRecord {
     @Id
     private String id;
+    private String owner;
     private String bidRequestId;
     private String campaign;
     private String creative;
@@ -26,6 +27,14 @@ public class ClickRecord {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public String getBidRequestId() {

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Component
 public class ClickService {
@@ -21,7 +22,12 @@ public class ClickService {
         this.creativeService = creativeService;
     }
 
+    public List<ClickRecord> getClicks(String id, String bidId) {
+        return clickDao.findAllByOwnerAndBidRequestId(id, bidId);
+    }
+
     public void handleRequest(
+            String id,
             HttpServletRequest request,
             HttpServletResponse response,
             String bid,
@@ -30,6 +36,7 @@ public class ClickService {
             String cb
     ) {
         ClickRecord record = new ClickRecord();
+        record.setOwner(id);
         record.setClickTimestamp(System.currentTimeMillis());
         record.setIp(request.getRemoteUser());
         record.setUserAgent(request.getHeader("User-Agent"));

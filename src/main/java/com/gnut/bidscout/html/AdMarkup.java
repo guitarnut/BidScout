@@ -42,6 +42,8 @@ public class AdMarkup {
         StringBuilder imp = new StringBuilder();
         imp.append("http://localhost:8080/imp")
                 .append("/")
+                .append(campaign.getOwner())
+                .append("/")
                 .append(bidRequestId)
                 .append("/")
                 .append(campaign.getId())
@@ -57,6 +59,8 @@ public class AdMarkup {
 
         StringBuilder click = new StringBuilder();
         click.append("http://localhost:8080/click")
+                .append("/")
+                .append(campaign.getOwner())
                 .append("/")
                 .append(bidRequestId)
                 .append("/")

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Component
 public class ImpressionService {
@@ -32,7 +33,12 @@ public class ImpressionService {
         this.impressionCache = impressionCache;
     }
 
+    public List<ImpressionRecord> getImpressions(String id, String bidId) {
+        return impressionDao.findAllByOwnerAndBidRequestId(id, bidId);
+    }
+
     public void handleRequest(
+            String id,
             HttpServletRequest request,
             HttpServletResponse response,
             String bid,
@@ -43,6 +49,7 @@ public class ImpressionService {
             String cb
     ) {
         ImpressionRecord record = new ImpressionRecord();
+        record.setOwner(id);
         record.setImpressionTimestamp(System.currentTimeMillis());
         record.setIp(request.getRemoteUser());
         record.setUserAgent(request.getHeader("User-Agent"));

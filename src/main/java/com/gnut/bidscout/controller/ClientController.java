@@ -1,13 +1,16 @@
 package com.gnut.bidscout.controller;
 
 import com.gnut.bidscout.model.Campaign;
+import com.gnut.bidscout.model.ClickRecord;
 import com.gnut.bidscout.model.Creative;
+import com.gnut.bidscout.model.ImpressionRecord;
 import com.gnut.bidscout.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,6 +33,26 @@ public class ClientController {
             HttpServletResponse response
     ) {
         return service.getBid(account, id);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/impressions/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody public List<ImpressionRecord> getImpressions(
+            @PathVariable("id") String id,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        return service.getImpressions(account, id);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/clicks/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody public List<ClickRecord> getClicks(
+            @PathVariable("id") String id,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        return service.getClicks(account, id);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)

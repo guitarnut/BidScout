@@ -18,8 +18,9 @@ public class ImpressionController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value="/{bid}/{campaign}/{creative}/{bidprice}/{cp}", method = RequestMethod.GET)
+    @RequestMapping(value="/{id}/{bid}/{campaign}/{creative}/{bidprice}/{cp}", method = RequestMethod.GET)
     public void handleImp(
+            @PathVariable(value = "id") String id,
             @PathVariable(value = "bid") String bid,
             @PathVariable(value = "campaign") String campaign,
             @PathVariable(value = "creative") String creative,
@@ -29,6 +30,6 @@ public class ImpressionController {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        service.handleRequest(request, response, bid, campaign, creative, bidprice, cp, cb);
+        service.handleRequest(id, request, response, bid, campaign, creative, bidprice, cp, cb);
     }
 }

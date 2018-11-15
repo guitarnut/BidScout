@@ -2,10 +2,6 @@ Todo:
 
 Remove object mapper
 
-Add account value to creatives and campaigns
-
-Generate and update user
-
 Update campaign
 
 Update creative
@@ -16,8 +12,4 @@ Support video bidding (paste vast, xml)
 
 Support custom ad markup for display, but still inject pixels
 
-Logout
-
-Add application state for login/out state
-
-Add timeout in api to wipe login creds
+Generate endpoint in UI for bidder
