@@ -148,6 +148,7 @@ public class CampaignService {
         } else {
             final Map<String, String> results = new HashMap<>();
             campaigns.forEach(c -> {
+
                 results.put(c.getId(), c.getName());
             });
             return results;
@@ -158,7 +159,7 @@ public class CampaignService {
         // Todo: Target off of request
         List<Campaign> campaigns = campaignDao.findAllByEnabledAndOwner(true, owner);
         if (campaigns.isEmpty()) {
-            return null;
+            return Optional.empty();
         }
         return Optional.of(campaigns.get(0));
     }

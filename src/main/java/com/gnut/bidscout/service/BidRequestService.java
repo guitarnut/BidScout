@@ -8,6 +8,7 @@ import com.gnut.bidscout.db.AuctionDao;
 import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.rtb.BidRequestValidator;
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
 import com.iab.openrtb.request.BidRequest;
 import com.iab.openrtb.response.BidResponse;
@@ -53,18 +54,23 @@ public class BidRequestService {
     }
 
     public String handleRequest(String bidder, String publisher, HttpServletRequest request, HttpServletResponse response) {
+        if(Strings.isNullOrEmpty(publisher)) {
+            publisher = "";
+        }
+
         final BidRequest bidRequest;
         AuctionRecord record = new AuctionRecord();
         try {
             bidRequest = objectMapper.readValue(stringifyPostData(request), BidRequest.class);
             record.setRequestTimestamp(System.currentTimeMillis());
-            record.setIp(request.getRemoteUser());
+            record.setIp(request.getRemoteAddr());
             record.setUserAgent(request.getHeader("User-Agent"));
             record.setCookies(request.getHeader("Cookie"));
             record.setxForwardedFor(request.getHeader("X-Forwarded-For"));
             record.setHost(request.getHeader("Host"));
             record.setBidRequest(bidRequest);
             record.setBidRequestId(bidRequest.getId());
+            record.setPublisher(publisher);
         } catch (IOException ex) {
             return generateNoContentResponse(response);
         }

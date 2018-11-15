@@ -51,7 +51,7 @@ public class ImpressionService {
         ImpressionRecord record = new ImpressionRecord();
         record.setOwner(id);
         record.setImpressionTimestamp(System.currentTimeMillis());
-        record.setIp(request.getRemoteUser());
+        record.setIp(request.getRemoteAddr());
         record.setUserAgent(request.getHeader("User-Agent"));
         record.setCookies(request.getHeader("Cookie"));
         record.setxForwardedFor(request.getHeader("X-Forwarded-For"));

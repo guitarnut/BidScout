@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 public class AuctionRecord {
     @Id
     private String id;
+    private String publisher;
     private String owner;
     private String ip;
     private String userAgent;
@@ -29,6 +30,14 @@ public class AuctionRecord {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
 
     public String getOwner() {

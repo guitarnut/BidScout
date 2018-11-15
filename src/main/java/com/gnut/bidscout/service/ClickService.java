@@ -38,7 +38,7 @@ public class ClickService {
         ClickRecord record = new ClickRecord();
         record.setOwner(id);
         record.setClickTimestamp(System.currentTimeMillis());
-        record.setIp(request.getRemoteUser());
+        record.setIp(request.getRemoteAddr());
         record.setUserAgent(request.getHeader("User-Agent"));
         record.setCookies(request.getHeader("Cookie"));
         record.setxForwardedFor(request.getHeader("X-Forwarded-For"));

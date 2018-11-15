@@ -53,6 +53,7 @@ public class AdMarkup {
                 .append(String.valueOf(price))
                 .append("/")
                 .append("${AUCTION_PRICE}")
+                .append("/")
                 .append("?cb=")
                 .append(System.currentTimeMillis())
                 .toString();
