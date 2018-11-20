@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/create", produces = "application/json")
     @ResponseBody
     @ResponseStatus(value=HttpStatus.OK)
     public Users create(
