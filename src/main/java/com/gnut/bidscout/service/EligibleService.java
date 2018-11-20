@@ -27,6 +27,11 @@ public class EligibleService {
     public Set<Creative> getEligibleCreatives(RequestTargetingData targetingData, Campaign campaign) {
         final Set<Creative> eligible = new HashSet<>();
         final Iterable<Creative> creatives = creativeService.getCreatives(campaign.getCreatives());
+
+        if(creatives == null) {
+            return eligible;
+        }
+
         for (Creative c : creatives) {
             if (!c.isEnabled()) {
                 continue;
