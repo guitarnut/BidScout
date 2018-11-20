@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "/user")
-@PreAuthorize("hasRole('ROLE_USER')")
 public class UserController {
     private final UserService service;
 
@@ -20,6 +19,7 @@ public class UserController {
         this.service = service;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -39,6 +39,7 @@ public class UserController {
         return service.createUser(user, response);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/account/get/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -50,6 +51,7 @@ public class UserController {
         return service.getUser(id, user);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/account/delete/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -60,6 +62,7 @@ public class UserController {
         service.deleteUser(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/account/update/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
