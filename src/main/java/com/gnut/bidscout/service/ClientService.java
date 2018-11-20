@@ -124,19 +124,21 @@ public class ClientService {
     public Map<String, String> getCreativeNamesByCampaign(String account, String campaignId) {
         Campaign campaign = campaignService.getCampaign(account, campaignId);
         final Map<String, String> results = new HashMap<>();
-        if(campaign != null) {
-            campaign.getCreatives().forEach(creativeId->{
-                Creative creative = creativeService.getCreative(account, creativeId);
-                if (creative != null) {
-                    results.put(creative.getId(), creative.getName());
-                }
-            });
+        if (campaign != null) {
+            if(campaign.getCreatives() != null) {
+                campaign.getCreatives().forEach(creativeId -> {
+                    Creative creative = creativeService.getCreative(account, creativeId);
+                    if (creative != null) {
+                        results.put(creative.getId(), creative.getName());
+                    }
+                });
+            }
         }
         return results;
     }
 
     public Campaign getCampaignByProperty(String account, String property, String value) {
-        switch(property) {
+        switch (property) {
             case "creative":
                 return campaignService.getCampaignWithCreative(account, value);
         }

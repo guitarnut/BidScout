@@ -1,5 +1,8 @@
 package com.gnut.bidscout.model;
 
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +16,8 @@ public class Requirements {
     private List<String> publisherBlacklist;
     private List<String> domainBlacklist;
     private List<String> bundleBlacklist;
+    @Field
+    private List<String> dealIds = Collections.emptyList();
     private boolean mobile;
     private boolean desktop;
     private boolean inapp;
@@ -90,6 +95,14 @@ public class Requirements {
 
     public void setBundleBlacklist(List<String> bundleBlacklist) {
         this.bundleBlacklist = bundleBlacklist;
+    }
+
+    public List<String> getDealIds() {
+        return dealIds;
+    }
+
+    public void setDealIds(List<String> dealIds) {
+        this.dealIds = dealIds;
     }
 
     public boolean isMobile() {

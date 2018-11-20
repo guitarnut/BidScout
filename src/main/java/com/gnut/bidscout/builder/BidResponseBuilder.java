@@ -3,6 +3,7 @@ package com.gnut.bidscout.builder;
 import com.gnut.bidscout.html.AdMarkup;
 import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.Creative;
+import com.google.common.base.Strings;
 import com.iab.openrtb.request.BidRequest;
 import com.iab.openrtb.request.Imp;
 import com.iab.openrtb.response.Bid;
@@ -31,7 +32,8 @@ public class BidResponseBuilder {
             BidRequest bidRequest,
             Imp selectedImpression,
             Campaign campaign,
-            Creative creative
+            Creative creative,
+            String dealId
     ) {
         final Bid bid = new Bid();
         bid.setId(selectedImpression.getId());
@@ -46,6 +48,10 @@ public class BidResponseBuilder {
         bid.setH(creative.getH());
         bid.setPrice(price);
         bid.setAdm(adMarkup.generateMarkup(price, bidRequest.getId(), campaign, creative));
+
+        if(!Strings.isNullOrEmpty(dealId)) {
+            bid.setDealid(dealId);
+        }
 
         final SeatBid seatBid = new SeatBid();
         seatBid.setSeat(campaign.getSeat());

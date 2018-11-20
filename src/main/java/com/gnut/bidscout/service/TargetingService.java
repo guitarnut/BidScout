@@ -49,6 +49,10 @@ public class TargetingService {
         data.setBattr(bidRequest.getImp().get(0).getBanner().getBattr());
         data.setBtype(bidRequest.getImp().get(0).getBanner().getBtype());
 
+        if(bidRequest.getImp().get(0).getPmp() != null) {
+            data.setDealIds(bidRequest.getImp().get(0).getPmp().getDeals());
+        }
+
         return data;
     }
 }

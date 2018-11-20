@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
@@ -27,7 +28,7 @@ public class EligibleService {
         final Set<Creative> eligible = new HashSet<>();
         final Iterable<Creative> creatives = creativeService.getCreatives(campaign.getCreatives());
         for (Creative c : creatives) {
-            if(!c.isEnabled()) {
+            if (!c.isEnabled()) {
                 continue;
             }
 
@@ -86,6 +87,19 @@ public class EligibleService {
 
     public boolean isEligible(RequestTargetingData targetingData, Requirements filter) {
         final Date now = new Date();
+
+        // deal targeting
+        if (filter.getDealIds() != null && !filter.getDealIds().isEmpty()) {
+            final AtomicBoolean dealMatch = new AtomicBoolean(false);
+            targetingData.getDealIds().forEach(d -> {
+                if (filter.getDealIds().contains(d.getId())) {
+                    dealMatch.getAndSet(true);
+                }
+            });
+            if(!dealMatch.get()) {
+                return false;
+            }
+        }
 
         if (filter.isUserMatch() && !targetingData.isUserMatch()) {
             return false;

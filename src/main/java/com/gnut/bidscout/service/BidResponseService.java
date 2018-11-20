@@ -25,8 +25,9 @@ public class BidResponseService {
             BidRequest bidRequest,
             Imp selectedImpression,
             Campaign campaign,
-            Creative creative
+            Creative creative,
+            String dealId
     ) {
-        return builder.buildBidResponse(price, bidRequest, selectedImpression, campaign, creative);
+        return builder.buildBidResponse(price, bidRequest, selectedImpression, campaign, creative, dealId);
     }
 }

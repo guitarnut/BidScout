@@ -1,6 +1,10 @@
 package com.gnut.bidscout.model;
 
+import com.iab.openrtb.request.Deal;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class RequestTargetingData {
     public enum Platform {
@@ -14,6 +18,7 @@ public class RequestTargetingData {
     private String bundleId;
     private String idfa;
     private String buyeruid;
+    private List<Deal> dealIds = new ArrayList<>();
     private List<Integer> widths;
     private List<Integer> heights;
     private List<String> badv;
@@ -77,6 +82,14 @@ public class RequestTargetingData {
 
     public void setBuyeruid(String buyeruid) {
         this.buyeruid = buyeruid;
+    }
+
+    public List<Deal> getDealIds() {
+        return dealIds;
+    }
+
+    public void setDealIds(List<Deal> dealIds) {
+        this.dealIds = dealIds;
     }
 
     public List<Integer> getWidths() {

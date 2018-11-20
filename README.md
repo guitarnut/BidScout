@@ -12,4 +12,4 @@ Support video bidding (paste vast, xml)
 
 Support custom ad markup for display, but still inject pixels
 
-Generate endpoint in UI for bidder
+Default values for new props

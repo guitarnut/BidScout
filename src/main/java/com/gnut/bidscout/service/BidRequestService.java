@@ -11,6 +11,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
 import com.iab.openrtb.request.BidRequest;
+import com.iab.openrtb.request.Deal;
 import com.iab.openrtb.response.BidResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,8 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class BidRequestService {
@@ -54,7 +54,7 @@ public class BidRequestService {
     }
 
     public String handleRequest(String bidder, String publisher, HttpServletRequest request, HttpServletResponse response) {
-        if(Strings.isNullOrEmpty(publisher)) {
+        if (Strings.isNullOrEmpty(publisher)) {
             publisher = "";
         }
 
@@ -91,36 +91,53 @@ public class BidRequestService {
                 record.setCreative(creative.getId());
 
                 Statistics campaignStats = campaign.getStatistics();
-                if(campaignStats == null) {
+                if (campaignStats == null) {
                     campaignStats = new Statistics();
                 }
 
                 Statistics creativeStats = creative.getStatistics();
-                if(creativeStats == null) {
+                if (creativeStats == null) {
                     creativeStats = new Statistics();
                 }
 
                 campaignStats.setRequests(campaignStats.getRequests() + 1);
                 creativeStats.setRequests(creativeStats.getRequests() + 1);
 
-                if (Float.valueOf(price.toString()) >= data.get().getData().getBidfloor()) {
+                float bidPrice = Float.valueOf(price.toString());
+                boolean validBid = bidPrice >= data.get().getData().getBidfloor();
+                boolean creativeRequiresDeal = !creative.getRequirements().getDealIds().isEmpty();
+                boolean campaignRequiresDeal = !campaign.getRequirements().getDealIds().isEmpty();
+
+                String selectedDeal = "";
+                if (campaignRequiresDeal || creativeRequiresDeal) {
+                    List<Deal> requestDeals = bidRequest.getImp().get(0).getPmp() != null ?
+                            bidRequest.getImp().get(0).getPmp().getDeals() : Collections.emptyList();
+                    selectedDeal = getEligibleDeal(
+                            campaign, campaignRequiresDeal, creative, creativeRequiresDeal, requestDeals, bidPrice
+                    );
+                    if (Strings.isNullOrEmpty(selectedDeal)) {
+                        validBid = false;
+                    }
+                }
+
+                if (validBid) {
                     campaignStats.setBids(campaignStats.getBids() + 1);
-                    campaignStats.setBidPriceTotal(campaignStats.getBidPriceTotal() + Float.valueOf(price.toString())/1000);
+                    campaignStats.setBidPriceTotal(campaignStats.getBidPriceTotal() + Float.valueOf(price.toString()) / 1000);
                     creativeStats.setBids(creativeStats.getBids() + 1);
-                    creativeStats.setBidPriceTotal(creativeStats.getBidPriceTotal() + Float.valueOf(price.toString())/1000);
+                    creativeStats.setBidPriceTotal(creativeStats.getBidPriceTotal() + Float.valueOf(price.toString()) / 1000);
 
                     BidResponse bidResponse = bidResponseService.buildBidResponse(
-                            price, bidRequest, bidRequest.getImp().get(0), data.get().getCampaign(), creative
+                            price, bidRequest, bidRequest.getImp().get(0), data.get().getCampaign(), creative, selectedDeal
                     );
 
-                    if(bidResponse.getNbr() != null) {
+                    if (bidResponse.getNbr() != null) {
                         campaignStats.setNbr(campaignStats.getNbr() + 1);
                         creativeStats.setNbr(creativeStats.getNbr() + 1);
                     }
 
                     record.setResponseTimestamp(System.currentTimeMillis());
                     record.setBidResponse(bidResponse);
-                    if(bidResponse.getSeatbid() != null) {
+                    if (bidResponse.getSeatbid() != null) {
                         record.setMarkup(bidResponse.getSeatbid().get(0).getBid().get(0).getAdm());
                     }
                     auctionDao.save(record);
@@ -138,6 +155,45 @@ public class BidRequestService {
         }
 
         return generateNoContentResponse(response);
+    }
+
+    private String getEligibleDeal(
+            Campaign campaign,
+            boolean campaignRequiresDeal,
+            Creative creative,
+            boolean creativeRequiresDeal,
+            List<Deal> requestDeals,
+            float bidPrice
+    ) {
+        String selectedDeal = "";
+        Set<String> eligibleDealsOnCreative = new HashSet<>();
+        Set<String> eligibleDealsOnCampaign = new HashSet<>();
+
+        if (!requestDeals.isEmpty()) {
+            // check for matching deals on campaign and creative
+            for (Deal d : requestDeals) {
+                if (creative.getRequirements().getDealIds().contains(d.getId()) && bidPrice >= d.getBidfloor()) {
+                    eligibleDealsOnCreative.add(d.getId());
+                }
+                if (campaign.getRequirements().getDealIds().contains(d.getId()) && bidPrice >= d.getBidfloor()) {
+                    eligibleDealsOnCampaign.add(d.getId());
+                }
+            }
+        }
+
+        if (eligibleDealsOnCreative.isEmpty() && creativeRequiresDeal) {
+            return selectedDeal;
+        } else if (eligibleDealsOnCampaign.isEmpty() && campaignRequiresDeal) {
+            return selectedDeal;
+        } else if (!eligibleDealsOnCreative.isEmpty()) {
+            // all of these deals have a floor that was beat by the bid and are eligible
+            selectedDeal = eligibleDealsOnCreative.iterator().next();
+        } else if (!eligibleDealsOnCampaign.isEmpty()) {
+            // all of these deals have a floor that was beat by the bid and are eligible
+            selectedDeal = eligibleDealsOnCampaign.iterator().next();
+        }
+
+        return selectedDeal;
     }
 
     private String generateNoContentResponse(HttpServletResponse response) {
