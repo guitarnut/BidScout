@@ -4,6 +4,7 @@ import com.gnut.bidscout.model.UserProfile;
 import com.gnut.bidscout.model.Users;
 import com.gnut.bidscout.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ public class UserController {
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
+    @ResponseStatus(value=HttpStatus.OK)
     public Users create(
             @RequestBody Users user,
             HttpServletResponse response
