@@ -22,6 +22,22 @@ public class Campaign {
     private long impressionExpiry;
     private boolean syncUsers;
 
+    public void copyValues(Campaign c) {
+        this.name = c.getName();
+        this.enabled = c.isEnabled();
+        this.publisher = c.getPublisher();
+        this.cid = c.getCid();
+        this.seat = c.getSeat();
+        this.flags = c.getFlags();
+        this.creatives = c.getCreatives();
+        this.limits = c.getLimits();
+        this.requirements = c.getRequirements();
+        this.statistics = c.getStatistics();
+        this.nurl = c.getNurl();
+        this.impressionExpiry = c.getImpressionExpiry();
+        this.syncUsers = c.isSyncUsers();
+    }
+
     public String getId() {
         return id;
     }

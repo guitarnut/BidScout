@@ -42,17 +42,16 @@ public class ClientService {
 
     // Todo: Remove objectmapper
 
-    public String saveCampaign(String account, Campaign campaign) {
+    public Campaign saveCampaign(String account, Campaign campaign) {
         campaign.setOwner(account);
-        Campaign savedCampaign = campaignService.saveCampaign(campaign);
-        if (savedCampaign != null) {
-            try {
-                return objectMapper.writeValueAsString(savedCampaign);
-            } catch (IOException ex) {
-                //
+        if (!Strings.isNullOrEmpty(campaign.getId())) {
+            Campaign c = campaignService.getCampaign(account, campaign.getId());
+            if (c != null) {
+                c.copyValues(campaign);
             }
+            return campaignService.saveCampaign(c);
         }
-        return "";
+        return campaignService.saveCampaign(campaign);
     }
 
     public Creative saveCreative(String account, Creative creative) {
