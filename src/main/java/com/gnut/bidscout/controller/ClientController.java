@@ -1,9 +1,6 @@
 package com.gnut.bidscout.controller;
 
-import com.gnut.bidscout.model.Campaign;
-import com.gnut.bidscout.model.ClickRecord;
-import com.gnut.bidscout.model.Creative;
-import com.gnut.bidscout.model.ImpressionRecord;
+import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,12 +24,21 @@ public class ClientController {
 
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/bid/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
-    @ResponseBody public String getBid(
+    @ResponseBody public AuctionRecord getBid(
             @PathVariable("id") String id,
             @PathVariable("account") String account,
             HttpServletResponse response
     ) {
         return service.getBid(account, id);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/biderrors/{account}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody public List<List<String>> getBidErrors(
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        return service.getBidErrors(account);
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)

@@ -70,6 +70,7 @@ public class BidRequestService {
         record.setxForwardedFor(request.getHeader("X-Forwarded-For"));
         record.setHost(request.getHeader("Host"));
         record.setPublisher(publisher);
+        record.setOwner(bidder);
 
         try {
             bidRequest = objectMapper.readValue(stringifyPostData(request), BidRequest.class);
@@ -91,7 +92,6 @@ public class BidRequestService {
                 final double bp = Math.random() * (creative.getMaxBid() - creative.getMinBid()) + creative.getMinBid();
                 final BigDecimal price = new BigDecimal(bp).setScale(2, RoundingMode.HALF_UP);
 
-                record.setOwner(campaign.getOwner());
                 record.setCampaign(campaign.getId());
                 record.setCreative(creative.getId());
 

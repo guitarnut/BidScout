@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.lang.reflect.Array;
+import java.util.*;
 
 @Component
 public class ClientService {
@@ -77,16 +75,12 @@ public class ClientService {
         return creativeService.getCreativeNames(account);
     }
 
-    public String getBid(String account, String id) {
+    public AuctionRecord getBid(String account, String id) {
         AuctionRecord record = auctionDao.findFirstByBidRequestIdAndOwner(id, account);
         if (record != null && record.getOwner().equals(account)) {
-            try {
-                return objectMapper.writeValueAsString(record);
-            } catch (IOException ex) {
-                //
-            }
+            return record;
         }
-        return "";
+        return null;
     }
 
     public void addCreativeToCampaign(String owner, String campaignId, String creativeId) {
@@ -125,7 +119,7 @@ public class ClientService {
         Campaign campaign = campaignService.getCampaign(account, campaignId);
         final Map<String, String> results = new HashMap<>();
         if (campaign != null) {
-            if(campaign.getCreatives() != null) {
+            if (campaign.getCreatives() != null) {
                 campaign.getCreatives().forEach(creativeId -> {
                     Creative creative = creativeService.getCreative(account, creativeId);
                     if (creative != null) {
@@ -151,6 +145,18 @@ public class ClientService {
 
     public List<ImpressionRecord> getImpressions(String account, String bidId) {
         return impressionService.getImpressions(account, bidId);
+    }
+
+    public List<List<String>> getBidErrors(String account) {
+        List<AuctionRecord> record = auctionDao.findAllByBidRequestErrorsIsNotNullAndOwner(account);
+        if (record != null) {
+            final List<List<String>> result = new ArrayList<>();
+            record.forEach(r -> {
+                result.add(r.getBidRequestErrors());
+            });
+            return result;
+        }
+        return null;
     }
 }
 
