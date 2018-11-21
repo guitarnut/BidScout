@@ -11,6 +11,7 @@ public class RequestTargetingData {
         DESKTOP, MOBILE, INAPP, CTV
     }
 
+    private String parent;
     private String publisher;
     private Platform platform;
     private String publisherId;

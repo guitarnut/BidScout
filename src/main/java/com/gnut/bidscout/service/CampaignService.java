@@ -1,10 +1,7 @@
 package com.gnut.bidscout.service;
 
 import com.gnut.bidscout.db.CampaignDao;
-import com.gnut.bidscout.model.Campaign;
-import com.gnut.bidscout.model.Creative;
-import com.gnut.bidscout.model.EligibleCampaignData;
-import com.gnut.bidscout.model.RequestTargetingData;
+import com.gnut.bidscout.model.*;
 import com.iab.openrtb.request.BidRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -113,15 +110,17 @@ public class CampaignService {
         return campaign;
     }
 
-    public Optional<EligibleCampaignData> targetCampaign(String owner, String publisher, BidRequest bidRequest, HttpServletRequest request) {
+    public Optional<EligibleCampaignData> targetCampaign(
+            String owner, String publisher, BidRequest bidRequest, HttpServletRequest request, AuctionRecord auctionRecord
+    ) {
         final Optional<Campaign> campaign = selectCampaign(owner, bidRequest);
         if (campaign.isPresent()) {
             final RequestTargetingData targetingData = targetingService.generateTargetingData(publisher, bidRequest, request);
 
-            if (eligibleService.isEligible(targetingData, campaign.get().getRequirements(), Optional.empty())) {
+            if (eligibleService.isEligible(targetingData, campaign.get().getRequirements(), campaign, Optional.empty(), auctionRecord)) {
                 final EligibleCampaignData campaignData = new EligibleCampaignData();
                 campaignData.setCampaign(campaign.get());
-                campaignData.setCreatives(eligibleService.getEligibleCreatives(targetingData, campaign.get()));
+                campaignData.setCreatives(eligibleService.getEligibleCreatives(targetingData, campaign.get(), auctionRecord));
                 campaignData.setData(targetingData);
                 return Optional.of(campaignData);
             }

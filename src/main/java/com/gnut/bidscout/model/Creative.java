@@ -29,7 +29,6 @@ public class Creative {
     private float minBid;
     private float maxBid;
     private boolean syncUsers;
-    private String targetingFailureReason;
 
     public String getId() {
         return id;
@@ -213,13 +212,5 @@ public class Creative {
 
     public void setSyncUsers(boolean syncUsers) {
         this.syncUsers = syncUsers;
-    }
-
-    public String getTargetingFailureReason() {
-        return targetingFailureReason;
-    }
-
-    public void setTargetingFailureReason(String targetingFailureReason) {
-        this.targetingFailureReason = targetingFailureReason;
     }
 }

@@ -21,7 +21,6 @@ public class Campaign {
     private String nurl;
     private long impressionExpiry;
     private boolean syncUsers;
-    private String targetingFailureReason;
 
     public String getId() {
         return id;
@@ -141,13 +140,5 @@ public class Campaign {
 
     public void setSyncUsers(boolean syncUsers) {
         this.syncUsers = syncUsers;
-    }
-
-    public String getTargetingFailureReason() {
-        return targetingFailureReason;
-    }
-
-    public void setTargetingFailureReason(String targetingFailureReason) {
-        this.targetingFailureReason = targetingFailureReason;
     }
 }
