@@ -1,7 +1,10 @@
 package com.gnut.bidscout.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.List;
 
+@Document
 public class Creative {
     enum Type {
        DISPLAY, VAST, VPAID
@@ -29,6 +32,30 @@ public class Creative {
     private float minBid;
     private float maxBid;
     private boolean syncUsers;
+
+    public void copyValues(Creative c) {
+        this.name = c.getName();
+        this.type = c.getType();
+        this.w = c.getW();
+        this.h = c.getH();
+        this.enabled = c.isEnabled();
+        this.iabCategories = c.getIabCategories();
+        this.attr = c.getAttr();
+        this.btype = c.getBtype();
+        this.mimes = c.getMimes();
+        this.adId = c.getAdId();
+        this.crid = c.getCrid();
+        this.adDomain = c.getAdDomain();
+        this.creativeUrl = c.getCreativeUrl();
+        this.xml = c.getXml();
+        this.adm = c.getAdm();
+        this.limits = c.getLimits();
+        this.requirements = c.getRequirements();
+        this.statistics = c.getStatistics();
+        this.minBid = c.getMinBid();
+        this.maxBid = c.getMaxBid();
+        this.syncUsers = c.isSyncUsers();
+    }
 
     public String getId() {
         return id;

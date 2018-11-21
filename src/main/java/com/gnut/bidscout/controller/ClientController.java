@@ -125,7 +125,7 @@ public class ClientController {
 
     @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/creative/create/{account}", method = RequestMethod.POST, produces = "application/json")
-    @ResponseBody public String saveCampaign(
+    @ResponseBody public Creative saveCreative(
             @RequestBody Creative creative,
             @PathVariable("account") String account,
             HttpServletResponse response

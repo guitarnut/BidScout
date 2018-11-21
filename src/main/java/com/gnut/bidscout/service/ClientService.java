@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gnut.bidscout.db.AuctionDao;
 import com.gnut.bidscout.model.*;
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,17 +55,16 @@ public class ClientService {
         return "";
     }
 
-    public String saveCreative(String account, Creative creative) {
+    public Creative saveCreative(String account, Creative creative) {
         creative.setOwner(account);
-        Creative savedCreative = creativeService.saveCreative(creative);
-        if (savedCreative != null) {
-            try {
-                return objectMapper.writeValueAsString(savedCreative);
-            } catch (IOException ex) {
-                //
+        if (!Strings.isNullOrEmpty(creative.getId())) {
+            Creative c = creativeService.getCreative(account, creative.getId());
+            if (c != null) {
+                c.copyValues(creative);
             }
+            return creativeService.saveCreative(c);
         }
-        return "";
+        return creativeService.saveCreative(creative);
     }
 
     public Map<String, String> getCampaignNames(String owner) {
