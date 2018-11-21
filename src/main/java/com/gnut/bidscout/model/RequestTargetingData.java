@@ -22,11 +22,13 @@ public class RequestTargetingData {
     private List<Integer> widths;
     private List<Integer> heights;
     private List<String> badv;
+    private List<String> bcat;
     private List<Integer> battr;
     private List<Integer> btype;
     private boolean secure;
     private float bidfloor;
     private boolean userMatch;
+    private String targetingFailureReason;
 
     public String getPublisher() {
         return publisher;
@@ -132,6 +134,14 @@ public class RequestTargetingData {
         this.badv = badv;
     }
 
+    public List<String> getBcat() {
+        return bcat;
+    }
+
+    public void setBcat(List<String> bcat) {
+        this.bcat = bcat;
+    }
+
     public List<Integer> getBattr() {
         return battr;
     }
@@ -154,5 +164,13 @@ public class RequestTargetingData {
 
     public void setUserMatch(boolean userMatch) {
         this.userMatch = userMatch;
+    }
+
+    public String getTargetingFailureReason() {
+        return targetingFailureReason;
+    }
+
+    public void setTargetingFailureReason(String targetingFailureReason) {
+        this.targetingFailureReason = targetingFailureReason;
     }
 }

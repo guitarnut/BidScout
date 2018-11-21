@@ -118,7 +118,7 @@ public class CampaignService {
         if (campaign.isPresent()) {
             final RequestTargetingData targetingData = targetingService.generateTargetingData(publisher, bidRequest, request);
 
-            if (eligibleService.isEligible(targetingData, campaign.get().getRequirements())) {
+            if (eligibleService.isEligible(targetingData, campaign.get().getRequirements(), Optional.empty())) {
                 final EligibleCampaignData campaignData = new EligibleCampaignData();
                 campaignData.setCampaign(campaign.get());
                 campaignData.setCreatives(eligibleService.getEligibleCreatives(targetingData, campaign.get()));

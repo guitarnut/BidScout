@@ -22,12 +22,14 @@ public class Creative {
     private List<String> adDomain;
     private String creativeUrl;
     private String xml;
+    private String adm;
     private Limits limits;
     private Requirements requirements;
     private Statistics statistics;
     private float minBid;
     private float maxBid;
     private boolean syncUsers;
+    private String targetingFailureReason;
 
     public String getId() {
         return id;
@@ -157,6 +159,14 @@ public class Creative {
         this.xml = xml;
     }
 
+    public String getAdm() {
+        return adm;
+    }
+
+    public void setAdm(String adm) {
+        this.adm = adm;
+    }
+
     public Limits getLimits() {
         return limits;
     }
@@ -203,5 +213,13 @@ public class Creative {
 
     public void setSyncUsers(boolean syncUsers) {
         this.syncUsers = syncUsers;
+    }
+
+    public String getTargetingFailureReason() {
+        return targetingFailureReason;
+    }
+
+    public void setTargetingFailureReason(String targetingFailureReason) {
+        this.targetingFailureReason = targetingFailureReason;
     }
 }
