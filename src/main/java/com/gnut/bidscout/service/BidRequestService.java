@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gnut.bidscout.db.AuctionDao;
 import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.rtb.BidRequestValidator;
+import com.gnut.bidscout.values.BidRequestError;
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
@@ -60,25 +61,27 @@ public class BidRequestService {
 
         final BidRequest bidRequest;
         AuctionRecord record = new AuctionRecord();
+        record.setRequestTimestamp(System.currentTimeMillis());
+        record.setIp(request.getRemoteAddr());
+        record.setUserAgent(request.getHeader("User-Agent"));
+        record.setCookies(request.getHeader("Cookie"));
+        record.setxForwardedFor(request.getHeader("X-Forwarded-For"));
+        record.setHost(request.getHeader("Host"));
+        record.setPublisher(publisher);
+
         try {
             bidRequest = objectMapper.readValue(stringifyPostData(request), BidRequest.class);
-            record.setRequestTimestamp(System.currentTimeMillis());
-            record.setIp(request.getRemoteAddr());
-            record.setUserAgent(request.getHeader("User-Agent"));
-            record.setCookies(request.getHeader("Cookie"));
-            record.setxForwardedFor(request.getHeader("X-Forwarded-For"));
-            record.setHost(request.getHeader("Host"));
-            record.setBidRequest(bidRequest);
-            record.setBidRequestId(bidRequest.getId());
-            record.setPublisher(publisher);
         } catch (IOException ex) {
+            record.getBidRequestErrors().add(BidRequestError.PARSE_ERROR.value());
+            auctionDao.save(record);
             return generateNoContentResponse(response);
         }
 
-        Set<BidRequestValidator.Violation> violations = bidRequestValidator.validateBidRequest();
+        record.setBidRequest(bidRequest);
+        record.setBidRequestId(bidRequest.getId());
 
-        if (violations.isEmpty()) {
-            final Optional<EligibleCampaignData> data = campaignService.targetCampaign(bidder, publisher, bidRequest, request);
+        if (bidRequestValidator.validateBidRequest(bidRequest, record)) {
+            final Optional<EligibleCampaignData> data = campaignService.targetCampaign(bidder, publisher, bidRequest, request, record);
 
             if (data.isPresent() && !data.get().getCreatives().isEmpty()) {
                 final Campaign campaign = data.get().getCampaign();
@@ -152,6 +155,8 @@ public class BidRequestService {
                     }
                 }
             }
+        } else {
+            auctionDao.save(record);
         }
 
         return generateNoContentResponse(response);

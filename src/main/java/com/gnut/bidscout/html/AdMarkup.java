@@ -2,6 +2,7 @@ package com.gnut.bidscout.html;
 
 import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.Creative;
+import com.google.common.base.Strings;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -24,18 +25,24 @@ public class AdMarkup {
 
     public String generateMarkup(BigDecimal price, String bidRequestId, Campaign campaign, Creative creative) {
         final StringBuilder adm = new StringBuilder();
-        adm.append(HTML_OPEN)
-                .append(CLICK_OPEN)
-                .append(ASSET_IMG)
-                .append(CLICK_CLOSE)
-                .append(IMPRESSION_IMG_HIDDEN);
 
-        StringBuilder sync = new StringBuilder();
+        if (Strings.isNullOrEmpty(creative.getAdm())) {
+            adm.append(HTML_OPEN)
+                    .append(CLICK_OPEN)
+                    .append(ASSET_IMG)
+                    .append(CLICK_CLOSE)
+                    .append(IMPRESSION_IMG_HIDDEN);
+        } else {
+            adm.append(HTML_OPEN)
+                    .append(creative.getAdm())
+                    .append(IMPRESSION_IMG_HIDDEN);
+        }
+
+        String sync = "";
         if (campaign.isSyncUsers() || creative.isSyncUsers()) {
             adm.append(SYNC_IMG_HIDDEN);
-            sync.append("http://localhost:8080/sync/user");
+            sync = "http://localhost:8080/sync/user";
         }
-        sync.toString();
 
         adm.append(HTML_CLOSE);
 
@@ -75,7 +82,6 @@ public class AdMarkup {
         return adm.toString()
                 .replace(IMPRESSION_MACRO, imp)
                 .replace(SYNC_MACRO, sync)
-                .replace(SYNC_MACRO, imp)
                 .replace(CLICK_MACRO, click)
                 .replace(ASSET_MACRO, creative.getCreativeUrl())
                 .replaceAll(WIDTH_MACRO, String.valueOf(creative.getW()))
