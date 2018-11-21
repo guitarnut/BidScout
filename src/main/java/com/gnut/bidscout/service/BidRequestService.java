@@ -155,10 +155,8 @@ public class BidRequestService {
                     }
                 }
             }
-        } else {
-            auctionDao.save(record);
         }
-
+        auctionDao.save(record);
         return generateNoContentResponse(response);
     }
 
