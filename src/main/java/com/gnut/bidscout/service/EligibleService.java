@@ -49,6 +49,7 @@ public class EligibleService {
                     continue;
                 }
             } else {
+                record.getTargetingFailures().put(campaign.getName(), TargetFailure.SIZE_MATCH.value());
                 continue;
             }
 
