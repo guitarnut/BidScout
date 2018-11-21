@@ -61,6 +61,8 @@ public class BidRequestService {
 
         final BidRequest bidRequest;
         AuctionRecord record = new AuctionRecord();
+        record.setTargetingFailures(new HashMap<>());
+        record.setBidRequestErrors(new ArrayList<>());
         record.setRequestTimestamp(System.currentTimeMillis());
         record.setIp(request.getRemoteAddr());
         record.setUserAgent(request.getHeader("User-Agent"));
