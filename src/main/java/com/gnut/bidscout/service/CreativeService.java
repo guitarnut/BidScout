@@ -86,4 +86,10 @@ public class CreativeService {
             creativeDao.save(c);
         }
     }
+
+    public void deleteCreative(String id, String account) {
+        if (creativeDao.findByIdAndOwner(id, account) != null) {
+            creativeDao.deleteById(id);
+        }
+    }
 }

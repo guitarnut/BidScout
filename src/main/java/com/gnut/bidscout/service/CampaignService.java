@@ -162,4 +162,10 @@ public class CampaignService {
         }
         return Optional.of(campaigns.get(0));
     }
+
+    public void deleteCampaign(String id, String account) {
+        if(campaignDao.findByIdAndOwner(id, account) != null) {
+            campaignDao.deleteById(id);
+        }
+    }
 }

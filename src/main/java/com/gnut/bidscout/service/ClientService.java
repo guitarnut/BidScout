@@ -157,5 +157,13 @@ public class ClientService {
         }
         return null;
     }
+
+    public void deleteCampaign(String account, String creativeId) {
+        campaignService.deleteCampaign(creativeId, account);
+    }
+
+    public void deleteCreative(String account, String creativeId) {
+        creativeService.deleteCreative(creativeId, account);
+    }
 }
 

@@ -161,4 +161,26 @@ public class ClientController {
     ) {
         return service.getCreative(account, creativeId);
     }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/campaign/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody public void deleteCampaign(
+            @PathVariable("id") String creativeId,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        service.deleteCampaign(account, creativeId);
+        response.setStatus(204);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/creative/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody public void deleteCreative(
+            @PathVariable("id") String creativeId,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        service.deleteCreative(account, creativeId);
+        response.setStatus(204);
+    }
 }
