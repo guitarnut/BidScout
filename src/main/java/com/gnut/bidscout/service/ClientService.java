@@ -20,6 +20,7 @@ public class ClientService {
     private final ClickService clickService;
     private final CampaignService campaignService;
     private final CreativeService creativeService;
+    private final AuctionRecordService auctionRecordService;
 
     static {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -31,13 +32,15 @@ public class ClientService {
             ImpressionService impressionService,
             ClickService clickService,
             CampaignService campaignService,
-            CreativeService creativeService
+            CreativeService creativeService,
+            AuctionRecordService auctionRecordService
     ) {
         this.auctionDao = auctionDao;
         this.impressionService = impressionService;
         this.clickService = clickService;
         this.campaignService = campaignService;
         this.creativeService = creativeService;
+        this.auctionRecordService = auctionRecordService;
     }
 
     // Todo: Remove objectmapper
@@ -75,7 +78,7 @@ public class ClientService {
     }
 
     public AuctionRecord getBid(String account, String id) {
-        AuctionRecord record = auctionDao.findFirstByBidRequestIdAndOwner(id, account);
+        AuctionRecord record = auctionDao.findFirstByIdAndOwner(id, account);
         if (record != null && record.getOwner().equals(account)) {
             return record;
         }
@@ -164,6 +167,18 @@ public class ClientService {
 
     public void deleteCreative(String account, String creativeId) {
         creativeService.deleteCreative(creativeId, account);
+    }
+
+    public Map<String, String> getAuctionRecordList(String account) {
+        return auctionRecordService.getListOfAllRecords(account);
+    }
+
+    public void deleteAllBids(String account) {
+        auctionRecordService.deleteAllBids(account);
+    }
+
+    public void deleteBid(String account, String id) {
+        auctionRecordService.deleteBid(account, id);
     }
 }
 

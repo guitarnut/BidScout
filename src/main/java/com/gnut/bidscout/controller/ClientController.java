@@ -33,6 +33,34 @@ public class ClientController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/bid/all/{account}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody public Map<String, String> deleteCreative(
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        return service.getAuctionRecordList(account);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/bid/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody public void deleteBid(
+            @PathVariable("id") String id,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        service.deleteBid(account, id);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value = "/bid/deleteall/{account}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody public void deleteAllBids(
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        service.deleteAllBids(account);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value = "/biderrors/{account}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody public List<List<String>> getBidErrors(
             @PathVariable("account") String account,
