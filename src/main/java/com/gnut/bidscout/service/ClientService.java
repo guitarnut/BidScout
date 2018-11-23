@@ -154,7 +154,9 @@ public class ClientService {
         if (record != null) {
             final List<List<String>> result = new ArrayList<>();
             record.forEach(r -> {
-                result.add(r.getBidRequestErrors());
+                if (r.getBidRequestErrors() != null && !r.getBidRequestErrors().isEmpty()) {
+                    result.add(r.getBidRequestErrors());
+                }
             });
             return result;
         }

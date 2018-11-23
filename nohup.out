@@ -1,0 +1,28 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.1.0.RELEASE)
+
+2018-11-23 09:12:53.017  INFO 17884 --- [           main] com.gnut.bidscout.BidscoutApplication    : Starting BidscoutApplication v0.0.1-SNAPSHOT on ip-192-168-1-247.ec2.internal with PID 17884 (/Users/Rick/git/bid-scout/target/bidscout-0.0.1-SNAPSHOT.jar started by Rick in /Users/Rick/git/bid-scout)
+2018-11-23 09:12:53.020  INFO 17884 --- [           main] com.gnut.bidscout.BidscoutApplication    : No active profile set, falling back to default profiles: default
+2018-11-23 09:12:53.580  INFO 17884 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2018-11-23 09:12:53.660  INFO 17884 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 74ms. Found 6 repository interfaces.
+2018-11-23 09:12:54.236  INFO 17884 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2018-11-23 09:12:54.257  INFO 17884 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2018-11-23 09:12:54.257  INFO 17884 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/9.0.12
+2018-11-23 09:12:54.265  INFO 17884 --- [           main] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [/Users/Rick/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.]
+2018-11-23 09:12:54.328  INFO 17884 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2018-11-23 09:12:54.328  INFO 17884 --- [           main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1269 ms
+2018-11-23 09:12:54.347  INFO 17884 --- [           main] o.s.b.w.servlet.FilterRegistrationBean   : Mapping filter: 'characterEncodingFilter' to: [/*]
+2018-11-23 09:12:54.348  INFO 17884 --- [           main] .s.DelegatingFilterProxyRegistrationBean : Mapping filter: 'springSecurityFilterChain' to: [/*]
+2018-11-23 09:12:54.348  INFO 17884 --- [           main] o.s.b.w.servlet.ServletRegistrationBean  : Servlet dispatcherServlet mapped to [/]
+2018-11-23 09:12:54.614  INFO 17884 --- [           main] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[127.0.0.1:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+2018-11-23 09:12:54.667  INFO 17884 --- [127.0.0.1:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:1227}] to 127.0.0.1:27017
+2018-11-23 09:12:54.668  INFO 17884 --- [127.0.0.1:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=127.0.0.1:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[3, 4, 10]}, minWireVersion=0, maxWireVersion=5, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=null, roundTripTimeNanos=865733}
+2018-11-23 09:12:55.595  INFO 17884 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4bdeaabb, org.springframework.security.web.context.SecurityContextPersistenceFilter@23e84203, org.springframework.security.web.header.HeaderWriterFilter@43df23d3, org.springframework.web.filter.CorsFilter@6c4906d3, org.springframework.security.web.authentication.logout.LogoutFilter@7ae0a9ec, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@70cf32e3, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@73eb439a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@302c971f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@65987993, org.springframework.security.web.access.ExceptionTranslationFilter@609e8838, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@536f2a7e]
+2018-11-23 09:12:55.662  INFO 17884 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2018-11-23 09:12:55.664  INFO 17884 --- [           main] com.gnut.bidscout.BidscoutApplication    : Started BidscoutApplication in 2.945 seconds (JVM running for 3.33)

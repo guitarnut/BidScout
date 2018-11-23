@@ -17,7 +17,6 @@ public class BidRequestController {
         this.service = service;
     }
 
-    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value="/{bidder}/{publisher}", method = RequestMethod.POST, produces = "application/json")
     public String handleBidRequestPost(
             @PathVariable(value = "bidder") String bidder,
@@ -28,7 +27,6 @@ public class BidRequestController {
        return service.handleRequest(bidder, publisher, request, response);
     }
 
-    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value="/{bidder}", method = RequestMethod.POST, produces = "application/json")
     public String handleBidRequestPost(
             @PathVariable(value = "bidder") String bidder,
