@@ -42,6 +42,8 @@ public class EligibleService {
                     int index = targetingData.getWidths().indexOf(w);
                     if (targetingData.getWidths().get(index) == c.getW() && targetingData.getHeights().get(index) == c.getH()) {
                         matches.getAndIncrement();
+                    } else if (c.getW() == 0 && c.getH() == 0) {
+                        matches.getAndIncrement();
                     }
                 });
                 if (matches.get() == 0) {

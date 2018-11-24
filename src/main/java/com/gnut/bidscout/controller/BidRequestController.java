@@ -1,6 +1,7 @@
 package com.gnut.bidscout.controller;
 
 import com.gnut.bidscout.service.BidRequestService;
+import com.iab.openrtb.response.BidResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class BidRequestController {
     }
 
     @RequestMapping(value="/{bidder}/{publisher}", method = RequestMethod.POST, produces = "application/json")
-    public String handleBidRequestPost(
+    public BidResponse handleBidRequestPostWithKey(
             @PathVariable(value = "bidder") String bidder,
             @PathVariable(value = "publisher") String publisher,
             HttpServletRequest request,
@@ -28,7 +29,7 @@ public class BidRequestController {
     }
 
     @RequestMapping(value="/{bidder}", method = RequestMethod.POST, produces = "application/json")
-    public String handleBidRequestPost(
+    public BidResponse handleBidRequestPost(
             @PathVariable(value = "bidder") String bidder,
             HttpServletRequest request,
             HttpServletResponse response

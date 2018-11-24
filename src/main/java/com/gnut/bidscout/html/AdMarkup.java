@@ -16,6 +16,7 @@ public class AdMarkup {
     private static final String CLICK_MACRO = "CLICK";
     private static final String ASSET_MACRO = "ASSET";
     private static final String HTML_OPEN = "<div style=\"width:" + WIDTH_MACRO + "px; height:" + HEIGHT_MACRO + "px;\">";
+    private static final String HTML_OPEN_CREATIVE_FOR_ALL_SIZES = "<div style=\"border: 1px solid black; background: #CCC; width:" + WIDTH_MACRO + "px; height:" + HEIGHT_MACRO + "px;\">";
     private static final String HTML_CLOSE = "</div>";
     private static final String CLICK_OPEN = "<a href=\"" + CLICK_MACRO + "\" target=\"_blank\">";
     private static final String CLICK_CLOSE = "</a>";
@@ -23,20 +24,22 @@ public class AdMarkup {
     private static final String SYNC_IMG_HIDDEN = "<img src=\"" + SYNC_MACRO + "\" style=\"width:0; height:0; display:none;\"/>";
     private static final String ASSET_IMG = "<img src=\"" + ASSET_MACRO + "\" style=\"width:" + WIDTH_MACRO + "px; height:" + HEIGHT_MACRO + "px;\">";
 
-    public String generateMarkup(BigDecimal price, String bidRequestId, Campaign campaign, Creative creative) {
+    public String generateDisplayMarkup(BigDecimal price, String bidRequestId, Campaign campaign, Creative creative) {
         final StringBuilder adm = new StringBuilder();
 
         if (Strings.isNullOrEmpty(creative.getAdm())) {
             adm.append(HTML_OPEN)
                     .append(CLICK_OPEN)
                     .append(ASSET_IMG)
-                    .append(CLICK_CLOSE)
-                    .append(IMPRESSION_IMG_HIDDEN);
+                    .append(CLICK_CLOSE);
+        } else if (creative.getW() == 0 && creative.getH() == 0) {
+            adm.append(HTML_OPEN_CREATIVE_FOR_ALL_SIZES);
         } else {
             adm.append(HTML_OPEN)
-                    .append(creative.getAdm())
-                    .append(IMPRESSION_IMG_HIDDEN);
+                    .append(creative.getAdm());
         }
+
+        adm.append(IMPRESSION_IMG_HIDDEN);
 
         String sync = "";
         if (campaign.isSyncUsers() || creative.isSyncUsers()) {

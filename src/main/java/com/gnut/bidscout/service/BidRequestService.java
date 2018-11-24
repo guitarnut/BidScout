@@ -1,9 +1,9 @@
 package com.gnut.bidscout.service;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gnut.bidscout.builder.BidResponseBuilder;
 import com.gnut.bidscout.db.AuctionDao;
 import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.rtb.BidRequestValidator;
@@ -28,6 +28,7 @@ import java.util.*;
 @Component
 public class BidRequestService {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final String PARSE_ERROR = "Unable to parse bid request";
     private final CampaignService campaignService;
     private final CreativeService creativeService;
     private final BidResponseService bidResponseService;
@@ -54,7 +55,7 @@ public class BidRequestService {
         this.auctionDao = auctionDao;
     }
 
-    public String handleRequest(String bidder, String publisher, HttpServletRequest request, HttpServletResponse response) {
+    public BidResponse handleRequest(String bidder, String publisher, HttpServletRequest request, HttpServletResponse response) {
         if (Strings.isNullOrEmpty(publisher)) {
             publisher = "";
         }
@@ -77,7 +78,9 @@ public class BidRequestService {
         } catch (IOException ex) {
             record.getBidRequestErrors().add(BidRequestError.PARSE_ERROR.value());
             auctionDao.save(record);
-            return generateNoContentResponse(response);
+            return bidResponseService.buildNBRBidResponse(
+                    null, BidResponseBuilder.NBR.INVALID_REQUEST, PARSE_ERROR
+            );
         }
 
         record.setBidRequest(bidRequest);
@@ -150,11 +153,7 @@ public class BidRequestService {
                     campaignService.saveCampaign(campaign);
                     creative.setStatistics(creativeStats);
                     creativeService.saveCreative(creative);
-                    try {
-                        return objectMapper.writeValueAsString(bidResponse);
-                    } catch (JsonProcessingException ex) {
-                        //
-                    }
+                    return bidResponse;
                 }
             }
         }
@@ -201,9 +200,9 @@ public class BidRequestService {
         return selectedDeal;
     }
 
-    private String generateNoContentResponse(HttpServletResponse response) {
+    private BidResponse generateNoContentResponse(HttpServletResponse response) {
         response.setStatus(204);
-        return "";
+        return null;
     }
 
     private String stringifyPostData(HttpServletRequest request) {

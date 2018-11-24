@@ -6,7 +6,7 @@ import java.util.List;
 
 @Document
 public class Creative {
-    enum Type {
+    public enum Type {
        DISPLAY, VAST, VPAID
     }
     private String id;

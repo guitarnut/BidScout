@@ -1,5 +1,7 @@
 package com.gnut.bidscout.builder;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.gnut.bidscout.html.AdMarkup;
 import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.Creative;
@@ -19,7 +21,31 @@ import java.util.List;
 
 @Component
 public class BidResponseBuilder {
+    public enum NBR {
+        UNKNOWN_ERROR(0),
+        TECHNICAL_ERROR(1),
+        INVALID_REQUEST(2),
+        KNOWN_WEB_SPIDER(3),
+        SUSPECTED_NON_HUMAN_TRAFFIC(4),
+        CLOUD_DATA_CENTER_OR_PROXY_IP(5),
+        UNSUPPORTED_DEVICE(6),
+        BLOCKED_PUBLISHER_OR_SITE(7),
+        UNMATCHED_USER(8),
+        DAILY_READER_CAP_MET(9),
+        DAILY_DOMAIN_CAP_MET(10);
 
+        private int code;
+
+        NBR(int v) {
+            this.code = v;
+        }
+
+        public int value() {
+            return code;
+        }
+    }
+
+    private static final JsonNodeFactory factory = JsonNodeFactory.instance;
     private final AdMarkup adMarkup;
 
     @Autowired
@@ -47,9 +73,14 @@ public class BidResponseBuilder {
         bid.setW(creative.getW());
         bid.setH(creative.getH());
         bid.setPrice(price);
-        bid.setAdm(adMarkup.generateMarkup(price, bidRequest.getId(), campaign, creative));
 
-        if(!Strings.isNullOrEmpty(dealId)) {
+        if(creative.getType() == Creative.Type.VPAID || creative.getType() == Creative.Type.VAST) {
+            bid.setAdm(creative.getXml());
+        } else {
+            bid.setAdm(adMarkup.generateDisplayMarkup(price, bidRequest.getId(), campaign, creative));
+        }
+
+        if (!Strings.isNullOrEmpty(dealId)) {
             bid.setDealid(dealId);
         }
 
@@ -63,13 +94,35 @@ public class BidResponseBuilder {
         final BidResponse bidResponse = new BidResponse();
         bidResponse.setId(bidRequest.getId());
 
-        if(Math.random()* 10 > 7) {
-            bidResponse.setNbr(4);
+        bidResponse.setSeatbid(seatBids);
+        bidResponse.setBidid(bidRequest.getId());
+        bidResponse.setCur("USD");
+
+        ObjectNode ext = factory.objectNode();
+        ext.put("campaign", campaign.getName());
+        ext.put("creative", creative.getName());
+        bidResponse.setExt(ext);
+
+        return bidResponse;
+    }
+
+    public BidResponse buildNBRBidResponse(
+            BidRequest bidRequest,
+            String message,
+            NBR nbr
+    ) {
+        final BidResponse bidResponse = new BidResponse();
+        if(bidRequest == null || Strings.isNullOrEmpty(bidRequest.getId())) {
+            bidResponse.setId("1");
         } else {
-            bidResponse.setSeatbid(seatBids);
-            bidResponse.setBidid(bidRequest.getId());
-            bidResponse.setCur("USD");
+            bidResponse.setId(bidRequest.getId());
         }
+
+        bidResponse.setNbr(nbr.value());
+
+        ObjectNode ext = factory.objectNode();
+        ext.put("cause", message);
+        bidResponse.setExt(ext);
 
         return bidResponse;
     }

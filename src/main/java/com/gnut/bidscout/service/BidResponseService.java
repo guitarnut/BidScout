@@ -30,4 +30,12 @@ public class BidResponseService {
     ) {
         return builder.buildBidResponse(price, bidRequest, selectedImpression, campaign, creative, dealId);
     }
+
+    public BidResponse buildNBRBidResponse(
+            BidRequest bidRequest,
+            BidResponseBuilder.NBR nbr,
+            String message
+    ) {
+        return builder.buildNBRBidResponse(bidRequest, message, nbr);
+    }
 }

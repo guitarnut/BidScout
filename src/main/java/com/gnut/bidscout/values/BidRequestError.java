@@ -1,19 +1,27 @@
 package com.gnut.bidscout.values;
 
 public enum BidRequestError {
+    NO_BID_ID("Bid id missing"),
+
     PARSE_ERROR("Parsing error"),
+
     NO_IMPRESSION("No impression object"),
-    NO_BANNER(""),
-    NO_SIZE(""),
-    NO_USER_AGENT(""),
-    NO_IP(""),
-    NO_BUYERUID(""),
-    NO_USER_ID(""),
-    NO_IDFA(""),
-    NO_DOMAIN(""),
-    NO_PAGE(""),
-    NO_PUBLISHER(""),
-    NO_BID_ID("");
+
+    NO_USER("No user object"),
+    NO_BUYERUID("No buyer id"),
+    NO_USER_ID("No user id"),
+
+    NO_PUBLISHER("No publisher object"),
+    NO_DOMAIN("No domain value"),
+    NO_PAGE("No page value"),
+
+    NO_BANNER("No banner object"),
+    NO_SIZE("No size(s) specified"),
+
+    NO_DEVICE("No device object"),
+    NO_USER_AGENT("No user agent"),
+    NO_IP("No device IP address"),
+    NO_IDFA("No IDFA value");
 
     private String v;
 
