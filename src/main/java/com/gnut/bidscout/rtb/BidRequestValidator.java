@@ -10,15 +10,16 @@ import org.springframework.stereotype.Component;
 public class BidRequestValidator {
 
     public boolean validateBidRequest(BidRequest bidRequest, AuctionRecord record) {
+        String id = Strings.isNullOrEmpty(bidRequest.getId()) ? "Unknown - " : bidRequest.getId() + " - ";
         // Failures
         if (bidRequest.getImp() == null) {
-            record.getBidRequestErrors().add(BidRequestError.NO_IMPRESSION.value());
+            record.getBidRequestErrors().add(id + BidRequestError.NO_IMPRESSION.value());
             return false;
         }
 
         // Warnings
         if (Strings.isNullOrEmpty(bidRequest.getUser().getBuyeruid())) {
-            record.getBidRequestErrors().add(BidRequestError.NO_BUYERUID.value());
+            record.getBidRequestErrors().add(id + BidRequestError.NO_BUYERUID.value());
         }
 
         return true;
