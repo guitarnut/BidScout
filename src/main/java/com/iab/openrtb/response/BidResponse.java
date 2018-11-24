@@ -1,9 +1,8 @@
 package com.iab.openrtb.response;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.isNull;
 
@@ -49,7 +48,7 @@ public class BidResponse {
     Integer nbr;
 
     /** Placeholder for bidder-specific extensions to OpenRTB. */
-    ObjectNode ext;
+    Map<String, Object> ext;
 
     public String getId() {
         return id;
@@ -99,11 +98,11 @@ public class BidResponse {
         this.nbr = nbr;
     }
 
-    public ObjectNode getExt() {
+    public Map<String, Object> getExt() {
         return ext;
     }
 
-    public void setExt(ObjectNode ext) {
+    public void setExt(Map<String, Object> ext) {
         this.ext = ext;
     }
 

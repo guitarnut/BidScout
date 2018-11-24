@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -98,10 +99,9 @@ public class BidResponseBuilder {
         bidResponse.setBidid(bidRequest.getId());
         bidResponse.setCur("USD");
 
-        ObjectNode ext = factory.objectNode();
-        ext.put("campaign", campaign.getName());
-        ext.put("creative", creative.getName());
-        bidResponse.setExt(ext);
+        bidResponse.setExt(new HashMap<>());
+        bidResponse.getExt().put("campaign", campaign.getName());
+        bidResponse.getExt().put("creative", creative.getName());
 
         return bidResponse;
     }
@@ -119,10 +119,8 @@ public class BidResponseBuilder {
         }
 
         bidResponse.setNbr(nbr.value());
-
-        ObjectNode ext = factory.objectNode();
-        ext.put("cause", message);
-        bidResponse.setExt(ext);
+        bidResponse.setExt(new HashMap<>());
+        bidResponse.getExt().put("cause", message);
 
         return bidResponse;
     }
