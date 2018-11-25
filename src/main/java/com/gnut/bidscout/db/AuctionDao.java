@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface AuctionDao extends MongoRepository<AuctionRecord, String> {
     AuctionRecord findFirstByIdAndOwner(String id, String owner);
+    AuctionRecord findFirstByBidRequestIdAndOwner(String id, String owner);
     List<AuctionRecord> findAllByOwner(String owner);
     List<AuctionRecord> findAllByBidRequestErrorsIsNotNullAndOwner(String owner);
 }

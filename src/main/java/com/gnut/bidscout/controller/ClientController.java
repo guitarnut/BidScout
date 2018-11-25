@@ -131,7 +131,7 @@ public class ClientController {
 
     @RequestMapping(value = "/campaign/get/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public String getCampaign(
+    public Campaign getCampaign(
             @PathVariable("account") String account,
             @PathVariable("id") String campaignId,
             HttpServletResponse response
@@ -181,7 +181,7 @@ public class ClientController {
 
     @RequestMapping(value = "/creative/get/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public String getCreative(
+    public Creative getCreative(
             @PathVariable("id") String creativeId,
             @PathVariable("account") String account,
             HttpServletResponse response

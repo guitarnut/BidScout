@@ -28,7 +28,12 @@ import java.util.*;
 @Component
 public class BidRequestService {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private final int BID_FREQUENCY_VALUE = 10;
     private final String PARSE_ERROR = "Unable to parse bid request";
+    private final String BID_REQUEST_ID_MISSING = "Bid request ID missing";
+    private final String BID_REQUEST_ID_NOT_UNIQUE = "Bid request ID already exists in database. " +
+            "Delete existing auction data or change bid request ID";
+
     private final CampaignService campaignService;
     private final CreativeService creativeService;
     private final BidResponseService bidResponseService;
@@ -83,8 +88,19 @@ public class BidRequestService {
             );
         }
 
+        if (Strings.isNullOrEmpty(bidRequest.getId())) {
+            return bidResponseService.buildNBRBidResponse(
+                    bidRequest, BidResponseBuilder.NBR.INVALID_REQUEST, BID_REQUEST_ID_MISSING
+            );
+        } else if (auctionDao.findFirstByBidRequestIdAndOwner(bidRequest.getId(), record.getOwner()) != null) {
+            return bidResponseService.buildNBRBidResponse(
+                    bidRequest, BidResponseBuilder.NBR.INVALID_REQUEST, BID_REQUEST_ID_NOT_UNIQUE
+            );
+        }
+
         record.setBidRequest(bidRequest);
         record.setBidRequestId(bidRequest.getId());
+        BidResponse bidResponse = null;
 
         if (bidRequestValidator.validateBidRequest(bidRequest, record)) {
             final Optional<EligibleCampaignData> data = campaignService.targetCampaign(bidder, publisher, bidRequest, request, record);
@@ -98,18 +114,18 @@ public class BidRequestService {
                 record.setCampaign(campaign.getId());
                 record.setCreative(creative.getId());
 
-                Statistics campaignStats = campaign.getStatistics();
-                if (campaignStats == null) {
-                    campaignStats = new Statistics();
+                if (campaign.getStatistics() == null) {
+                    Statistics campaignStats = new Statistics();
+                    campaign.setStatistics(campaignStats);
                 }
 
-                Statistics creativeStats = creative.getStatistics();
-                if (creativeStats == null) {
-                    creativeStats = new Statistics();
+                if (creative.getStatistics() == null) {
+                    Statistics creativeStats = new Statistics();
+                    creative.setStatistics(creativeStats);
                 }
 
-                campaignStats.setRequests(campaignStats.getRequests() + 1);
-                creativeStats.setRequests(creativeStats.getRequests() + 1);
+                campaign.getStatistics().setRequests(campaign.getStatistics().getRequests() + 1);
+                creative.getStatistics().setRequests(creative.getStatistics().getRequests() + 1);
 
                 float bidPrice = Float.valueOf(price.toString());
                 boolean validBid = bidPrice >= data.get().getData().getBidfloor();
@@ -123,24 +139,21 @@ public class BidRequestService {
                     selectedDeal = getEligibleDeal(
                             campaign, campaignRequiresDeal, creative, creativeRequiresDeal, requestDeals, bidPrice
                     );
-                    if (Strings.isNullOrEmpty(selectedDeal)) {
-                        validBid = false;
-                    }
                 }
 
-                if (validBid) {
-                    campaignStats.setBids(campaignStats.getBids() + 1);
-                    campaignStats.setBidPriceTotal(campaignStats.getBidPriceTotal() + Float.valueOf(price.toString()) / 1000);
-                    creativeStats.setBids(creativeStats.getBids() + 1);
-                    creativeStats.setBidPriceTotal(creativeStats.getBidPriceTotal() + Float.valueOf(price.toString()) / 1000);
+                if (validBid && creativeWillBid(creative)) {
+                    campaign.getStatistics().setBids(campaign.getStatistics().getBids() + 1);
+                    campaign.getStatistics().setBidPriceTotal(campaign.getStatistics().getBidPriceTotal() + Float.valueOf(price.toString()) / 1000);
+                    creative.getStatistics().setBids(creative.getStatistics().getBids() + 1);
+                    creative.getStatistics().setBidPriceTotal(creative.getStatistics().getBidPriceTotal() + Float.valueOf(price.toString()) / 1000);
 
-                    BidResponse bidResponse = bidResponseService.buildBidResponse(
+                    bidResponse = bidResponseService.buildBidResponse(
                             price, bidRequest, bidRequest.getImp().get(0), data.get().getCampaign(), creative, selectedDeal
                     );
 
                     if (bidResponse.getNbr() != null) {
-                        campaignStats.setNbr(campaignStats.getNbr() + 1);
-                        creativeStats.setNbr(creativeStats.getNbr() + 1);
+                        campaign.getStatistics().setNbr(campaign.getStatistics().getNbr() + 1);
+                        creative.getStatistics().setNbr(creative.getStatistics().getNbr() + 1);
                     }
 
                     record.setResponseTimestamp(System.currentTimeMillis());
@@ -148,17 +161,30 @@ public class BidRequestService {
                     if (bidResponse.getSeatbid() != null) {
                         record.setMarkup(bidResponse.getSeatbid().get(0).getBid().get(0).getAdm());
                     }
-                    auctionDao.save(record);
-                    campaign.setStatistics(campaignStats);
-                    campaignService.saveCampaign(campaign);
-                    creative.setStatistics(creativeStats);
-                    creativeService.saveCreative(creative);
-                    return bidResponse;
                 }
+                saveCampaignAndCreative(creative, campaign);
             }
         }
+
         auctionDao.save(record);
-        return generateNoContentResponse(response);
+
+        if (bidResponse != null) {
+            return bidResponse;
+        } else {
+            return generateNoContentResponse(response);
+        }
+    }
+
+    private void saveCampaignAndCreative(Creative creative, Campaign campaign) {
+        campaignService.saveCampaign(campaign);
+        creativeService.saveCreative(creative);
+    }
+
+    private boolean creativeWillBid(Creative creative) {
+        return creative.getBidFrequency() >= 10 ||
+                creative.getBidFrequency() != 0 &&
+                        creative.getBidFrequency() > Math.floor(Math.random() * BID_FREQUENCY_VALUE);
+
     }
 
     private String getEligibleDeal(

@@ -32,6 +32,7 @@ public class Creative {
     private float minBid;
     private float maxBid;
     private boolean syncUsers;
+    private int bidFrequency;
 
     public void copyValues(Creative c) {
         this.name = c.getName();
@@ -55,6 +56,7 @@ public class Creative {
         this.minBid = c.getMinBid();
         this.maxBid = c.getMaxBid();
         this.syncUsers = c.isSyncUsers();
+        this.bidFrequency = c.getBidFrequency();
     }
 
     public String getId() {
@@ -239,5 +241,13 @@ public class Creative {
 
     public void setSyncUsers(boolean syncUsers) {
         this.syncUsers = syncUsers;
+    }
+
+    public int getBidFrequency() {
+        return bidFrequency;
+    }
+
+    public void setBidFrequency(int bidFrequency) {
+        this.bidFrequency = bidFrequency;
     }
 }

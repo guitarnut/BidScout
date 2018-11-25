@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 
 @Component
@@ -42,8 +41,6 @@ public class ClientService {
         this.creativeService = creativeService;
         this.auctionRecordService = auctionRecordService;
     }
-
-    // Todo: Remove objectmapper
 
     public Campaign saveCampaign(String account, Campaign campaign) {
         campaign.setOwner(account);
@@ -93,28 +90,12 @@ public class ClientService {
         return campaignService.removeCreativeFromCampaign(owner, campaignId, creativeId);
     }
 
-    public String getCampaign(String account, String campaignId) {
-        Campaign campaign = campaignService.getCampaign(account, campaignId);
-        if (campaign != null) {
-            try {
-                return objectMapper.writeValueAsString(campaign);
-            } catch (IOException ex) {
-                //
-            }
-        }
-        return "";
+    public Campaign getCampaign(String account, String campaignId) {
+        return campaignService.getCampaign(account, campaignId);
     }
 
-    public String getCreative(String account, String creativeId) {
-        Creative creative = creativeService.getCreative(account, creativeId);
-        if (creative != null) {
-            try {
-                return objectMapper.writeValueAsString(creative);
-            } catch (IOException ex) {
-                //
-            }
-        }
-        return "";
+    public Creative getCreative(String account, String creativeId) {
+        return creativeService.getCreative(account, creativeId);
     }
 
     public Map<String, String> getCreativeNamesByCampaign(String account, String campaignId) {

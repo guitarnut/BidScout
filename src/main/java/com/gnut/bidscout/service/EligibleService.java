@@ -36,7 +36,8 @@ public class EligibleService {
             final Requirements filter = c.getRequirements();
 
             // size targeting
-            if (targetingData.getWidths().contains(c.getW()) && targetingData.getHeights().contains(c.getH())) {
+            if (targetingData.getWidths().contains(c.getW()) && targetingData.getHeights().contains(c.getH())
+                    || c.getW() == 0 && c.getH() == 0) {
                 AtomicInteger matches = new AtomicInteger(0);
                 targetingData.getWidths().forEach(w -> {
                     int index = targetingData.getWidths().indexOf(w);

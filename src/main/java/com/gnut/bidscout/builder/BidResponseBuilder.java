@@ -71,14 +71,29 @@ public class BidResponseBuilder {
         bid.setAttr(creative.getAttr());
         bid.setCid(campaign.getCid());
         bid.setCrid(creative.getCrid());
-        bid.setW(creative.getW());
-        bid.setH(creative.getH());
         bid.setPrice(price);
 
-        if(creative.getType() == Creative.Type.VPAID || creative.getType() == Creative.Type.VAST) {
+        if (creative.getW() == 0 && creative.getH() == 0) {
+            if (creative.getType() == Creative.Type.DISPLAY) {
+                if (bidRequest.getImp().get(0).getBanner().getW() != null
+                        && bidRequest.getImp().get(0).getBanner().getW() != 0) {
+                    bid.setW(bidRequest.getImp().get(0).getBanner().getW());
+                    bid.setH(bidRequest.getImp().get(0).getBanner().getH());
+                } else if (bidRequest.getImp().get(0).getBanner().getFormat() != null
+                        && !bidRequest.getImp().get(0).getBanner().getFormat().isEmpty()) {
+                    bid.setW(bidRequest.getImp().get(0).getBanner().getFormat().get(0).getW());
+                    bid.setH(bidRequest.getImp().get(0).getBanner().getFormat().get(0).getH());
+                }
+            }
+        } else {
+            bid.setW(creative.getW());
+            bid.setH(creative.getH());
+        }
+
+        if (creative.getType() == Creative.Type.VPAID || creative.getType() == Creative.Type.VAST) {
             bid.setAdm(creative.getXml());
         } else {
-            bid.setAdm(adMarkup.generateDisplayMarkup(price, bidRequest.getId(), campaign, creative));
+            bid.setAdm(adMarkup.generateDisplayMarkup(price, bidRequest.getId(), campaign, creative, bid));
         }
 
         if (!Strings.isNullOrEmpty(dealId)) {
@@ -112,7 +127,7 @@ public class BidResponseBuilder {
             NBR nbr
     ) {
         final BidResponse bidResponse = new BidResponse();
-        if(bidRequest == null || Strings.isNullOrEmpty(bidRequest.getId())) {
+        if (bidRequest == null || Strings.isNullOrEmpty(bidRequest.getId())) {
             bidResponse.setId("1");
         } else {
             bidResponse.setId(bidRequest.getId());
