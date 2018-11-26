@@ -15,9 +15,6 @@ public class Ad
     @XmlAttribute(name="conditionalAd")
     private String conditionalAd;
 
-    @XmlValue
-    private String value;
-
     public String getId() {
         return id;
     }
@@ -42,11 +39,4 @@ public class Ad
         this.conditionalAd = conditionalAd;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
 }

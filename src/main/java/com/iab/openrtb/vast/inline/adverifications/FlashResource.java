@@ -1,13 +1,18 @@
 package com.iab.openrtb.vast.inline.adverifications;
 
+import com.gnut.bidscout.xml.AdapterCDATA;
+
 import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="FlashResource")
 public class FlashResource {
+
     @XmlAttribute(name = "apiFramework")
     private String apiFramework;
 
+    @XmlJavaTypeAdapter(AdapterCDATA.class)
     @XmlValue
     private String value;
 

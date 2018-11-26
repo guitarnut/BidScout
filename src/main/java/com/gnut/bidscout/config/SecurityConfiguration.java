@@ -23,6 +23,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                 .csrf().disable()
+                .authorizeRequests().antMatchers("/test/**").permitAll()
+                .and()
                 .authorizeRequests().antMatchers("/health/**").permitAll()
                 .and()
                 .authorizeRequests().antMatchers("/user/create/**").permitAll()

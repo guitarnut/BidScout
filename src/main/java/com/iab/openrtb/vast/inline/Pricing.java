@@ -1,6 +1,9 @@
 package com.iab.openrtb.vast.inline;
 
+import com.gnut.bidscout.xml.AdapterCDATA;
+
 import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="Pricing")
@@ -12,6 +15,7 @@ public class Pricing
     @XmlAttribute(name="currency")
     private String currency;
 
+    @XmlJavaTypeAdapter(AdapterCDATA.class)
     @XmlValue
     private String value;
 

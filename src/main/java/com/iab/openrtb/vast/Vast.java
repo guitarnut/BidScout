@@ -10,10 +10,10 @@ public class Vast {
     @XmlAttribute(name = "version")
     private String id;
 
-    @XmlValue
+    @XmlElement
     private Error error;
 
-    @XmlValue
+    @XmlElement
     private Ad ad;
 
     public String getId() {

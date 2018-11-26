@@ -5,16 +5,17 @@ import javax.xml.bind.annotation.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="Verification")
 public class Verification {
+
     @XmlAttribute(name = "vendor")
     private String vendor;
 
-    @XmlValue
+    @XmlElement
     private JavaScriptResource javaScriptResource;
 
-    @XmlValue
+    @XmlElement
     private FlashResource flashResource;
 
-    @XmlValue
+    @XmlElement
     private ViewableImpression viewableImpression;
 
     public String getVendor() {

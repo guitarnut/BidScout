@@ -13,13 +13,13 @@ public class ViewableImpression {
     @XmlAttribute(name="id")
     private String id;
 
-    @XmlValue
+    @XmlElement
     private Viewable viewable;
 
-    @XmlValue
+    @XmlElement
     private NotViewable notViewable;
 
-    @XmlValue
+    @XmlElement
     private ViewUndetermined viewUndetermined;
 
     public String getId() {

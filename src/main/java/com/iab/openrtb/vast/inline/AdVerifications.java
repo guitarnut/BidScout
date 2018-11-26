@@ -9,7 +9,14 @@ import java.util.List;
 @XmlRootElement(name="AdVerifications")
 public class AdVerifications {
 
-    @XmlValue
+    @XmlElement
     private List<Verification> verifications;
 
+    public List<Verification> getVerifications() {
+        return verifications;
+    }
+
+    public void setVerifications(List<Verification> verifications) {
+        this.verifications = verifications;
+    }
 }

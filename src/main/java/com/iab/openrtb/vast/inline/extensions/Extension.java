@@ -1,4 +1,4 @@
-package com.iab.openrtb.vast.inline;
+package com.iab.openrtb.vast.inline.extensions;
 
 import com.gnut.bidscout.xml.AdapterCDATA;
 
@@ -6,23 +6,22 @@ import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="AdSystem")
-public class AdSystem
-{
-    @XmlAttribute(name="version")
-    private String version;
+@XmlRootElement(name="Extension")
+public class Extension {
 
+    @XmlAttribute(name = "type")
+    private String type;
 
     @XmlJavaTypeAdapter(AdapterCDATA.class)
     @XmlValue
     private String value;
 
-    public String getVersion() {
-        return version;
+    public String getType() {
+        return type;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getValue() {
