@@ -2,6 +2,7 @@ package com.gnut.bidscout.controller;
 
 import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.service.ClientService;
+import com.iab.openrtb.vast.Vast;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -187,6 +188,17 @@ public class ClientController {
             HttpServletResponse response
     ) {
         return service.getCreative(account, creativeId);
+    }
+
+    @RequestMapping(value = "/xml/create/{account}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public void saveXml(
+            @PathVariable("account") String account,
+            @RequestBody Vast vast,
+            HttpServletResponse response
+    ) {
+        service.saveXml(account, vast);
+        response.setStatus(204);
     }
 
     @RequestMapping(value = "/campaign/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")

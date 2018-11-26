@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gnut.bidscout.db.AuctionDao;
 import com.gnut.bidscout.model.*;
 import com.google.common.base.Strings;
+import com.iab.openrtb.vast.Vast;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ public class ClientService {
     private final CampaignService campaignService;
     private final CreativeService creativeService;
     private final AuctionRecordService auctionRecordService;
+    private final VastService vastService;
 
     static {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -32,7 +34,8 @@ public class ClientService {
             ClickService clickService,
             CampaignService campaignService,
             CreativeService creativeService,
-            AuctionRecordService auctionRecordService
+            AuctionRecordService auctionRecordService,
+            VastService vastService
     ) {
         this.auctionDao = auctionDao;
         this.impressionService = impressionService;
@@ -40,6 +43,7 @@ public class ClientService {
         this.campaignService = campaignService;
         this.creativeService = creativeService;
         this.auctionRecordService = auctionRecordService;
+        this.vastService = vastService;
     }
 
     public Campaign saveCampaign(String account, Campaign campaign) {
@@ -162,6 +166,10 @@ public class ClientService {
 
     public void deleteBid(String account, String id) {
         auctionRecordService.deleteBid(account, id);
+    }
+
+    public void saveXml(String account, Vast vast) {
+        vastService.saveXml(account, vast);
     }
 }
 
