@@ -2,9 +2,9 @@ package com.gnut.bidscout.controller;
 
 import com.iab.openrtb.vast.Error;
 import com.iab.openrtb.vast.Vast;
-import com.iab.openrtb.vast.inline.AdVerifications;
-import com.iab.openrtb.vast.inline.adverifications.FlashResource;
-import com.iab.openrtb.vast.inline.adverifications.Verification;
+import com.iab.openrtb.vast.ad.AdVerifications;
+import com.iab.openrtb.vast.ad.adverifications.FlashResource;
+import com.iab.openrtb.vast.ad.adverifications.Verification;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;

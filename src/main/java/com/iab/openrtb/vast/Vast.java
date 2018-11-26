@@ -1,7 +1,5 @@
 package com.iab.openrtb.vast;
 
-import com.iab.openrtb.vast.inline.Ad;
-
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
