@@ -1,10 +1,10 @@
-package com.iab.openrtb.vast;
+package com.iab.openrtb.vast.inline;
 
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="Description")
-public class Description
+@XmlRootElement(name="AdTitle")
+public class AdTitle
 {
     @XmlValue
     private String value;

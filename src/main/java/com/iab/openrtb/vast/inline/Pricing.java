@@ -1,4 +1,4 @@
-package com.iab.openrtb.vast;
+package com.iab.openrtb.vast.inline;
 
 import javax.xml.bind.annotation.*;
 
