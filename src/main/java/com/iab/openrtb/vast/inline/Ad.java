@@ -3,17 +3,20 @@ package com.iab.openrtb.vast.inline;
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="Ad")
-public class Ad
-{
-    @XmlAttribute(name="id")
+@XmlRootElement(name = "Ad")
+public class Ad {
+
+    @XmlAttribute(name = "id")
     private String id;
 
-    @XmlAttribute(name="sequence")
+    @XmlAttribute(name = "sequence")
     private String sequence;
 
-    @XmlAttribute(name="conditionalAd")
+    @XmlAttribute(name = "conditionalAd")
     private String conditionalAd;
+
+    @XmlElement
+    private InLine inLine;
 
     public String getId() {
         return id;
@@ -39,4 +42,11 @@ public class Ad
         this.conditionalAd = conditionalAd;
     }
 
+    public InLine getInLine() {
+        return inLine;
+    }
+
+    public void setInLine(InLine inLine) {
+        this.inLine = inLine;
+    }
 }
