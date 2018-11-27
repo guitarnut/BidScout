@@ -10,15 +10,15 @@ import java.util.List;
 @XmlRootElement(name="AdVerifications")
 public class AdVerifications {
 
-    @JsonProperty("Verifications")
-    @XmlElement(name = "Verifications")
-    private List<Verification> verifications;
+    @JsonProperty("Verification")
+    @XmlElement(name = "Verification")
+    private List<Verification> value;
 
-    public List<Verification> getVerifications() {
-        return verifications;
+    public List<Verification> getValue() {
+        return value;
     }
 
-    public void setVerifications(List<Verification> verifications) {
-        this.verifications = verifications;
+    public void setValue(List<Verification> value) {
+        this.value = value;
     }
 }

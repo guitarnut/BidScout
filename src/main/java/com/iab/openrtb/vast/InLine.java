@@ -2,6 +2,7 @@ package com.iab.openrtb.vast;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.*;
+import com.iab.openrtb.vast.ad.adverifications.Verification;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -55,7 +56,7 @@ public class InLine {
 
     @JsonProperty("AdVerifications")
     @XmlElement(name = "AdVerifications")
-    private List<AdVerifications> adVerifications;
+    private AdVerifications adVerifications;
 
     @JsonProperty("Extensions")
     @XmlElement(name = "Extensions")
@@ -145,12 +146,12 @@ public class InLine {
         this.viewableImpression = viewableImpression;
     }
 
-    public List<AdVerifications> getAdVerifications() {
+    public AdVerifications getAdVerifications() {
         return adVerifications;
     }
 
-    public void setAdVerifications(List<AdVerifications> adVerifications) {
-        this.adVerifications = adVerifications;
+    public void setAdVerifications(AdVerifications verification) {
+        this.adVerifications = verification;
     }
 
     public List<Extensions> getExtensions() {

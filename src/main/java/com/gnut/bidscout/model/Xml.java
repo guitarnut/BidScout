@@ -5,6 +5,7 @@ import com.iab.openrtb.vast.Vast;
 public class Xml {
     private String id;
     private String owner;
+    private String name;
     private Vast vast;
 
     public String getId() {
@@ -21,6 +22,14 @@ public class Xml {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Vast getVast() {

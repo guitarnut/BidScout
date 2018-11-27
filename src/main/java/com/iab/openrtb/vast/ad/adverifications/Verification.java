@@ -1,21 +1,27 @@
 package com.iab.openrtb.vast.ad.adverifications;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="Verification")
 public class Verification {
 
+    @JsonProperty("vendor")
     @XmlAttribute(name = "vendor")
     private String vendor;
 
-    @XmlElement
+    @JsonProperty("JavaScriptResource")
+    @XmlElement(name = "JavaScriptResource")
     private JavaScriptResource javaScriptResource;
 
-    @XmlElement
+    @JsonProperty("FlashResource")
+    @XmlElement(name = "FlashResource")
     private FlashResource flashResource;
 
-    @XmlElement
+    @JsonProperty("ViewableImpression")
+    @XmlElement(name = "ViewableImpression")
     private ViewableImpression viewableImpression;
 
     public String getVendor() {
