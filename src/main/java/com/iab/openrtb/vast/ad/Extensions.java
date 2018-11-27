@@ -1,5 +1,6 @@
 package com.iab.openrtb.vast.ad;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.extensions.Extension;
 
 import javax.xml.bind.annotation.*;
@@ -9,7 +10,8 @@ import java.util.List;
 @XmlRootElement(name="Extensions")
 public class Extensions {
 
-    @XmlValue
+    @JsonProperty("Extensions")
+    @XmlElement(name = "Extensions")
     private List<Extension> extensions;
 
     public List<Extension> getExtensions() {

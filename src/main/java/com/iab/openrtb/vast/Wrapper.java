@@ -1,5 +1,6 @@
 package com.iab.openrtb.vast;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.*;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -12,31 +13,40 @@ import java.util.List;
 @XmlRootElement(name="Error")
 public class Wrapper {
 
-    @XmlElement
+    @JsonProperty("Impression")
+    @XmlElement(name = "Impression")
     private Impression impression;
 
-    @XmlElement
+    @JsonProperty("VASTAdTagURI")
+    @XmlElement(name = "VASTAdTagURI")
     private VASTAdTagURI vastAdTagURI;
 
-    @XmlElement
+    @JsonProperty("AdSystem")
+    @XmlElement(name = "AdSystem")
     private AdSystem adSystem;
 
-    @XmlElement
+    @JsonProperty("Pricing")
+    @XmlElement(name = "Pricing")
     private Pricing pricing;
 
-    @XmlElement
+    @JsonProperty("Error")
+    @XmlElement(name = "Error")
     private Error error;
 
-    @XmlElement
+    @JsonProperty("ViewableImpression")
+    @XmlElement(name = "ViewableImpression")
     private ViewableImpression viewableImpression;
 
-    @XmlElement
+    @JsonProperty("AdVerifications")
+    @XmlElement(name = "AdVerifications")
     private List<AdVerifications> adVerifications;
 
-    @XmlElement
+    @JsonProperty("Extensions")
+    @XmlElement(name = "Extensions")
     private List<Extensions> extensions;
 
-    @XmlElement
+    @JsonProperty("Creatives")
+    @XmlElement(name = "Creatives")
     private List<Creatives> creatives;
 
     public Impression getImpression() {

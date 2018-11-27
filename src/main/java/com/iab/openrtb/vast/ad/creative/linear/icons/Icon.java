@@ -1,5 +1,7 @@
 package com.iab.openrtb.vast.ad.creative.linear.icons;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -33,19 +35,24 @@ public class Icon {
     @XmlAttribute(name = "pxratio,")
     private String pxratio;
 
-    @XmlElement
+    @JsonProperty("StaticResource")
+    @XmlElement(name = "StaticResource")
     StaticResource staticResource;
 
-    @XmlElement
+    @JsonProperty("IFrameResource")
+    @XmlElement(name = "IFrameResource")
     IFrameResource iFrameResource;
 
-    @XmlElement
+    @JsonProperty("HTMLResource")
+    @XmlElement(name = "HTMLResource")
     HTMLResource htmlResource;
 
-    @XmlElement
+    @JsonProperty("IconClicks")
+    @XmlElement(name = "IconClicks")
     IconClicks iconClicks;
 
-    @XmlElement
+    @JsonProperty("IconViewTracking")
+    @XmlElement(name = "IconViewTracking")
     IconViewTracking iconViewTracking;
 
     public String getProgram() {

@@ -8,18 +8,19 @@ import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="Ad")
+@XmlType(name="viewableImpressionAd")
 public class ViewableImpression {
 
     @XmlAttribute(name="id")
     private String id;
 
-    @XmlElement
+    @XmlElement(name = "Viewable")
     private Viewable viewable;
 
-    @XmlElement
+    @XmlElement(name = "NotViewable")
     private NotViewable notViewable;
 
-    @XmlElement
+    @XmlElement(name = "ViewUndetermined")
     private ViewUndetermined viewUndetermined;
 
     public String getId() {

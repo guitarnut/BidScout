@@ -171,5 +171,9 @@ public class ClientService {
     public void saveXml(String account, Vast vast) {
         vastService.saveXml(account, vast);
     }
+
+    public Vast getXml() {
+        return vastService.getXml();
+    }
 }
 

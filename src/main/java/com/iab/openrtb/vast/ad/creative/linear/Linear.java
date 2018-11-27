@@ -1,5 +1,6 @@
 package com.iab.openrtb.vast.ad.creative.linear;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.creative.linear.icons.Icon;
 import com.iab.openrtb.vast.ad.creative.linear.mediafiles.MediaFile;
 import com.iab.openrtb.vast.ad.creative.linear.trackingevents.Tracking;
@@ -14,22 +15,28 @@ public class Linear {
     @XmlAttribute(name="skipoffset")
     private String skipoffset;
 
-    @XmlElement
+    @JsonProperty("Duration")
+    @XmlElement(name = "Duration")
     private Duration duration;
 
-    @XmlElement
+    @JsonProperty("AdParameters")
+    @XmlElement(name = "AdParameters")
     private AdParameters adParameters;
 
-    @XmlElement
+    @JsonProperty("MediaFiles")
+    @XmlElement(name = "MediaFiles")
     private List<MediaFile> mediaFiles;
 
-    @XmlElement
+    @JsonProperty("VideoClicks")
+    @XmlElement(name = "VideoClicks")
     private VideoClicks videoClicks;
 
-    @XmlElement
+    @JsonProperty("TrackingEvents")
+    @XmlElement(name = "TrackingEvents")
     private List<Tracking> trackingEvents;
 
-    @XmlElement
+    @JsonProperty("Icons")
+    @XmlElement(name = "Icons")
     private List<Icon> icons;
 
     public String getSkipoffset() {

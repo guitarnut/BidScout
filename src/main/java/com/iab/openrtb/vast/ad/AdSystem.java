@@ -12,7 +12,6 @@ public class AdSystem
     @XmlAttribute(name="version")
     private String version;
 
-
     @XmlJavaTypeAdapter(AdapterCDATA.class)
     @XmlValue
     private String value;

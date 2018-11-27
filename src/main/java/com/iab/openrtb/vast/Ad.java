@@ -1,5 +1,7 @@
 package com.iab.openrtb.vast;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -15,10 +17,12 @@ public class Ad {
     @XmlAttribute(name = "conditionalAd")
     private String conditionalAd;
 
-    @XmlElement
+    @JsonProperty("InLine")
+    @XmlElement(name = "InLine")
     private InLine inLine;
 
-    @XmlElement
+    @JsonProperty("Wrapper")
+    @XmlElement(name = "Wrapper")
     private Wrapper wrapper;
 
     public String getId() {

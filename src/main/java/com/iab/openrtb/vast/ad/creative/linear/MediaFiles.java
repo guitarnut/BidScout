@@ -1,5 +1,6 @@
 package com.iab.openrtb.vast.ad.creative.linear;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.creative.linear.mediafiles.InteractiveCreativeFile;
 import com.iab.openrtb.vast.ad.creative.linear.mediafiles.MediaFile;
 import com.iab.openrtb.vast.ad.creative.linear.mediafiles.Mezzanine;
@@ -13,13 +14,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "MediaFiles")
 public class MediaFiles {
 
-    @XmlElement
+    @JsonProperty("Mezzanine")
+    @XmlElement(name = "Mezzanine")
     private Mezzanine mezzanine;
 
-    @XmlElement
+    @JsonProperty("MediaFile")
+    @XmlElement(name = "MediaFile")
     private MediaFile mediaFile;
 
-    @XmlElement
+    @JsonProperty("InteractiveCreativeFile")
+    @XmlElement(name = "InteractiveCreativeFile")
     private InteractiveCreativeFile interactiveCreativeFile;
 
     public Mezzanine getMezzanine() {

@@ -46,7 +46,7 @@ public class MediaFile {
     private String apiFramework;
 
     @XmlJavaTypeAdapter(AdapterCDATA.class)
-    @XmlElement
+    @XmlValue
     private String value;
 
     public String getId() {

@@ -1,5 +1,6 @@
 package com.iab.openrtb.vast.ad.creative.linear.icons;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.creative.linear.icons.iconclicks.IconClickThrough;
 import com.iab.openrtb.vast.ad.creative.linear.icons.iconclicks.IconClickTracking;
 
@@ -9,10 +10,12 @@ import javax.xml.bind.annotation.*;
 @XmlRootElement(name = "IconClicks")
 public class IconClicks {
 
-    @XmlElement
+    @JsonProperty("IconClickThrough")
+    @XmlElement(name = "IconClickThrough")
     private IconClickThrough iconClickThrough;
 
-    @XmlElement
+    @JsonProperty("IconClickTracking")
+    @XmlElement(name = "IconClickTracking")
     private IconClickTracking iconClickTracking;
 
     public IconClickThrough getIconClickThrough() {

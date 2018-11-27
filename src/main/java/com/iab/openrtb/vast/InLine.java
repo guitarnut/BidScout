@@ -1,5 +1,6 @@
 package com.iab.openrtb.vast;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.*;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -12,43 +13,56 @@ import java.util.List;
 @XmlRootElement(name = "InLine")
 public class InLine {
 
-    @XmlElement
+    @JsonProperty("AdSystem")
+    @XmlElement(name = "AdSystem")
     private AdSystem adSystem;
 
-    @XmlElement
+    @JsonProperty("AdTitle")
+    @XmlElement(name = "AdTitle")
     private AdTitle adTitle;
 
-    @XmlElement
+    @JsonProperty("Impression")
+    @XmlElement(name = "Impression")
     private Impression impression;
 
-    @XmlElement
+    @JsonProperty("Category")
+    @XmlElement(name = "Category")
     private Category category;
 
-    @XmlElement
+    @JsonProperty("Description")
+    @XmlElement(name = "Description")
     private Description description;
 
-    @XmlElement
+    @JsonProperty("Advertiser")
+    @XmlElement(name = "Advertiser")
     private Advertiser advertiser;
 
-    @XmlElement
+    @JsonProperty("Pricing")
+    @XmlElement(name = "Pricing")
     private Pricing pricing;
 
-    @XmlElement
+    @JsonProperty("Survey")
+    @XmlElement(name = "Survey")
     private Survey survey;
 
-    @XmlElement
+    @JsonProperty("Error")
+    @XmlElement(name = "Error")
     private Error error;
 
-    @XmlElement
+    @JsonProperty("ViewableImpression")
+    @XmlElement(name = "ViewableImpression")
     private ViewableImpression viewableImpression;
 
-    @XmlElement
+    @JsonProperty("AdVerifications")
+    @XmlElement(name = "AdVerifications")
     private List<AdVerifications> adVerifications;
 
-    @XmlElement
+    @JsonProperty("Extensions")
+    @XmlElement(name = "Extensions")
     private List<Extensions> extensions;
 
-    @XmlElement
+    @JsonProperty("Creatives")
+    @XmlElement(name = "Creatives")
     private List<Creatives> creatives;
 
     public AdSystem getAdSystem() {

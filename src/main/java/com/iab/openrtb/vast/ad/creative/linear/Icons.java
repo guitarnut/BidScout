@@ -1,5 +1,6 @@
 package com.iab.openrtb.vast.ad.creative.linear;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.creative.linear.icons.Icon;
 
 import javax.xml.bind.annotation.*;
@@ -9,7 +10,8 @@ import java.util.List;
 @XmlRootElement(name = "Icons")
 public class Icons {
 
-    @XmlElement
+    @JsonProperty("Icons")
+    @XmlElement(name = "Icons")
     private List<Icon> icons;
 
     public List<Icon> getIcons() {

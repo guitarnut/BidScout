@@ -5,6 +5,8 @@ import com.gnut.bidscout.model.Xml;
 import com.iab.openrtb.vast.Vast;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class VastService {
 
@@ -18,5 +20,11 @@ public class VastService {
         Xml xml = new Xml();
         xml.setOwner(account);
         xml.setVast(vast);
+        xmlDao.save(xml);
+    }
+
+    public Vast getXml() {
+        List<Xml> result = xmlDao.findAll();
+        return result.get(0).getVast();
     }
 }

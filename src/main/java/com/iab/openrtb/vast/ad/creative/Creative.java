@@ -1,5 +1,6 @@
 package com.iab.openrtb.vast.ad.creative;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.creative.linear.Linear;
 
 import javax.xml.bind.annotation.*;
@@ -21,13 +22,16 @@ public class Creative {
     @XmlAttribute(name = "apiFramework")
     private String apiFramework;
 
-    @XmlElement
+    @JsonProperty("UniversalAdId")
+    @XmlElement(name = "UniversalAdId")
     private UniversalAdId universalAdId;
 
-    @XmlElement
+    @JsonProperty("CreativeExtensions")
+    @XmlElement(name = "CreativeExtensions")
     private List<CreativeExtensions> creativeExtensions;
 
-    @XmlElement
+    @JsonProperty("Linear")
+    @XmlElement(name = "Linear")
     private Linear linear;
 
     public String getId() {

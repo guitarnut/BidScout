@@ -1,5 +1,6 @@
 package com.iab.openrtb.vast.ad.creative.linear;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.creative.linear.trackingevents.Tracking;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -12,7 +13,8 @@ import java.util.List;
 @XmlRootElement(name = "TrackingEvents")
 public class TrackingEvents {
 
-    @XmlElement
+    @JsonProperty("TrackingEvents")
+    @XmlElement(name = "TrackingEvents")
     private List<Tracking> tracking;
 
     public List<Tracking> getTracking() {

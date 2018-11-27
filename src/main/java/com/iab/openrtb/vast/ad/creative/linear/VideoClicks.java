@@ -1,5 +1,6 @@
 package com.iab.openrtb.vast.ad.creative.linear;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.creative.linear.videoclicks.ClickThrough;
 import com.iab.openrtb.vast.ad.creative.linear.videoclicks.ClickTracking;
 import com.iab.openrtb.vast.ad.creative.linear.videoclicks.CustomClick;
@@ -13,13 +14,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "VideoClicks")
 public class VideoClicks {
 
-    @XmlElement
+    @JsonProperty("ClickThrough")
+    @XmlElement(name = "ClickThrough")
     private ClickThrough clickThrough;
 
-    @XmlElement
+    @JsonProperty("ClickTracking")
+    @XmlElement(name = "ClickTracking")
     private ClickTracking clickTracking;
 
-    @XmlElement
+    @JsonProperty("CustomClick")
+    @XmlElement(name = "CustomClick")
     private CustomClick customClick;
 
     public ClickThrough getClickThrough() {

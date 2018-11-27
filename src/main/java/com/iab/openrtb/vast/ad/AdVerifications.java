@@ -1,5 +1,6 @@
 package com.iab.openrtb.vast.ad;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.adverifications.Verification;
 
 import javax.xml.bind.annotation.*;
@@ -9,7 +10,8 @@ import java.util.List;
 @XmlRootElement(name="AdVerifications")
 public class AdVerifications {
 
-    @XmlElement
+    @JsonProperty("Verifications")
+    @XmlElement(name = "Verifications")
     private List<Verification> verifications;
 
     public List<Verification> getVerifications() {

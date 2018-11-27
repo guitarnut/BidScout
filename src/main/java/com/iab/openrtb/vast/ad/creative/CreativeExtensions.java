@@ -1,5 +1,7 @@
 package com.iab.openrtb.vast.ad.creative;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -10,7 +12,8 @@ import java.util.List;
 @XmlRootElement(name = "CreativeExtensions")
 public class CreativeExtensions {
 
-    @XmlElement
+    @JsonProperty("CreativeExtensions")
+    @XmlElement(name = "CreativeExtensions")
     private List<CreativeExtension> creativeExtensions;
 
     public List<CreativeExtension> getCreativeExtensions() {
