@@ -194,11 +194,20 @@ public class ClientController {
     @ResponseBody
     public void saveXml(
             @PathVariable("account") String account,
-            @RequestBody Vast vast,
+            @RequestBody Xml xml,
             HttpServletResponse response
     ) {
-        service.saveXml(account, vast);
+        service.saveXml(account, xml);
         response.setStatus(204);
+    }
+
+    @RequestMapping(value = "/xml/all/{account}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public Map<String, String> getAllXml(
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        return service.getAllXml(account);
     }
 
     @RequestMapping(value = "/campaign/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")

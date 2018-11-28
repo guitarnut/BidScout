@@ -168,12 +168,16 @@ public class ClientService {
         auctionRecordService.deleteBid(account, id);
     }
 
-    public void saveXml(String account, Vast vast) {
-        vastService.saveXml(account, vast);
+    public void saveXml(String account, Xml xml) {
+        vastService.saveXml(account, xml);
     }
 
     public Vast getXml() {
         return vastService.getXml();
+    }
+
+    public Map<String, String> getAllXml(String account) {
+        return vastService.getAllVastDocuments(account);
     }
 }
 
