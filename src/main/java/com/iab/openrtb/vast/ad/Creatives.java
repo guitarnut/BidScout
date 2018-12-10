@@ -2,24 +2,21 @@ package com.iab.openrtb.vast.ad;
 
 import com.iab.openrtb.vast.ad.creative.Creative;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.*;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "Creatives")
 public class Creatives {
 
-    @XmlValue
-    private List<Creative> creatives;
+    @XmlElement(name = "Creative")
+    private List<Creative> creative;
 
-    public List<Creative> getCreatives() {
-        return creatives;
+    public List<Creative> getCreative() {
+        return creative;
     }
 
-    public void setCreatives(List<Creative> creatives) {
-        this.creatives = creatives;
+    public void setCreative(List<Creative> creative) {
+        this.creative = creative;
     }
 }

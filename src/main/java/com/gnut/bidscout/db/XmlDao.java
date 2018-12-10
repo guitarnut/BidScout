@@ -8,5 +8,4 @@ import java.util.List;
 public interface XmlDao extends MongoRepository<Xml, String> {
     Xml findByOwnerAndId(String owner, String id);
     List<Xml> findAllByOwner(String owner);
-
 }

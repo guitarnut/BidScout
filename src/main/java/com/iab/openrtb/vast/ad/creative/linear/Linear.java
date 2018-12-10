@@ -24,7 +24,8 @@ public class Linear {
     private AdParameters adParameters;
 
     @JsonProperty("MediaFiles")
-    @XmlElement(name = "MediaFiles")
+    @XmlElementWrapper(name="MediaFiles")
+    @XmlElement(name="MediaFile")
     private List<MediaFile> mediaFiles;
 
     @JsonProperty("VideoClicks")

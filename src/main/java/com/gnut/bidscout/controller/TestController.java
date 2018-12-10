@@ -18,10 +18,4 @@ public class TestController {
     public TestController(VastService service) {
         this.service = service;
     }
-
-    @RequestMapping(value = "/xml", method = RequestMethod.GET, produces = "application/xml")
-    @ResponseBody
-    public Vast test() {
-        return service.getXml();
-    }
 }

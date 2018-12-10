@@ -5,10 +5,7 @@ import com.iab.openrtb.vast.ad.*;
 import com.iab.openrtb.vast.ad.adverifications.Verification;
 import com.iab.openrtb.vast.ad.creative.Creative;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -64,7 +61,8 @@ public class InLine {
     private List<Extensions> extensions;
 
     @JsonProperty("Creatives")
-    @XmlElement(name = "Creatives")
+    @XmlElementWrapper(name="Creatives")
+    @XmlElement(name="Creative")
     private List<Creative> creatives;
 
     public AdSystem getAdSystem() {

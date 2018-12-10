@@ -24,16 +24,11 @@ public class VastService {
         xmlDao.save(xml);
     }
 
-    public Vast getXml() {
-        List<Xml> result = xmlDao.findAll();
-        return result.get(0).getVast();
-    }
-
     public Map<String, String> getAllVastDocuments(String account) {
         List<Xml> allXml = xmlDao.findAllByOwner(account);
-        if(allXml != null) {
+        if (allXml != null) {
             Map<String, String> results = new HashMap<>();
-            allXml.forEach(x->{
+            allXml.forEach(x -> {
                 results.put(x.getId(), x.getName());
             });
             return results;
@@ -44,10 +39,21 @@ public class VastService {
 
     public Vast serveVast(String account, String id) {
         Xml xml = xmlDao.findByOwnerAndId(account, id);
-        if(xml != null){
+        if (xml != null) {
             return xml.getVast();
         } else {
             return null;
+        }
+    }
+
+    public Xml getXml(String account, String xmlId) {
+        return xmlDao.findByOwnerAndId(account, xmlId);
+    }
+
+    public void deleteXml(String account, String xmlId) {
+        Xml result = xmlDao.findByOwnerAndId(account, xmlId);
+        if (result != null) {
+            xmlDao.delete(result);
         }
     }
 }

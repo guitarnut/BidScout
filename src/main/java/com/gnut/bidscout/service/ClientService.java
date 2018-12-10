@@ -172,12 +172,16 @@ public class ClientService {
         vastService.saveXml(account, xml);
     }
 
-    public Vast getXml() {
-        return vastService.getXml();
-    }
-
     public Map<String, String> getAllXml(String account) {
         return vastService.getAllVastDocuments(account);
+    }
+
+    public Xml getXml(String account, String xmlId) {
+        return vastService.getXml(account, xmlId);
+    }
+
+    public void deleteXml(String account, String xmlId) {
+        vastService.deleteXml(account, xmlId);
     }
 }
 

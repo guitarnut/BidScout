@@ -212,6 +212,26 @@ public class ClientController {
         return service.getAllXml(account);
     }
 
+    @RequestMapping(value = "/xml/get/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public Xml getXml(
+            @PathVariable("id") String xmlId,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        return service.getXml(account, xmlId);
+    }
+
+    @RequestMapping(value = "/xml/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public void deleteXml(
+            @PathVariable("id") String xmlId,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        service.deleteXml(account, xmlId);
+    }
+
     @RequestMapping(value = "/campaign/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public void deleteCampaign(
