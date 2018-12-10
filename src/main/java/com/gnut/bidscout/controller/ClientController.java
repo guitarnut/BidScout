@@ -1,5 +1,6 @@
 package com.gnut.bidscout.controller;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.service.ClientService;
 import com.iab.openrtb.vast.Vast;
@@ -192,6 +193,7 @@ public class ClientController {
 
     @RequestMapping(value = "/xml/create/{account}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public void saveXml(
             @PathVariable("account") String account,
             @RequestBody Xml xml,

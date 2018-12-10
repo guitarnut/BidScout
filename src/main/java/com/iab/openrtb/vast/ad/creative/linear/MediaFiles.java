@@ -5,10 +5,8 @@ import com.iab.openrtb.vast.ad.creative.linear.mediafiles.InteractiveCreativeFil
 import com.iab.openrtb.vast.ad.creative.linear.mediafiles.MediaFile;
 import com.iab.openrtb.vast.ad.creative.linear.mediafiles.Mezzanine;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
+import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "MediaFiles")
@@ -18,9 +16,8 @@ public class MediaFiles {
     @XmlElement(name = "Mezzanine")
     private Mezzanine mezzanine;
 
-    @JsonProperty("MediaFile")
-    @XmlElement(name = "MediaFile")
-    private MediaFile mediaFile;
+    @XmlValue
+    private List<MediaFile> mediaFiles;
 
     @JsonProperty("InteractiveCreativeFile")
     @XmlElement(name = "InteractiveCreativeFile")
@@ -34,12 +31,12 @@ public class MediaFiles {
         this.mezzanine = mezzanine;
     }
 
-    public MediaFile getMediaFile() {
-        return mediaFile;
+    public List<MediaFile> getMediaFiles() {
+        return mediaFiles;
     }
 
-    public void setMediaFile(MediaFile mediaFile) {
-        this.mediaFile = mediaFile;
+    public void setMediaFiles(List<MediaFile> mediaFiles) {
+        this.mediaFiles = mediaFiles;
     }
 
     public InteractiveCreativeFile getInteractiveCreativeFile() {

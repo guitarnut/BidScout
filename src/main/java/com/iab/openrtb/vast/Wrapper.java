@@ -2,6 +2,7 @@ package com.iab.openrtb.vast;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iab.openrtb.vast.ad.*;
+import com.iab.openrtb.vast.ad.creative.Creative;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -47,7 +48,7 @@ public class Wrapper {
 
     @JsonProperty("Creatives")
     @XmlElement(name = "Creatives")
-    private List<Creatives> creatives;
+    private List<Creative> creatives;
 
     public Impression getImpression() {
         return impression;
@@ -113,11 +114,11 @@ public class Wrapper {
         this.extensions = extensions;
     }
 
-    public List<Creatives> getCreatives() {
+    public List<Creative> getCreatives() {
         return creatives;
     }
 
-    public void setCreatives(List<Creatives> creatives) {
+    public void setCreatives(List<Creative> creatives) {
         this.creatives = creatives;
     }
 }

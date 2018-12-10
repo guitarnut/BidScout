@@ -1,6 +1,7 @@
 package com.iab.openrtb.vast;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mongodb.lang.Nullable;
 import org.springframework.data.annotation.Id;
 
 import javax.xml.bind.annotation.*;
@@ -16,6 +17,7 @@ public class Vast {
 
     @JsonProperty("Error")
     @XmlElement
+    @Nullable
     private Error error;
 
     @JsonProperty("Ad")
