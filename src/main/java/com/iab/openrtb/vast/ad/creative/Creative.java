@@ -1,37 +1,39 @@
 package com.iab.openrtb.vast.ad.creative;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.iab.openrtb.vast.ad.creative.linear.Linear;
 
-import javax.xml.bind.annotation.*;
 import java.util.List;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "Creative")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Creative {
 
-    @XmlAttribute(name = "id")
+    @JacksonXmlProperty(isAttribute = true)
     private String id;
 
-    @XmlAttribute(name = "sequence")
+    @JacksonXmlProperty(isAttribute = true)
     private String sequence;
 
-    @XmlAttribute(name = "adId")
+    @JacksonXmlProperty(isAttribute = true)
     private String adId;
 
-    @XmlAttribute(name = "apiFramework")
+    @JacksonXmlProperty(isAttribute = true)
     private String apiFramework;
 
     @JsonProperty("UniversalAdId")
-    @XmlElement(name = "UniversalAdId")
+    @JacksonXmlProperty(localName = "UniversalAdId")
     private UniversalAdId universalAdId;
 
     @JsonProperty("CreativeExtensions")
-    @XmlElement(name = "CreativeExtensions")
-    private List<CreativeExtensions> creativeExtensions;
+    @JacksonXmlElementWrapper(localName = "CreativeExtensions")
+    @JacksonXmlProperty(localName = "CreativeExtension")
+    private List<CreativeExtension> creativeExtensions;
 
     @JsonProperty("Linear")
-    @XmlElement(name = "Linear")
+    @JacksonXmlProperty(localName = "Linear")
     private Linear linear;
 
     public String getId() {
@@ -74,11 +76,11 @@ public class Creative {
         this.universalAdId = universalAdId;
     }
 
-    public List<CreativeExtensions> getCreativeExtensions() {
+    public List<CreativeExtension> getCreativeExtensions() {
         return creativeExtensions;
     }
 
-    public void setCreativeExtensions(List<CreativeExtensions> creativeExtensions) {
+    public void setCreativeExtensions(List<CreativeExtension> creativeExtensions) {
         this.creativeExtensions = creativeExtensions;
     }
 

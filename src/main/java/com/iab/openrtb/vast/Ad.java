@@ -1,28 +1,27 @@
 package com.iab.openrtb.vast;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
-import javax.xml.bind.annotation.*;
-
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "Ad")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Ad {
 
-    @XmlAttribute(name = "id")
+    @JacksonXmlProperty(isAttribute = true)
     private String id;
 
-    @XmlAttribute(name = "sequence")
+    @JacksonXmlProperty(isAttribute = true)
     private String sequence;
 
-    @XmlAttribute(name = "conditionalAd")
+    @JacksonXmlProperty(isAttribute = true)
     private String conditionalAd;
 
     @JsonProperty("InLine")
-    @XmlElement(name = "InLine")
+    @JacksonXmlProperty(localName = "InLine")
     private InLine inLine;
 
     @JsonProperty("Wrapper")
-    @XmlElement(name = "Wrapper")
+    @JacksonXmlProperty(localName = "Wrapper")
     private Wrapper wrapper;
 
     public String getId() {

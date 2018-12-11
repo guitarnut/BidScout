@@ -1,20 +1,15 @@
 package com.iab.openrtb.vast.ad.creative.linear;
 
-import com.gnut.bidscout.xml.AdapterCDATA;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "Duration")
 public class Duration {
 
-    @XmlJavaTypeAdapter(AdapterCDATA.class)
-    @XmlValue
+    @JacksonXmlText
     private String value;
+
+    public Duration(String value) {
+        this.value = value;
+    }
 
     public String getValue() {
         return value;

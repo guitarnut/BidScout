@@ -1,27 +1,25 @@
 package com.iab.openrtb.vast;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mongodb.lang.Nullable;
-import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
-import javax.xml.bind.annotation.*;
-
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "VAST")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JacksonXmlRootElement(localName = "VAST")
 public class Vast {
-    @Id
+    @JacksonXmlProperty(isAttribute = true)
     private String id;
 
-    @XmlAttribute(name = "version")
+    @JacksonXmlProperty(isAttribute = true)
     private String version;
 
     @JsonProperty("Error")
-    @XmlElement
-    @Nullable
+    @JacksonXmlProperty(localName = "Error")
     private Error error;
 
     @JsonProperty("Ad")
-    @XmlElement(name = "Ad")
+    @JacksonXmlProperty(localName = "Ad")
     private Ad ad;
 
     public String getId() {

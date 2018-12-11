@@ -67,19 +67,19 @@ public class VastService {
     }
 
     private void addLinearTrackingEventsToServedVast(Vast vast) {
-        vast.getAd().getInLine().getCreatives().get(0).getLinear().setTrackingEvents(
+        vast.getAd().getInLine().getCreative().get(0).getLinear().setTrackingEvent(
             eventsBuilder.getTrackingEventsLinear()
         );
-        vast.getAd().getInLine().getCreatives().get(0).getLinear().getTrackingEvents().addAll(
+        vast.getAd().getInLine().getCreative().get(0).getLinear().getTrackingEvent().addAll(
                 eventsBuilder.getTrackingEventsPlayer()
         );
     }
 
     private void addVideoClickToServedVast(Vast vast) {
-        vast.getAd().getInLine().getCreatives().get(0).getLinear().setVideoClicks(
+        vast.getAd().getInLine().getCreative().get(0).getLinear().setVideoClicks(
                 new VideoClicks()
         );
-        vast.getAd().getInLine().getCreatives().get(0).getLinear().getVideoClicks().setClickTracking(
+        vast.getAd().getInLine().getCreative().get(0).getLinear().getVideoClicks().setClickTracking(
                 eventsBuilder.getClickTracking()
         );
     }

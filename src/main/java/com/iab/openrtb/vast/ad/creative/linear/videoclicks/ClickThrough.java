@@ -1,19 +1,16 @@
 package com.iab.openrtb.vast.ad.creative.linear.videoclicks;
 
-import com.gnut.bidscout.xml.AdapterCDATA;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 
-import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "ClickThrough")
 public class ClickThrough {
 
-    @XmlAttribute(name = "id")
+    @JacksonXmlProperty(isAttribute = true, localName = "id")
     private String id;
 
-    @XmlJavaTypeAdapter(AdapterCDATA.class)
-    @XmlValue
+    @JacksonXmlText
+    @JacksonXmlCData
     private String value;
 
     public String getId() {

@@ -1,52 +1,51 @@
 package com.iab.openrtb.vast.ad.creative.linear.mediafiles;
 
-import com.gnut.bidscout.xml.AdapterCDATA;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 
-import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "MediaFile")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class MediaFile {
 
-    @XmlAttribute(name = "id")
+    @JacksonXmlProperty(isAttribute = true)
     private String id;
 
-    @XmlAttribute(name = "delivery")
+    @JacksonXmlProperty(isAttribute = true)
     private String delivery;
 
-    @XmlAttribute(name = "type")
+    @JacksonXmlProperty(isAttribute = true)
     private String type;
 
-    @XmlAttribute(name = "bitrate")
+    @JacksonXmlProperty(isAttribute = true)
     private String bitrate;
 
-    @XmlAttribute(name = "minBitrate")
+    @JacksonXmlProperty(isAttribute = true)
     private String minBitrate;
 
-    @XmlAttribute(name = "maxBitrate")
+    @JacksonXmlProperty(isAttribute = true)
     private String maxBitrate;
 
-    @XmlAttribute(name = "width")
+    @JacksonXmlProperty(isAttribute = true)
     private String width;
 
-    @XmlAttribute(name = "height")
+    @JacksonXmlProperty(isAttribute = true)
     private String height;
 
-    @XmlAttribute(name = "scalable")
+    @JacksonXmlProperty(isAttribute = true)
     private String scalable;
 
-    @XmlAttribute(name = "mantainAspectRatio")
+    @JacksonXmlProperty(isAttribute = true)
     private String mantainAspectRatio;
 
-    @XmlAttribute(name = "codec")
+    @JacksonXmlProperty(isAttribute = true)
     private String codec;
 
-    @XmlAttribute(name = "apiFramework")
+    @JacksonXmlProperty(isAttribute = true)
     private String apiFramework;
 
-    @XmlJavaTypeAdapter(AdapterCDATA.class)
-    @XmlValue
+    @JacksonXmlCData
+    @JacksonXmlText
     private String value;
 
     public String getId() {
