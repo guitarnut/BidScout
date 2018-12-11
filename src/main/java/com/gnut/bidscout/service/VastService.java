@@ -47,8 +47,8 @@ public class VastService {
     public Vast serveVast(String account, String id) {
         Xml xml = xmlDao.findByOwnerAndId(account, id);
         if (xml != null) {
-            //addLinearTrackingEventsToServedVast(xml.getVast());
-            //addVideoClickToServedVast(xml.getVast());
+            addLinearTrackingEventsToServedVast(xml.getVast());
+            addVideoClickToServedVast(xml.getVast());
             return xml.getVast();
         } else {
             return null;
