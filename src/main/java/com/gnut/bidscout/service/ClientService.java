@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gnut.bidscout.db.AuctionDao;
 import com.gnut.bidscout.model.*;
 import com.google.common.base.Strings;
-import com.iab.openrtb.vast.Vast;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class ClientService {
@@ -46,6 +47,10 @@ public class ClientService {
         this.vastService = vastService;
     }
 
+    /**
+     * ------------- Campaigns -------------
+     */
+
     public Campaign saveCampaign(String account, Campaign campaign) {
         campaign.setOwner(account);
         if (!Strings.isNullOrEmpty(campaign.getId())) {
@@ -57,6 +62,30 @@ public class ClientService {
         }
         return campaignService.saveCampaign(campaign);
     }
+
+    public Map<String, String> getCampaignNames(String owner) {
+        return campaignService.getCampaignNames(owner);
+    }
+
+    public Campaign getCampaign(String account, String campaignId) {
+        return campaignService.getCampaign(account, campaignId);
+    }
+
+    public Campaign getCampaignByProperty(String account, String property, String value) {
+        switch (property) {
+            case "creative":
+                return campaignService.getCampaignWithCreative(account, value);
+        }
+        return null;
+    }
+
+    public void deleteCampaign(String account, String creativeId) {
+        campaignService.deleteCampaign(creativeId, account);
+    }
+
+    /**
+     * ------------- Creatives -------------
+     */
 
     public Creative saveCreative(String account, Creative creative) {
         creative.setOwner(account);
@@ -70,20 +99,8 @@ public class ClientService {
         return creativeService.saveCreative(creative);
     }
 
-    public Map<String, String> getCampaignNames(String owner) {
-        return campaignService.getCampaignNames(owner);
-    }
-
     public Map<String, String> getCreativeNames(String account) {
         return creativeService.getCreativeNames(account);
-    }
-
-    public AuctionRecord getBid(String account, String id) {
-        AuctionRecord record = auctionDao.findFirstByIdAndOwner(id, account);
-        if (record != null && record.getOwner().equals(account)) {
-            return record;
-        }
-        return null;
     }
 
     public void addCreativeToCampaign(String owner, String campaignId, String creativeId) {
@@ -92,10 +109,6 @@ public class ClientService {
 
     public Campaign removeCreativeFromCampaign(String owner, String campaignId, String creativeId) {
         return campaignService.removeCreativeFromCampaign(owner, campaignId, creativeId);
-    }
-
-    public Campaign getCampaign(String account, String campaignId) {
-        return campaignService.getCampaign(account, campaignId);
     }
 
     public Creative getCreative(String account, String creativeId) {
@@ -118,20 +131,20 @@ public class ClientService {
         return results;
     }
 
-    public Campaign getCampaignByProperty(String account, String property, String value) {
-        switch (property) {
-            case "creative":
-                return campaignService.getCampaignWithCreative(account, value);
+    public void deleteCreative(String account, String creativeId) {
+        creativeService.deleteCreative(creativeId, account);
+    }
+
+    /**
+     * ------------- Bids -------------
+     */
+
+    public AuctionRecord getBid(String account, String id) {
+        AuctionRecord record = auctionDao.findFirstByIdAndOwner(id, account);
+        if (record != null && record.getOwner().equals(account)) {
+            return record;
         }
         return null;
-    }
-
-    public List<ClickRecord> getClicks(String account, String bidId) {
-        return clickService.getClicks(account, bidId);
-    }
-
-    public List<ImpressionRecord> getImpressions(String account, String bidId) {
-        return impressionService.getImpressions(account, bidId);
     }
 
     public List<List<String>> getBidErrors(String account) {
@@ -148,14 +161,6 @@ public class ClientService {
         return null;
     }
 
-    public void deleteCampaign(String account, String creativeId) {
-        campaignService.deleteCampaign(creativeId, account);
-    }
-
-    public void deleteCreative(String account, String creativeId) {
-        creativeService.deleteCreative(creativeId, account);
-    }
-
     public Map<String, String> getAuctionRecordList(String account) {
         return auctionRecordService.getListOfAllRecords(account);
     }
@@ -167,6 +172,26 @@ public class ClientService {
     public void deleteBid(String account, String id) {
         auctionRecordService.deleteBid(account, id);
     }
+
+    /**
+     * ------------- Clicks -------------
+     */
+
+    public List<ClickRecord> getClicks(String account, String bidId) {
+        return clickService.getClicks(account, bidId);
+    }
+
+    /**
+     * ------------- Impressions -------------
+     */
+
+    public List<ImpressionRecord> getImpressions(String account, String bidId) {
+        return impressionService.getImpressions(account, bidId);
+    }
+
+    /**
+     * ------------- XML -------------
+     */
 
     public void saveXml(String account, Xml xml) {
         vastService.saveXml(account, xml);

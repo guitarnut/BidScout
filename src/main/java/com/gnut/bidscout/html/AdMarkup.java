@@ -4,15 +4,16 @@ import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.Creative;
 import com.google.common.base.Strings;
 import com.iab.openrtb.response.Bid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
 @Component
 public class AdMarkup {
-    private static final String SYNC_URL = "//app.auctionscout.net/sync/user";
-    private static final String IMP_URL ="//app.auctionscout.net/event/imp";
-    private static final String CLICK_URL = "//app.auctionscout.net/event/click";
+    private static final String SYNC_URL = "/sync/user";
+    private static final String IMP_URL ="/event/imp";
+    private static final String CLICK_URL = "/event/click";
     private static final String WIDTH_MACRO = "WIDTH";
     private static final String HEIGHT_MACRO = "HEIGHT";
     private static final String IMPRESSION_MACRO = "IMPRESSION";
@@ -27,6 +28,9 @@ public class AdMarkup {
     private static final String IMPRESSION_IMG_HIDDEN = "<img src=\"" + IMPRESSION_MACRO + "\" style=\"width:0; height:0; display:none;\"/>";
     private static final String SYNC_IMG_HIDDEN = "<img src=\"" + SYNC_MACRO + "\" style=\"width:0; height:0; display:none;\"/>";
     private static final String ASSET_IMG = "<img src=\"" + ASSET_MACRO + "\" style=\"width:" + WIDTH_MACRO + "px; height:" + HEIGHT_MACRO + "px;\">";
+
+    @Value("${service.values.host.events}")
+    private String HOST;
 
     public String generateDisplayMarkup(BigDecimal price, String bidRequestId, Campaign campaign, Creative creative, Bid bid) {
         if (!Strings.isNullOrEmpty(creative.getAdm())) {
@@ -48,7 +52,7 @@ public class AdMarkup {
         String sync = "";
         if (campaign.isSyncUsers() || creative.isSyncUsers()) {
             adm.append(SYNC_IMG_HIDDEN);
-            sync = SYNC_URL;
+            sync = HOST+SYNC_URL;
         }
 
         adm.append(HTML_CLOSE);
@@ -72,7 +76,7 @@ public class AdMarkup {
         String sync = "";
         if (campaign.isSyncUsers() || creative.isSyncUsers()) {
             adm.append(SYNC_IMG_HIDDEN);
-            sync = SYNC_URL;
+            sync = HOST+SYNC_URL;
         }
 
         adm.append(HTML_CLOSE);
@@ -117,7 +121,7 @@ public class AdMarkup {
 
     private String buildImpressionPixel(Campaign campaign, Creative creative, String bidRequestId, BigDecimal price) {
         StringBuilder imp = new StringBuilder();
-        return imp.append(IMP_URL)
+        return imp.append(HOST+IMP_URL)
                 .append("/")
                 .append(campaign.getOwner())
                 .append("/")
@@ -138,7 +142,7 @@ public class AdMarkup {
 
     private String buildClickPixel(Campaign campaign, Creative creative, String bidRequestId) {
         StringBuilder click = new StringBuilder();
-        return click.append(CLICK_URL)
+        return click.append(HOST+CLICK_URL)
                 .append("/")
                 .append(campaign.getOwner())
                 .append("/")

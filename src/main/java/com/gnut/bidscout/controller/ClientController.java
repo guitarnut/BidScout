@@ -24,6 +24,10 @@ public class ClientController {
         this.service = service;
     }
 
+    /**
+     * ------------- Bids -------------
+     */
+
     @RequestMapping(value = "/bid/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public AuctionRecord getBid(
@@ -71,6 +75,10 @@ public class ClientController {
         return service.getBidErrors(account);
     }
 
+    /**
+     * ------------- Impressions -------------
+     */
+
     @RequestMapping(value = "/impressions/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public List<ImpressionRecord> getImpressions(
@@ -81,6 +89,10 @@ public class ClientController {
         return service.getImpressions(account, id);
     }
 
+    /**
+     * ------------- Clicks -------------
+     */
+
     @RequestMapping(value = "/clicks/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public List<ClickRecord> getClicks(
@@ -90,6 +102,10 @@ public class ClientController {
     ) {
         return service.getClicks(account, id);
     }
+
+    /**
+     * ------------- Campaigns -------------
+     */
 
     @RequestMapping(value = "/campaign/create/{account}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -152,6 +168,21 @@ public class ClientController {
         return service.getCampaignByProperty(account, property, value);
     }
 
+    @RequestMapping(value = "/campaign/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public void deleteCampaign(
+            @PathVariable("id") String creativeId,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        service.deleteCampaign(account, creativeId);
+        response.setStatus(204);
+    }
+
+    /**
+     * ------------- Creatives -------------
+     */
+
     @RequestMapping(value = "/creative/create/{account}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public Creative saveCreative(
@@ -190,6 +221,21 @@ public class ClientController {
     ) {
         return service.getCreative(account, creativeId);
     }
+
+    @RequestMapping(value = "/creative/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public void deleteCreative(
+            @PathVariable("id") String creativeId,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        service.deleteCreative(account, creativeId);
+        response.setStatus(204);
+    }
+
+    /**
+     * ------------- XML -------------
+     */
 
     @RequestMapping(value = "/xml/create/{account}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
@@ -232,25 +278,4 @@ public class ClientController {
         service.deleteXml(account, xmlId);
     }
 
-    @RequestMapping(value = "/campaign/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
-    @ResponseBody
-    public void deleteCampaign(
-            @PathVariable("id") String creativeId,
-            @PathVariable("account") String account,
-            HttpServletResponse response
-    ) {
-        service.deleteCampaign(account, creativeId);
-        response.setStatus(204);
-    }
-
-    @RequestMapping(value = "/creative/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
-    @ResponseBody
-    public void deleteCreative(
-            @PathVariable("id") String creativeId,
-            @PathVariable("account") String account,
-            HttpServletResponse response
-    ) {
-        service.deleteCreative(account, creativeId);
-        response.setStatus(204);
-    }
 }

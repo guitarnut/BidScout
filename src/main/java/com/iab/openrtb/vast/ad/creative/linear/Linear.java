@@ -33,7 +33,8 @@ public class Linear {
     private VideoClicks videoClicks;
 
     @JsonProperty("TrackingEvents")
-    @XmlElement(name = "TrackingEvents")
+    @XmlElementWrapper(name="TrackingEvents")
+    @XmlElement(name="TrackingEvent")
     private List<Tracking> trackingEvents;
 
     @JsonProperty("Icons")

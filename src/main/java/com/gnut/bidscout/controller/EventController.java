@@ -52,4 +52,19 @@ public class EventController {
     ) {
         clickService.handleRequest(id, request, response, bid, campaign, creative, cb);
     }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value="/video/{event}/{id}/{bid}/{campaign}/{creative}", method = RequestMethod.GET)
+    public void handleClick(
+            @PathVariable(value = "id") String id,
+            @PathVariable(value = "event") String event,
+            @PathVariable(value = "bid") String bid,
+            @PathVariable(value = "campaign") String campaign,
+            @PathVariable(value = "creative") String creative,
+            @RequestParam(value = "cb", required = false) String cb,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        response.setStatus(204);
+    }
 }
