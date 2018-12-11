@@ -3,6 +3,7 @@ package com.gnut.bidscout.controller;
 import com.gnut.bidscout.service.VastService;
 import com.iab.openrtb.vast.Vast;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,7 +22,7 @@ public class VastController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/{bidder}/{id}", method = RequestMethod.POST, produces = "application/xml")
+    @RequestMapping(value = "/{bidder}/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
     public Vast getVastPost(
             @PathVariable(value = "bidder") String bidder,
             @PathVariable(value = "id") String id,
@@ -31,7 +32,7 @@ public class VastController {
         return service.serveVast(bidder, id);
     }
 
-    @RequestMapping(value = "/{bidder}/{id}", method = RequestMethod.GET, produces = "application/xml")
+    @RequestMapping(value = "/{bidder}/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public Vast getVastGet(
             @PathVariable(value = "bidder") String bidder,
             @PathVariable(value = "id") String id,
