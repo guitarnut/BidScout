@@ -15,4 +15,16 @@ git pull 2> /dev/null
 
 mvn clean install 2> /dev/null
 
+pid=$(pgrep -f 'bidscout-0.0.1-SNAPSHOT')
+
+if [ -n "$pid" ]; then
+    kill $pid
+    echo "Terminated process"
+else
+    echo "Does not exist"
+fi
+
+# Pause
+sleep 5
+
 nohup java -jar target/bidscout-0.0.1-SNAPSHOT.jar&
