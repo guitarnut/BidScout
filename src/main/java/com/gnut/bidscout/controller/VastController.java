@@ -39,7 +39,6 @@ public class VastController {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        return null;
-        //return service.serveVast(bidder, id);
+        return service.serveVast(bidder, id);
     }
 }
