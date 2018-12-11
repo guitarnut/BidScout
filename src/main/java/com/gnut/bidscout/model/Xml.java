@@ -8,6 +8,13 @@ public class Xml {
     private String name;
     private Vast vast;
 
+    public void copyValues(Xml xml) {
+        this.id = xml.getId();
+        this.owner = xml.getOwner();
+        this.name = xml.getName();
+        this.vast = xml.getVast();
+    }
+
     public String getId() {
         return id;
     }

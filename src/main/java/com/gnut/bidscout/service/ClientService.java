@@ -194,7 +194,16 @@ public class ClientService {
      */
 
     public void saveXml(String account, Xml xml) {
-        vastService.saveXml(account, xml);
+        xml.setOwner(account);
+        if (!Strings.isNullOrEmpty(xml.getId())) {
+            Xml x = vastService.getXml(account, xml.getId());
+            if (x != null) {
+                x.copyValues(xml);
+            }
+            vastService.saveXml(account, x);
+        } else {
+            vastService.saveXml(account, xml);
+        }
     }
 
     public Map<String, String> getAllXml(String account) {

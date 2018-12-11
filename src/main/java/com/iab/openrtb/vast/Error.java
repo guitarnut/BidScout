@@ -1,12 +1,14 @@
 package com.iab.openrtb.vast;
 
-import javax.xml.bind.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="Error")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Error
 {
-    @XmlValue
+    @JacksonXmlText
+    @JacksonXmlCData
     private String value;
 
     public String getValue() {

@@ -9,3 +9,5 @@ Support video bidding (paste vast, xml)
 Default values for new props
 
 ssh -i bidscout.pem ubuntu@18.222.180.75
+
+Remove from creative or campaign when deleting creative or campaign

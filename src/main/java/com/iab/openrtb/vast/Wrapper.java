@@ -1,53 +1,53 @@
 package com.iab.openrtb.vast;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.iab.openrtb.vast.ad.*;
+import com.iab.openrtb.vast.ad.adverifications.Verification;
 import com.iab.openrtb.vast.ad.creative.Creative;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name="Error")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Wrapper {
 
     @JsonProperty("Impression")
-    @XmlElement(name = "Impression")
+    @JacksonXmlProperty(localName = "Impression")
     private Impression impression;
 
     @JsonProperty("VASTAdTagURI")
-    @XmlElement(name = "VASTAdTagURI")
+    @JacksonXmlProperty(localName = "VASTAdTagURI")
     private VASTAdTagURI vastAdTagURI;
 
     @JsonProperty("AdSystem")
-    @XmlElement(name = "AdSystem")
+    @JacksonXmlProperty(localName = "AdSystem")
     private AdSystem adSystem;
 
     @JsonProperty("Pricing")
-    @XmlElement(name = "Pricing")
+    @JacksonXmlProperty(localName = "Pricing")
     private Pricing pricing;
 
     @JsonProperty("Error")
-    @XmlElement(name = "Error")
+    @JacksonXmlProperty(localName = "Error")
     private Error error;
 
     @JsonProperty("ViewableImpression")
-    @XmlElement(name = "ViewableImpression")
+    @JacksonXmlProperty(localName = "ViewableImpression")
     private ViewableImpression viewableImpression;
 
     @JsonProperty("AdVerifications")
-    @XmlElement(name = "AdVerifications")
-    private List<AdVerifications> adVerifications;
+    @JacksonXmlElementWrapper(localName = "AdVerifications")
+    @JacksonXmlProperty(localName = "Verification")
+    private List<Verification> adVerifications;
 
     @JsonProperty("Extensions")
-    @XmlElement(name = "Extensions")
+    @JacksonXmlProperty(localName = "Creative")
     private List<Extensions> extensions;
 
     @JsonProperty("Creatives")
-    @XmlElement(name = "Creatives")
+    @JacksonXmlProperty(localName = "Creative")
     private List<Creative> creatives;
 
     public Impression getImpression() {
@@ -98,11 +98,11 @@ public class Wrapper {
         this.viewableImpression = viewableImpression;
     }
 
-    public List<AdVerifications> getAdVerifications() {
+    public List<Verification> getAdVerifications() {
         return adVerifications;
     }
 
-    public void setAdVerifications(List<AdVerifications> adVerifications) {
+    public void setAdVerifications(List<Verification> adVerifications) {
         this.adVerifications = adVerifications;
     }
 
