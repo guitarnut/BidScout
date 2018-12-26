@@ -1,6 +1,8 @@
 package com.gnut.bidscout.service;
 
+import com.gnut.bidscout.db.CampaignDao;
 import com.gnut.bidscout.db.CreativeDao;
+import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.Creative;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,10 +12,12 @@ import java.util.*;
 @Component
 public class CreativeService {
     private final CreativeDao creativeDao;
+    private final CampaignDao campaignDao;
 
     @Autowired
-    public CreativeService(CreativeDao creativeDao) {
+    public CreativeService(CreativeDao creativeDao, CampaignDao campaignDao) {
         this.creativeDao = creativeDao;
+        this.campaignDao = campaignDao;
     }
 
     public Creative saveCreative(Creative creative) {
@@ -89,6 +93,13 @@ public class CreativeService {
 
     public void deleteCreative(String id, String account) {
         if (creativeDao.findByIdAndOwner(id, account) != null) {
+            List<Campaign> campaigns = campaignDao.findAllByOwner(account);
+            campaigns.forEach(c -> {
+                if (c.getCreatives().contains(id)) {
+                    c.getCreatives().remove(id);
+                    campaignDao.save(c);
+                }
+            });
             creativeDao.deleteById(id);
         }
     }
