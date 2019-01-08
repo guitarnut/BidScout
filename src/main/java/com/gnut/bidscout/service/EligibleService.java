@@ -21,6 +21,9 @@ public class EligibleService {
 
     public Set<Creative> getEligibleCreatives(RequestTargetingData targetingData, Campaign campaign, AuctionRecord record) {
         final Set<Creative> eligible = new HashSet<>();
+        if (campaign.getCreatives() == null) {
+            return eligible;
+        }
         final Iterable<Creative> creatives = creativeService.getCreatives(campaign.getCreatives());
 
         if (creatives == null) {

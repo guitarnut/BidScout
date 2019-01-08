@@ -1,19 +1,28 @@
 package com.gnut.bidscout.builder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.gnut.bidscout.db.XmlDao;
 import com.gnut.bidscout.html.AdMarkup;
 import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.Creative;
+import com.gnut.bidscout.model.Xml;
 import com.google.common.base.Strings;
 import com.iab.openrtb.request.BidRequest;
 import com.iab.openrtb.request.Imp;
 import com.iab.openrtb.response.Bid;
 import com.iab.openrtb.response.BidResponse;
 import com.iab.openrtb.response.SeatBid;
+import com.iab.openrtb.vast.Vast;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,11 +56,17 @@ public class BidResponseBuilder {
     }
 
     private static final JsonNodeFactory factory = JsonNodeFactory.instance;
+    private static final XmlMapper mapper = new XmlMapper();
     private final AdMarkup adMarkup;
+    private final XmlDao xmlDao;
 
     @Autowired
-    public BidResponseBuilder(AdMarkup adMarkup) {
+    public BidResponseBuilder(
+            AdMarkup adMarkup,
+            XmlDao xmlDao
+    ) {
         this.adMarkup = adMarkup;
+        this.xmlDao = xmlDao;
     }
 
     public BidResponse buildBidResponse(
@@ -91,7 +106,20 @@ public class BidResponseBuilder {
         }
 
         if (creative.getType() == Creative.Type.VPAID || creative.getType() == Creative.Type.VAST) {
-            bid.setAdm(creative.getXml());
+            if (!Strings.isNullOrEmpty(creative.getXml())) {
+                bid.setAdm(creative.getXml());
+            } else if (!Strings.isNullOrEmpty(creative.getXmlId())) {
+                Xml xml = xmlDao.findByOwnerAndId(creative.getOwner(), creative.getXmlId());
+                if (xml != null) {
+                    String xmlString = "";
+                    try {
+                        xmlString = mapper.writeValueAsString(xml.getVast());
+                    } catch (JsonProcessingException ex) {
+                        // noop
+                    }
+                    bid.setAdm(xmlString);
+                }
+            }
         } else {
             bid.setAdm(adMarkup.generateDisplayMarkup(price, bidRequest.getId(), campaign, creative, bid));
         }

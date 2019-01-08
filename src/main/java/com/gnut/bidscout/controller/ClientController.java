@@ -40,7 +40,7 @@ public class ClientController {
 
     @RequestMapping(value = "/bid/all/{account}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public Map<String, String> deleteCreative(
+    public Map<String, String> getBidRecords(
             @PathVariable("account") String account,
             HttpServletResponse response
     ) {

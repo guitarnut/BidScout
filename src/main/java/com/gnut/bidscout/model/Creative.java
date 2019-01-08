@@ -1,5 +1,6 @@
 package com.gnut.bidscout.model;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -9,6 +10,7 @@ public class Creative {
     public enum Type {
        DISPLAY, VAST, VPAID
     }
+    @Id
     private String id;
     private String owner;
     private String name;
@@ -25,6 +27,7 @@ public class Creative {
     private List<String> adDomain;
     private String creativeUrl;
     private String xml;
+    private String xmlId;
     private String adm;
     private Limits limits;
     private Requirements requirements;
@@ -49,6 +52,7 @@ public class Creative {
         this.adDomain = c.getAdDomain();
         this.creativeUrl = c.getCreativeUrl();
         this.xml = c.getXml();
+        this.xmlId = c.getXmlId();
         this.adm = c.getAdm();
         this.limits = c.getLimits();
         this.requirements = c.getRequirements();
@@ -185,6 +189,14 @@ public class Creative {
 
     public void setXml(String xml) {
         this.xml = xml;
+    }
+
+    public String getXmlId() {
+        return xmlId;
+    }
+
+    public void setXmlId(String xmlId) {
+        this.xmlId = xmlId;
     }
 
     public String getAdm() {

@@ -1,5 +1,6 @@
 package com.iab.openrtb.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * any if it can win them all as a group.
  */
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SeatBid {
 
     /**

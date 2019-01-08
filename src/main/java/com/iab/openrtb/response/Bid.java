@@ -1,5 +1,6 @@
 package com.iab.openrtb.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ import java.util.List;
  * memory pressure. In order to avoid unnecessary allocations this class is made mutable (as an exception) i.e. this
  * decision could be seen as a performance optimisation.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Bid {
 
     /** Bidder generated bid ID to assist with logging/tracking. (required) */
