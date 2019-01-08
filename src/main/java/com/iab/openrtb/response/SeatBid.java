@@ -1,6 +1,7 @@
 package com.iab.openrtb.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  * any if it can win them all as a group.
  */
 
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SeatBid {
 
@@ -38,6 +40,8 @@ public class SeatBid {
 
     /** Placeholder for bidder-specific extensions to OpenRTB. */
     ObjectNode ext;
+
+    public SeatBid(){}
 
     public List<Bid> getBid() {
         return bid;

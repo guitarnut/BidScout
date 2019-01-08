@@ -1,5 +1,7 @@
 package com.iab.openrtb.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
@@ -11,7 +13,8 @@ import java.util.List;
  * Refer to Section 7.3 for more details.
  */
 
-
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Pmp {
 
     /**
@@ -29,6 +32,8 @@ public class Pmp {
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
     ObjectNode ext;
+
+    public Pmp(){}
 
     public int getPrivateAuction() {
         return privateAuction;

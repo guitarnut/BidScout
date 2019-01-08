@@ -1,5 +1,7 @@
 package com.iab.openrtb.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.List;
  * <em>a priori</em> to its bidders.
  */
 
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Data {
 
     /** Exchange-specific ID for the data provider. */
@@ -29,6 +33,8 @@ public class Data {
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
     ObjectNode ext;
+
+    public Data(){}
 
     public String getId() {
         return id;

@@ -1,5 +1,7 @@
 package com.iab.openrtb.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
@@ -10,6 +12,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * for the United States Children’s Online Privacy Protection Act (“COPPA”).
  */
 
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Regs {
 
     /**
@@ -21,6 +25,8 @@ public class Regs {
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
     ObjectNode ext;
+
+    public Regs(){}
 
     public Integer getCoppa() {
         return coppa;

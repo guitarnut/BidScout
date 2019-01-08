@@ -1,5 +1,7 @@
 package com.iab.openrtb.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.math.BigDecimal;
@@ -23,7 +25,8 @@ import java.math.BigDecimal;
  * when presenting device IP values to bidders.
  */
 
-
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Device {
 
     /** Browser user agent string. (recommended) */
@@ -146,6 +149,8 @@ public class Device {
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
     ObjectNode ext;
+
+    public Device(){}
 
     public String getUa() {
         return ua;

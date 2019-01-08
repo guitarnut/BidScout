@@ -1,5 +1,7 @@
 package com.iab.openrtb.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
@@ -17,7 +19,8 @@ import java.util.List;
  * non-browser application, respectively.
  */
 
-
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BidRequest {
 
     /**
@@ -154,6 +157,8 @@ public class BidRequest {
      * Placeholder for exchange-specific extensions to OpenRTB
      */
     ObjectNode ext;
+
+    public BidRequest(){}
 
     public String getId() {
         return id;

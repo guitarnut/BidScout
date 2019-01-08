@@ -1,5 +1,7 @@
 package com.iab.openrtb.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
@@ -12,7 +14,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * set (i.e., for Flex Ads) be specified.
  */
 
-
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Format {
 
     /** Width in device independent pixels (DIPS). */
@@ -35,6 +38,8 @@ public class Format {
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
     ObjectNode ext;
+
+    public Format(){}
 
     public Integer getW() {
         return w;

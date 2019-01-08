@@ -1,5 +1,7 @@
 package com.iab.openrtb.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
@@ -19,7 +21,8 @@ import java.util.List;
  * the offered types.
  */
 
-
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Audio {
 
     /** Content MIME types supported (e.g., “audio/mp4”). (required) */
@@ -106,6 +109,8 @@ public class Audio {
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
     ObjectNode ext;
+
+    public Audio(){}
 
     public List<String> getMimes() {
         return mimes;

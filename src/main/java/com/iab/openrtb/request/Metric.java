@@ -1,5 +1,7 @@
 package com.iab.openrtb.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
@@ -12,7 +14,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * and optionally identifies the source or vendor measuring the value.
  */
 
-
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Metric {
 
     /**
@@ -37,6 +40,8 @@ public class Metric {
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
     ObjectNode ext;
+
+    public Metric(){}
 
     public String getType() {
         return type;

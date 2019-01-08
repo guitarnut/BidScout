@@ -1,5 +1,7 @@
 package com.iab.openrtb.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
@@ -9,7 +11,8 @@ import java.util.List;
  * displayed. The publisher is typically the seller in an OpenRTB transaction.
  */
 
-
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Publisher {
 
     /** Exchange-specific publisher ID. */
@@ -26,6 +29,8 @@ public class Publisher {
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
     ObjectNode ext;
+
+    public Publisher(){}
 
     public String getId() {
         return id;

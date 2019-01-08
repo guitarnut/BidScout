@@ -1,6 +1,7 @@
 package com.iab.openrtb.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Comparator;
 import java.util.List;
@@ -22,6 +23,7 @@ import static java.util.Objects.isNull;
  * code in the {@code nbr} attribute.
  */
 
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BidResponse {
 
@@ -52,6 +54,8 @@ public class BidResponse {
 
     /** Placeholder for bidder-specific extensions to OpenRTB. */
     Map<String, Object> ext;
+
+    public BidResponse(){}
 
     public String getId() {
         return id;

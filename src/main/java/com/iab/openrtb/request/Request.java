@@ -1,5 +1,7 @@
 package com.iab.openrtb.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
@@ -15,7 +17,8 @@ import java.util.List;
  * The Native Markup Request Object specified above is now the root object.
  */
 
-
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Request {
 
     /** Version in use. **/
@@ -53,6 +56,8 @@ public class Request {
 
     /** Placeholder that may contain custom JSON. */
     ObjectNode ext;
+
+    public Request(){}
 
     public String getVer() {
         return ver;

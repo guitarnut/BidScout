@@ -1,5 +1,7 @@
 package com.iab.openrtb.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
@@ -11,6 +13,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * exchange <em>a priori</em> to its bidders.
  */
 
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Segment {
 
     /** ID of the data segment specific to the data provider. */
@@ -24,6 +28,8 @@ public class Segment {
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
     ObjectNode ext;
+
+    public Segment(){}
 
     public String getId() {
         return id;

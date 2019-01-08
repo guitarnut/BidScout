@@ -1,5 +1,7 @@
 package com.iab.openrtb.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
@@ -15,7 +17,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * the centroid of a geographic region such as postal code should not be passed.
  */
 
-
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Geo {
 
     /** Latitude from -90.0 to +90.0, where negative is south. */
@@ -83,6 +86,8 @@ public class Geo {
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
     ObjectNode ext;
+
+    public Geo(){}
 
     public Float getLat() {
         return lat;

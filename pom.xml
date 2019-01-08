@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>bidscout</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Auction Engine for Ad Tech Testing</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

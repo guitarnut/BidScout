@@ -28,8 +28,10 @@ public class AuctionRecord {
     private String xForwardedFor;
     private String campaign;
     private String creative;
-    private Map<String, String> targetingFailures;
-    private List<String> bidRequestErrors;
+    private Map<String, String> targetingFailures = new HashMap<>();
+    private List<String> bidRequestErrors = new ArrayList<>();
+
+    public AuctionRecord(){}
 
     public String getId() {
         return id;
