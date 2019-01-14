@@ -2,6 +2,7 @@ package com.gnut.bidscout.model;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Campaign {
@@ -15,7 +16,7 @@ public class Campaign {
     private String seat;
     private Limits limits;
     private Flags flags;
-    private List<String> creatives;
+    private List<String> creatives = new ArrayList<>();
     private Requirements requirements;
     private Statistics statistics;
     private String nurl;

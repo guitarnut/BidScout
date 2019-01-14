@@ -21,7 +21,11 @@ public enum TargetFailure {
     DOMAIN_BLACKLIST("Domain blacklist matched"),
     PUBLISHER_WHITELIST("Publisher whitelist not matched"),
     PUBLISHER_BLACKLIST("Publisher blacklist matched"),
-    IAB_CATEGORY("IAB category blocked");
+    IAB_CATEGORY("IAB category blocked"),
+    REQUEST_LIMIT_REACHED("Request limit reached"),
+    BID_LIMIT_REACHED("Bid limit reached"),
+    IMPRESSION_LIMIT_REACHED("Impression limit reached"),
+    REVENUE_LIMIT_REACHED("Revenue limit reached");
 
     private String v;
 

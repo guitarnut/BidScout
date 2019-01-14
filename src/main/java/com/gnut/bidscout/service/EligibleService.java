@@ -122,7 +122,23 @@ public class EligibleService {
             AuctionRecord record
     ) {
         final Date now = new Date();
-        final String targetName = campaign.isPresent() ? campaign.get().getName() : creative.get().getName();
+        final String targetName;
+        final Statistics statistics;
+        final Limits limits;
+
+        if (campaign.isPresent()) {
+            targetName = campaign.get().getName();
+            statistics = campaign.get().getStatistics();
+            limits = campaign.get().getLimits();
+        } else {
+            targetName = creative.get().getName();
+            statistics = creative.get().getStatistics();
+            limits = creative.get().getLimits();
+        }
+
+        if (limitsExceeded(targetName, statistics, limits, record)) {
+            return false;
+        }
 
         // deal targeting
         if (filter.getDealIds() != null && !filter.getDealIds().isEmpty()) {
@@ -239,6 +255,27 @@ public class EligibleService {
         }
 
         return true;
+    }
+
+    private boolean limitsExceeded(String name, Statistics statistics, Limits limits, AuctionRecord record) {
+        int limitsMet = 0;
+        if (limits.getBidLimit() > 0 && statistics.getBids() == limits.getBidLimit()) {
+            record.getTargetingFailures().put(name, TargetFailure.BID_LIMIT_REACHED.value());
+            limitsMet++;
+        }
+        if (limits.getImpressionLimit() > 0 && statistics.getImpressions() == limits.getImpressionLimit()) {
+            record.getTargetingFailures().put(name, TargetFailure.IMPRESSION_LIMIT_REACHED.value());
+            limitsMet++;
+        }
+        if (limits.getRequestLimit() > 0 && statistics.getRequests() == limits.getRequestLimit()) {
+            record.getTargetingFailures().put(name, TargetFailure.REQUEST_LIMIT_REACHED.value());
+            limitsMet++;
+        }
+        if (limits.getRevenueLimit() > 0 && statistics.getRevenue() == limits.getRevenueLimit()) {
+            record.getTargetingFailures().put(name, TargetFailure.REVENUE_LIMIT_REACHED.value());
+            limitsMet++;
+        }
+        return limitsMet > 0;
     }
 
     private boolean listContainsValue(List<String> list, String val) {
