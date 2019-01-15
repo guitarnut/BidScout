@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.Map;
+
 
 /**
  * This object contains any legal, governmental, or industry regulations that
@@ -24,7 +26,7 @@ public class Regs {
     Integer coppa;
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
-    ObjectNode ext;
+    Map<Object, Object> ext;
 
     public Regs(){}
 
@@ -36,11 +38,11 @@ public class Regs {
         this.coppa = coppa;
     }
 
-    public ObjectNode getExt() {
+    public Map<Object, Object> getExt() {
         return ext;
     }
 
-    public void setExt(ObjectNode ext) {
+    public void setExt(Map<Object, Object> ext) {
         this.ext = ext;
     }
 }
