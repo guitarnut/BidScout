@@ -99,7 +99,9 @@ public class AdMarkup {
             sync = HOST + SYNC_URL;
         }
 
-        adm.append("<p style=\"font-size: 11px; padding: 5px;\">Campaign: " + campaign.getName() + "<br/>")
+        adm.append("<p style=\"font-size: 11px; padding: 5px;\">")
+                .append("<strong>Auction Scout Test Ad</strong><br/>")
+                .append("Campaign: " + campaign.getName() + "<br/>")
                 .append("Creative: " + creative.getName() + "<br/>")
                 .append("Bid: $" + price + "</p>");
 
