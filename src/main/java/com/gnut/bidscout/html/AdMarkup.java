@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Component
 public class AdMarkup {
     private static final String SYNC_URL = "/sync/user";
-    private static final String IMP_URL ="/event/imp";
+    private static final String IMP_URL = "/event/imp";
     private static final String CLICK_URL = "/event/click";
     private static final String WIDTH_MACRO = "WIDTH";
     private static final String HEIGHT_MACRO = "HEIGHT";
@@ -72,7 +72,7 @@ public class AdMarkup {
         String sync = "";
         if (campaign.isSyncUsers() || creative.isSyncUsers()) {
             adm.append(SYNC_IMG_HIDDEN);
-            sync = HOST+SYNC_URL;
+            sync = HOST + SYNC_URL;
         }
 
         adm.append(HTML_CLOSE);
@@ -96,8 +96,12 @@ public class AdMarkup {
         String sync = "";
         if (campaign.isSyncUsers() || creative.isSyncUsers()) {
             adm.append(SYNC_IMG_HIDDEN);
-            sync = HOST+SYNC_URL;
+            sync = HOST + SYNC_URL;
         }
+
+        adm.append("<p style=\"font-size: 11px; padding: 5px;\">Campaign: " + campaign.getName() + "<br/>")
+                .append("Creative: " + creative.getName() + "<br/>")
+                .append("Bid: $" + price + "</p>");
 
         adm.append(HTML_CLOSE);
 
@@ -141,7 +145,7 @@ public class AdMarkup {
 
     private String buildImpressionPixel(Campaign campaign, Creative creative, String bidRequestId, BigDecimal price) {
         StringBuilder imp = new StringBuilder();
-        return imp.append(HOST+IMP_URL)
+        return imp.append(HOST + IMP_URL)
                 .append("/")
                 .append(campaign.getOwner())
                 .append("/")
@@ -162,7 +166,7 @@ public class AdMarkup {
 
     private String buildClickPixel(Campaign campaign, Creative creative, String bidRequestId) {
         StringBuilder click = new StringBuilder();
-        return click.append(HOST+CLICK_URL)
+        return click.append(HOST + CLICK_URL)
                 .append("/")
                 .append(campaign.getOwner())
                 .append("/")
