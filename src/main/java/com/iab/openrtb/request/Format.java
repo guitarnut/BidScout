@@ -2,8 +2,8 @@ package com.iab.openrtb.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.Map;
 
 
 /**
@@ -37,7 +37,7 @@ public class Format {
     Integer wmin;
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
-    ObjectNode ext;
+    Map<Object, Object> ext;
 
     public Format(){}
 
@@ -81,11 +81,11 @@ public class Format {
         this.wmin = wmin;
     }
 
-    public ObjectNode getExt() {
+    public Map<Object, Object> getExt() {
         return ext;
     }
 
-    public void setExt(ObjectNode ext) {
+    public void setExt(Map<Object, Object> ext) {
         this.ext = ext;
     }
 }

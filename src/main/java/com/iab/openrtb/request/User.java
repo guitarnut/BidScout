@@ -2,9 +2,9 @@ package com.iab.openrtb.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * This object contains information known or derived about the human user of the
@@ -65,7 +65,7 @@ public class User {
     List<Data> data;
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
-    ObjectNode ext;
+    Map<Object, Object> ext;
 
     public User(){}
 
@@ -141,11 +141,11 @@ public class User {
         this.data = data;
     }
 
-    public ObjectNode getExt() {
+    public Map<Object, Object> getExt() {
         return ext;
     }
 
-    public void setExt(ObjectNode ext) {
+    public void setExt(Map<Object, Object> ext) {
         this.ext = ext;
     }
 }

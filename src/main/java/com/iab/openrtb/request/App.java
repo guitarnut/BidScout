@@ -2,9 +2,9 @@ package com.iab.openrtb.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * This object should be included if the ad supported content is a non-browser
@@ -71,7 +71,7 @@ public class App {
     String keywords;
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
-    ObjectNode ext;
+    Map<Object, Object> ext;
 
     public App(){}
 
@@ -187,11 +187,11 @@ public class App {
         this.keywords = keywords;
     }
 
-    public ObjectNode getExt() {
+    public Map<Object, Object> getExt() {
         return ext;
     }
 
-    public void setExt(ObjectNode ext) {
+    public void setExt(Map<Object, Object> ext) {
         this.ext = ext;
     }
 }

@@ -2,9 +2,9 @@ package com.iab.openrtb.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * This object provides information pertaining to the device through which the
@@ -148,7 +148,7 @@ public class Device {
     String macmd5;
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
-    ObjectNode ext;
+    Map<Object, Object> ext;
 
     public Device(){}
 
@@ -392,11 +392,11 @@ public class Device {
         this.macmd5 = macmd5;
     }
 
-    public ObjectNode getExt() {
+    public Map<Object, Object> getExt() {
         return ext;
     }
 
-    public void setExt(ObjectNode ext) {
+    public void setExt(Map<Object, Object> ext) {
         this.ext = ext;
     }
 }
