@@ -38,7 +38,7 @@ public class CampaignService {
         Optional<Campaign> campaign = campaignDao.findById(id);
         if (campaign.isPresent()) {
             Campaign c = campaign.get();
-            if (System.currentTimeMillis() - cb <= c.getImpressionExpiry() * 1000) {
+            if (c.getImpressionExpiry() == 0 || System.currentTimeMillis() - cb <= c.getImpressionExpiry() * 1000) {
                 return true;
             }
         }

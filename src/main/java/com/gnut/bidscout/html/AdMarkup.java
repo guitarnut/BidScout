@@ -20,14 +20,34 @@ public class AdMarkup {
     private static final String SYNC_MACRO = "SYNC";
     private static final String CLICK_MACRO = "CLICK";
     private static final String ASSET_MACRO = "ASSET";
-    private static final String HTML_OPEN = "<div style=\"width:" + WIDTH_MACRO + "px; height:" + HEIGHT_MACRO + "px;\">";
-    private static final String CREATIVE_FOR_ALL_SIZES = "<div style=\"border: 1px solid black; background: #CCC; width:" + WIDTH_MACRO + "px; height:" + HEIGHT_MACRO + "px;\">";
+    private static final String HTML_OPEN = "<div style=\"" +
+            "width:" + WIDTH_MACRO + "px; " +
+            "height:" + HEIGHT_MACRO + "px;" +
+            "\">";
+    private static final String CREATIVE_FOR_ALL_SIZES = "<div style=\"" +
+            "box-sizing: border-box; " +
+            "border: 1px solid black; " +
+            "background: #CCC; " +
+            "width:" + WIDTH_MACRO + "px; " +
+            "height:" + HEIGHT_MACRO + "px;" +
+            "\">";
     private static final String HTML_CLOSE = "</div>";
     private static final String CLICK_OPEN = "<a href=\"" + CLICK_MACRO + "\" target=\"_blank\">";
     private static final String CLICK_CLOSE = "</a>";
-    private static final String IMPRESSION_IMG_HIDDEN = "<img src=\"" + IMPRESSION_MACRO + "\" style=\"width:0; height:0; display:none;\"/>";
-    private static final String SYNC_IMG_HIDDEN = "<img src=\"" + SYNC_MACRO + "\" style=\"width:0; height:0; display:none;\"/>";
-    private static final String ASSET_IMG = "<img src=\"" + ASSET_MACRO + "\" style=\"width:" + WIDTH_MACRO + "px; height:" + HEIGHT_MACRO + "px;\">";
+    private static final String IMPRESSION_IMG_HIDDEN = "<img src=\"" + IMPRESSION_MACRO + "\" style=\"" +
+            "width:0; " +
+            "height:0; " +
+            "display:none;" +
+            "\"/>";
+    private static final String SYNC_IMG_HIDDEN = "<img src=\"" + SYNC_MACRO + "\" style=\"" +
+            "width:0; " +
+            "height:0; " +
+            "display:none;" +
+            "\"/>";
+    private static final String ASSET_IMG = "<img src=\"" + ASSET_MACRO + "\" style=\"" +
+            "width:" + WIDTH_MACRO + "px; " +
+            "height:" + HEIGHT_MACRO + "px;" +
+            "\">";
 
     @Value("${service.values.host.events}")
     private String HOST;
