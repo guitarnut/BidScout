@@ -59,7 +59,7 @@ public class CreativeService {
             Creative c = creative.get();
             c.getStatistics().setImpressions(c.getStatistics().getImpressions() + 1);
             c.getStatistics().setRevenue(c.getStatistics().getRevenue() + cp / 1000);
-            c.getStatistics().setEcpm(((c.getStatistics().getEcpm() + cp / 1000) / c.getStatistics().getImpressions()) * 1000);
+            c.getStatistics().setEcpm((c.getStatistics().getRevenue() / c.getStatistics().getImpressions()) * 1000);
             creativeDao.save(c);
         }
     }
