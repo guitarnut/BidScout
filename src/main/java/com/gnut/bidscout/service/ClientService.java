@@ -217,5 +217,27 @@ public class ClientService {
     public void deleteXml(String account, String xmlId) {
         vastService.deleteXml(account, xmlId);
     }
+
+    public void resetCreative(String account, String creativeId) {
+        final Creative c = creativeService.getCreative(account, creativeId);
+        if (c != null) {
+            c.setStatistics(resetStatistics(c.getStatistics()));
+            creativeService.saveCreative(c);
+        }
+    }
+
+    public void resetCampaign(String account, String campaignId) {
+        final Campaign c = campaignService.getCampaign(account, campaignId);
+        if (c != null) {
+            c.setStatistics(resetStatistics(c.getStatistics()));
+            campaignService.saveCampaign(c);
+        }
+    }
+
+    private Statistics resetStatistics(Statistics oldStats) {
+        final Statistics resetStats = new Statistics();
+        resetStats.setId(oldStats.getId());
+        return resetStats;
+    }
 }
 

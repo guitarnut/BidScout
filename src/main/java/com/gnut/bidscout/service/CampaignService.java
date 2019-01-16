@@ -51,7 +51,7 @@ public class CampaignService {
             Campaign c = campaign.get();
             c.getStatistics().setImpressions(c.getStatistics().getImpressions() + 1);
             c.getStatistics().setRevenue(c.getStatistics().getRevenue() + cp / 1000);
-            c.getStatistics().setEcpm(((c.getStatistics().getEcpm() + cp / 1000) / c.getStatistics().getImpressions()) * 1000);
+            c.getStatistics().setEcpm((c.getStatistics().getRevenue() / c.getStatistics().getImpressions()) * 1000);
             campaignDao.save(c);
         }
     }
@@ -102,7 +102,7 @@ public class CampaignService {
     public Campaign removeCreativeFromCampaign(String owner, String campaignId, String creativeId) {
         Campaign campaign = campaignDao.findByIdAndOwner(campaignId, owner);
         if (campaign != null) {
-            if(campaign.getCreatives() != null) {
+            if (campaign.getCreatives() != null) {
                 campaign.getCreatives().remove(creativeId);
                 campaignDao.save(campaign);
             }
@@ -164,7 +164,7 @@ public class CampaignService {
     }
 
     public void deleteCampaign(String id, String account) {
-        if(campaignDao.findByIdAndOwner(id, account) != null) {
+        if (campaignDao.findByIdAndOwner(id, account) != null) {
             campaignDao.deleteById(id);
         }
     }

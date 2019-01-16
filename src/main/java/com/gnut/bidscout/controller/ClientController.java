@@ -168,6 +168,17 @@ public class ClientController {
         return service.getCampaignByProperty(account, property, value);
     }
 
+    @RequestMapping(value = "/campaign/reset/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public void resetCampaign(
+            @PathVariable("id") String creativeId,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        service.resetCampaign(account, creativeId);
+        response.setStatus(204);
+    }
+
     @RequestMapping(value = "/campaign/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public void deleteCampaign(
@@ -220,6 +231,17 @@ public class ClientController {
             HttpServletResponse response
     ) {
         return service.getCreative(account, creativeId);
+    }
+
+    @RequestMapping(value = "/creative/reset/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public void resetCreative(
+            @PathVariable("id") String creativeId,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        service.resetCreative(account, creativeId);
+        response.setStatus(204);
     }
 
     @RequestMapping(value = "/creative/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")

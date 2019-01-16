@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Document
-public class Creative {
+public class Creative implements Advertisment {
     public enum Type {
        DISPLAY, VAST, VPAID
     }

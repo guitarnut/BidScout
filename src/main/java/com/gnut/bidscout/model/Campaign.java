@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Campaign {
+public class Campaign implements Advertisment {
     @Id
     private String id;
     private String owner;
