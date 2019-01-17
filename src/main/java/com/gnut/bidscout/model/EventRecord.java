@@ -5,49 +5,13 @@ import org.springframework.data.annotation.Id;
 import java.util.Set;
 
 public class EventRecord {
-    public enum Event {
-        MUTE(""),
-        UNMUTE(""),
-        PAUSE(""),
-        RESUME(""),
-        REWIND(""),
-        SKIP(""),
-        PLAYER_EXPANDED(""),
-        PLAYER_COLLAPSE(""),
-        START(""),
-        FIRST_QUARTILE(""),
-        MIDPOINT(""),
-        THIRD_QUARTILE(""),
-        COMPLETE(""),
-        ACCEPT_INVITATION_LINEAR(""),
-        TIME_SPENT_VIEWING(""),
-        OTHER_AD_INTERACTION(""),
-        PROGRESS(""),
-        CREATIVE_VIEW(""),
-        ACCEPT_INVITATION(""),
-        AD_EXPAND(""),
-        AD_COLLAPSE(""),
-        MINIMIZE(""),
-        CLOSE(""),
-        OVERLAY_VIEW_DURATION("");
-
-        private String value;
-
-        Event(String v) {
-            this.value = v;
-        }
-
-        public String value() {
-            return value;
-        }
-
-    }
 
     @Id
     private String id;
     private String owner;
-    private Event event;
+    private String event;
     private String bidRequestId;
+    private String tagRequestId;
     private String campaign;
     private String creative;
     private long cb;
@@ -75,11 +39,11 @@ public class EventRecord {
         this.owner = owner;
     }
 
-    public Event getEvent() {
+    public String getEvent() {
         return event;
     }
 
-    public void setEvent(Event event) {
+    public void setEvent(String event) {
         this.event = event;
     }
 
@@ -89,6 +53,14 @@ public class EventRecord {
 
     public void setBidRequestId(String bidRequestId) {
         this.bidRequestId = bidRequestId;
+    }
+
+    public String getTagRequestId() {
+        return tagRequestId;
+    }
+
+    public void setTagRequestId(String tagRequestId) {
+        this.tagRequestId = tagRequestId;
     }
 
     public String getCampaign() {

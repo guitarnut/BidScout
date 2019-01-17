@@ -36,27 +36,27 @@ public class VideoEventsBuilder {
     @Value("${service.values.host.events}")
     private String HOST;
 
-    public ClickTracking getClickTracking() {
+    public ClickTracking getClickTracking(String id) {
         final ClickTracking ct = new ClickTracking();
         ct.setId("BidScout");
-        ct.setValue(HOST + VIDEO_CLICK_TRACKING_URL + "?cb=" + System.currentTimeMillis());
+        ct.setValue(HOST + VIDEO_CLICK_TRACKING_URL + "/" + id + "?cb=" + System.currentTimeMillis());
         return ct;
     }
 
-    public List<Tracking> getTrackingEventsPlayer() {
-        return buildEvents(PLAYER_EVENTS);
+    public List<Tracking> getTrackingEventsPlayer(String id) {
+        return buildEvents(PLAYER_EVENTS, id);
     }
 
-    public List<Tracking> getTrackingEventsLinear() {
-        return buildEvents(LINEAR_EVENTS);
+    public List<Tracking> getTrackingEventsLinear(String id) {
+        return buildEvents(LINEAR_EVENTS, id);
     }
 
-    private List<Tracking> buildEvents(List<String> events) {
+    private List<Tracking> buildEvents(List<String> events, String id) {
         final List<Tracking> result = new ArrayList<>();
         PLAYER_EVENTS.forEach(e -> {
             Tracking t = new Tracking();
             t.setEvent(e);
-            t.setValue(HOST + VIDEO_EVENT_URL + "/" + e + "?cb=" + System.currentTimeMillis());
+            t.setValue(HOST + VIDEO_EVENT_URL + "/" + e + "/" + id + "?cb=" + System.currentTimeMillis());
             result.add(t);
         });
         return result;

@@ -1,28 +1,28 @@
 package com.gnut.bidscout.service;
 
 import com.gnut.bidscout.builder.VideoEventsBuilder;
+import com.gnut.bidscout.db.VastTagRecordDao;
 import com.gnut.bidscout.db.XmlDao;
+import com.gnut.bidscout.model.VastTagRecord;
 import com.gnut.bidscout.model.Xml;
 import com.iab.openrtb.vast.Vast;
 import com.iab.openrtb.vast.ad.creative.linear.VideoClicks;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class VastService {
 
     private final XmlDao xmlDao;
+    private final VastTagRecordDao vastTagRecordDao;
     private final VideoEventsBuilder eventsBuilder;
 
-    public VastService(
-            XmlDao xmlDao,
-            VideoEventsBuilder eventsBuilder
-    ) {
+    @Autowired
+    public VastService(XmlDao xmlDao, VastTagRecordDao vastTagRecordDao, VideoEventsBuilder eventsBuilder) {
         this.xmlDao = xmlDao;
+        this.vastTagRecordDao = vastTagRecordDao;
         this.eventsBuilder = eventsBuilder;
     }
 
@@ -47,8 +47,16 @@ public class VastService {
     public Vast serveVast(String account, String id) {
         Xml xml = xmlDao.findByOwnerAndId(account, id);
         if (xml != null) {
-            addLinearTrackingEventsToServedVast(xml.getVast());
-            addVideoClickToServedVast(xml.getVast());
+            long timestamp = System.currentTimeMillis();
+
+            VastTagRecord vastTagRecord = new VastTagRecord();
+            vastTagRecord.setRequestTimestamp(timestamp);
+            vastTagRecord.setVastName(xml.getName());
+
+            vastTagRecordDao.save(vastTagRecord);
+
+            addLinearTrackingEventsToServedVast(xml.getVast(), vastTagRecord.getId());
+            addVideoClickToServedVast(xml.getVast(), vastTagRecord.getId());
             return xml.getVast();
         } else {
             return null;
@@ -66,21 +74,24 @@ public class VastService {
         }
     }
 
-    private void addLinearTrackingEventsToServedVast(Vast vast) {
+    private void addLinearTrackingEventsToServedVast(Vast vast, String requestId) {
         vast.getAd().getInLine().getCreative().get(0).getLinear().setTrackingEvent(
-            eventsBuilder.getTrackingEventsLinear()
+                eventsBuilder.getTrackingEventsLinear(requestId)
         );
         vast.getAd().getInLine().getCreative().get(0).getLinear().getTrackingEvent().addAll(
-                eventsBuilder.getTrackingEventsPlayer()
+                eventsBuilder.getTrackingEventsPlayer(requestId)
         );
     }
 
-    private void addVideoClickToServedVast(Vast vast) {
+    private void addVideoClickToServedVast(Vast vast, String requestId) {
         vast.getAd().getInLine().getCreative().get(0).getLinear().setVideoClicks(
                 new VideoClicks()
         );
         vast.getAd().getInLine().getCreative().get(0).getLinear().getVideoClicks().setClickTracking(
-                eventsBuilder.getClickTracking()
+                eventsBuilder.getClickTracking(requestId)
         );
+    }
+
+    private void addVImpressionToServedVast(Vast vast) {
     }
 }
