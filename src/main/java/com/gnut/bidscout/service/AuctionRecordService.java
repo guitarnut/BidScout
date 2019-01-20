@@ -24,7 +24,7 @@ public class AuctionRecordService {
         List<AuctionRecord> records = auctionDao.findAllByOwner(account);
         if (records != null) {
             records.forEach(r -> {
-                results.put(r.getId(), r.getBidRequestId() + " - " + new Date(r.getRequestTimestamp()));
+                results.put(r.getId(), r.getBidRequestId());
             });
         }
         return results;

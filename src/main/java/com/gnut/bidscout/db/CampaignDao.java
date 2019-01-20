@@ -10,6 +10,6 @@ import java.util.List;
 public interface CampaignDao extends MongoRepository<Campaign, String> {
     List<Campaign> findAllByOwner(String owner);
     Campaign findByIdAndOwner(String id, String owner);
-    List<Campaign> findAllByEnabledAndOwner(boolean val, String account);
+    List<Campaign> findAllByEnabledAndOwnerAndId(boolean val, String account, String id);
     Campaign findByCreativesContainsAndOwner(String id, String account);
 }

@@ -13,13 +13,13 @@ public class BidRequestValidator {
         String id = Strings.isNullOrEmpty(bidRequest.getId()) ? "Unknown - " : bidRequest.getId() + " - ";
         // Failures
         if (bidRequest.getImp() == null) {
-            record.getBidRequestErrors().add(id + BidRequestError.NO_IMPRESSION.value());
+            record.getBidRequestErrors().add(BidRequestError.NO_IMPRESSION.value());
             return false;
         }
 
         // Warnings
         if (Strings.isNullOrEmpty(bidRequest.getUser().getBuyeruid())) {
-            record.getBidRequestErrors().add(id + BidRequestError.NO_BUYERUID.value());
+            record.getBidRequestErrors().add(BidRequestError.NO_BUYERUID.value());
         }
 
         return true;

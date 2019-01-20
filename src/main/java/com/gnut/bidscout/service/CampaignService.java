@@ -111,11 +111,11 @@ public class CampaignService {
     }
 
     public Optional<EligibleCampaignData> targetCampaign(
-            String owner, String publisher, BidRequest bidRequest, HttpServletRequest request, AuctionRecord auctionRecord
+            String owner, String campaignId, BidRequest bidRequest, HttpServletRequest request, AuctionRecord auctionRecord
     ) {
-        final Optional<Campaign> campaign = selectCampaign(owner, bidRequest);
+        final Optional<Campaign> campaign = selectCampaign(owner, campaignId);
         if (campaign.isPresent()) {
-            final RequestTargetingData targetingData = targetingService.generateTargetingData(publisher, bidRequest, request);
+            final RequestTargetingData targetingData = targetingService.generateTargetingData(bidRequest, request);
 
             if (eligibleService.isEligible(targetingData, campaign.get().getRequirements(), campaign, Optional.empty(), auctionRecord)) {
                 final EligibleCampaignData campaignData = new EligibleCampaignData();
@@ -154,9 +154,9 @@ public class CampaignService {
         }
     }
 
-    private Optional<Campaign> selectCampaign(String owner, BidRequest bidRequest) {
+    private Optional<Campaign> selectCampaign(String owner, String campaignId) {
         // Todo: Target off of request
-        List<Campaign> campaigns = campaignDao.findAllByEnabledAndOwner(true, owner);
+        List<Campaign> campaigns = campaignDao.findAllByEnabledAndOwnerAndId(true, owner, campaignId);
         if (campaigns.isEmpty()) {
             return Optional.empty();
         }

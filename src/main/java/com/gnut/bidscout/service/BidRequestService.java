@@ -60,11 +60,7 @@ public class BidRequestService {
         this.auctionDao = auctionDao;
     }
 
-    public BidResponse handleRequest(String bidder, String publisher, HttpServletRequest request, HttpServletResponse response) {
-        if (Strings.isNullOrEmpty(publisher)) {
-            publisher = "";
-        }
-
+    public BidResponse handleRequest(String bidder, String campaignId, HttpServletRequest request, HttpServletResponse response) {
         final BidRequest bidRequest;
         AuctionRecord record = new AuctionRecord();
         record.setTargetingFailures(new HashMap<>());
@@ -75,7 +71,7 @@ public class BidRequestService {
         record.setCookies(request.getHeader("Cookie"));
         record.setxForwardedFor(request.getHeader("X-Forwarded-For"));
         record.setHost(request.getHeader("Host"));
-        record.setPublisher(publisher);
+        record.setCampaign(campaignId);
         record.setOwner(bidder);
 
         try {
@@ -103,7 +99,7 @@ public class BidRequestService {
         BidResponse bidResponse = null;
 
         if (bidRequestValidator.validateBidRequest(bidRequest, record)) {
-            final Optional<EligibleCampaignData> data = campaignService.targetCampaign(bidder, publisher, bidRequest, request, record);
+            final Optional<EligibleCampaignData> data = campaignService.targetCampaign(bidder, campaignId, bidRequest, request, record);
 
             if (data.isPresent() && !data.get().getCreatives().isEmpty()) {
                 final Campaign campaign = data.get().getCampaign();

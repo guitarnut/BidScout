@@ -3,15 +3,13 @@ package com.gnut.bidscout.service;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gnut.bidscout.db.AuctionDao;
+import com.gnut.bidscout.db.EventRecordDao;
 import com.gnut.bidscout.model.*;
 import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class ClientService {
@@ -23,6 +21,7 @@ public class ClientService {
     private final CreativeService creativeService;
     private final AuctionRecordService auctionRecordService;
     private final VastService vastService;
+    private final EventRecordDao eventRecordDao;
 
     static {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -36,7 +35,8 @@ public class ClientService {
             CampaignService campaignService,
             CreativeService creativeService,
             AuctionRecordService auctionRecordService,
-            VastService vastService
+            VastService vastService,
+            EventRecordDao eventRecordDao
     ) {
         this.auctionDao = auctionDao;
         this.impressionService = impressionService;
@@ -45,6 +45,7 @@ public class ClientService {
         this.creativeService = creativeService;
         this.auctionRecordService = auctionRecordService;
         this.vastService = vastService;
+        this.eventRecordDao = eventRecordDao;
     }
 
     /**
@@ -239,5 +240,25 @@ public class ClientService {
         resetStats.setId(oldStats.getId());
         return resetStats;
     }
-}
 
+    public Map<String, VastTagRecord> getAllVastRecords(String account) {
+        final List<VastTagRecord> records = vastService.getAllVastTagRecords(account);
+        if (records.isEmpty()) {
+            return Collections.emptyMap();
+        } else {
+            final Map<String, VastTagRecord> results = new HashMap<>();
+            records.forEach(r -> {
+                results.put(r.getId(), r);
+            });
+            return results;
+        }
+    }
+
+    public VastTagRecord getVastRecordByRequestId(String account, String requestId) {
+        return vastService.getVastTagRecord(account, requestId);
+    }
+
+    public List<EventRecord> getAllVastTagEvents(String requestId) {
+        return eventRecordDao.findAllByTagRequestId(requestId);
+    }
+}

@@ -18,11 +18,9 @@ public class TargetingService {
         this.syncService = syncService;
     }
 
-    public RequestTargetingData generateTargetingData(String publisher, BidRequest bidRequest, HttpServletRequest request) {
+    public RequestTargetingData generateTargetingData(BidRequest bidRequest, HttpServletRequest request) {
         final RequestTargetingData data = new RequestTargetingData();
         final String userId = syncService.getUserCookieValue(request);
-
-        data.setPublisher(publisher);
 
         if (bidRequest.getApp() != null) {
             data.setPlatform(RequestTargetingData.Platform.INAPP);

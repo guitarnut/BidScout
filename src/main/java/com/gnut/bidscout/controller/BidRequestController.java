@@ -18,14 +18,14 @@ public class BidRequestController {
         this.service = service;
     }
 
-    @RequestMapping(value="/{bidder}/{publisher}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value="/{bidder}/{campaign}", method = RequestMethod.POST, produces = "application/json")
     public BidResponse handleBidRequestPostWithKey(
             @PathVariable(value = "bidder") String bidder,
-            @PathVariable(value = "publisher") String publisher,
+            @PathVariable(value = "campaign") String campaign,
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-       return service.handleRequest(bidder, publisher, request, response);
+       return service.handleRequest(bidder, campaign, request, response);
     }
 
     @RequestMapping(value="/{bidder}", method = RequestMethod.POST, produces = "application/json")

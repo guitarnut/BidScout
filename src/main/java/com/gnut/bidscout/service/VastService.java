@@ -10,7 +10,11 @@ import com.iab.openrtb.vast.ad.creative.linear.VideoClicks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class VastService {
@@ -44,7 +48,7 @@ public class VastService {
         }
     }
 
-    public Vast serveVast(String account, String id) {
+    public Vast serveVast(String account, String id, HttpServletRequest request) {
         Xml xml = xmlDao.findByOwnerAndId(account, id);
         if (xml != null) {
             long timestamp = System.currentTimeMillis();
@@ -53,10 +57,28 @@ public class VastService {
             vastTagRecord.setRequestTimestamp(timestamp);
             vastTagRecord.setVastName(xml.getName());
 
+            vastTagRecord.setIp(request.getRemoteAddr());
+            vastTagRecord.setUserAgent(request.getHeader("User-Agent"));
+            vastTagRecord.setCookies(request.getHeader("Cookie"));
+            vastTagRecord.setxForwardedFor(request.getHeader("X-Forwarded-For"));
+            vastTagRecord.setHost(request.getHeader("Host"));
+            vastTagRecord.setOwner(account);
+
             vastTagRecordDao.save(vastTagRecord);
 
             addLinearTrackingEventsToServedVast(xml.getVast(), vastTagRecord.getId());
             addVideoClickToServedVast(xml.getVast(), vastTagRecord.getId());
+            return xml.getVast();
+        } else {
+            return null;
+        }
+    }
+
+    public Vast getVast(String account, String id) {
+        Xml xml = xmlDao.findByOwnerAndId(account, id);
+        if (xml != null) {
+            addLinearTrackingEventsToServedVast(xml.getVast(), "{request_id}");
+            addVideoClickToServedVast(xml.getVast(), "{request_id}");
             return xml.getVast();
         } else {
             return null;
@@ -92,6 +114,14 @@ public class VastService {
         );
     }
 
-    private void addVImpressionToServedVast(Vast vast) {
+    private void addImpressionToServedVast(Vast vast) {
+    }
+
+    public VastTagRecord getVastTagRecord(String account, String requestId) {
+        return vastTagRecordDao.findFirstByOwnerAndId(account, requestId);
+    }
+
+    public List<VastTagRecord> getAllVastTagRecords(String account) {
+        return vastTagRecordDao.findAllByOwner(account);
     }
 }

@@ -13,6 +13,9 @@ public class VastTagRecord {
     private String cookies;
     private String host;
     private String xForwardedFor;
+    private String ip;
+    private String userAgent;
+    private String owner;
 
     public VastTagRecord() {}
 
@@ -86,5 +89,29 @@ public class VastTagRecord {
 
     public void setxForwardedFor(String xForwardedFor) {
         this.xForwardedFor = xForwardedFor;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getOwner() {
+        return owner;
     }
 }

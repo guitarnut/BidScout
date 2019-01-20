@@ -77,7 +77,7 @@ public class EventController {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        videoEventService.recordEvent(id, event, cb);
+        videoEventService.recordVastTagEvent(id, event, cb, request);
         response.setStatus(204);
     }
 

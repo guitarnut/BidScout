@@ -8,7 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -22,7 +21,14 @@ public class UserService {
     }
 
     public Users login(String username) {
-        return usersDao.findByUsername(username);
+        final Users user = usersDao.findByUsername(username);
+        if(user != null) {
+            user.setLastLogin(System.currentTimeMillis());
+            usersDao.save(user);
+            return user;
+        } else {
+            return null;
+        }
     }
 
     public Users createUser(Users user, HttpServletResponse response) {

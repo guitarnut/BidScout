@@ -6,6 +6,8 @@ import com.gnut.bidscout.model.EventRecord;
 import com.gnut.bidscout.model.VastTagRecord;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Component
 public class VideoEventService {
     private final EventRecordDao eventRecordDao;
@@ -16,7 +18,7 @@ public class VideoEventService {
         this.vastTagRecordDao = vastTagRecordDao;
     }
 
-    public void recordEvent(String id, String event, long cb) {
+    public void recordVastTagEvent(String id, String event, long cb, HttpServletRequest request) {
         final VastTagRecord vastTagRecord = vastTagRecordDao.findFirstById(id);
         if (vastTagRecord != null) {
             final EventRecord eventRecord = new EventRecord();
@@ -24,6 +26,13 @@ public class VideoEventService {
             eventRecord.setTagRequestId(id);
             eventRecord.setEventTimestamp(System.currentTimeMillis());
             eventRecord.setCb(cb);
+            eventRecord.setIp(request.getRemoteAddr());
+            eventRecord.setUserAgent(request.getHeader("User-Agent"));
+            eventRecord.setCookies(request.getHeader("Cookie"));
+            eventRecord.setxForwardedFor(request.getHeader("X-Forwarded-For"));
+            eventRecord.setHost(request.getHeader("Host"));
+            eventRecord.setUrl(request.getRequestURI());
+
             eventRecordDao.save(eventRecord);
         }
     }

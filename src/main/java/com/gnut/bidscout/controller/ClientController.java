@@ -3,7 +3,6 @@ package com.gnut.bidscout.controller;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.service.ClientService;
-import com.iab.openrtb.vast.Vast;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -290,14 +289,37 @@ public class ClientController {
         return service.getXml(account, xmlId);
     }
 
-    @RequestMapping(value = "/xml/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    /**
+     * ------------- VAST Transactions -------------
+     */
+
+    @RequestMapping(value = "/vast/all/{account}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public void deleteXml(
-            @PathVariable("id") String xmlId,
+    public Map<String, VastTagRecord> getAllVastRecords(
             @PathVariable("account") String account,
             HttpServletResponse response
     ) {
-        service.deleteXml(account, xmlId);
+        return service.getAllVastRecords(account);
+    }
+
+    @RequestMapping(value = "/vast/get/{account}/{request}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public VastTagRecord getVastRecord(
+            @PathVariable("request") String requestId,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        return service.getVastRecordByRequestId(account, requestId);
+    }
+
+    @RequestMapping(value = "/vast/events/get/{account}/{request}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<EventRecord> getVastRecordEvents(
+            @PathVariable("request") String requestId,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        return service.getAllVastTagEvents(requestId);
     }
 
 }
