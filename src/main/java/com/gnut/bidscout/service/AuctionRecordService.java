@@ -19,12 +19,15 @@ public class AuctionRecordService {
         this.auctionDao = auctionDao;
     }
 
-    public Map<String, String> getListOfAllRecords(String account) {
-        final Map<String, String> results = new HashMap<>();
+    public Map<String, AuctionRecord> getListOfAllRecords(String account) {
+        final Map<String, AuctionRecord> results = new HashMap<>();
         List<AuctionRecord> records = auctionDao.findAllByOwner(account);
         if (records != null) {
             records.forEach(r -> {
-                results.put(r.getId(), r.getBidRequestId());
+                final AuctionRecord auctionRecord = new AuctionRecord();
+                auctionRecord.setBidRequestId(r.getBidRequestId());
+                auctionRecord.setRequestTimestamp(r.getRequestTimestamp());
+                results.put(r.getId(), auctionRecord);
             });
         }
         return results;

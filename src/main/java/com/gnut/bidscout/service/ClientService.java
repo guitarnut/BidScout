@@ -162,7 +162,7 @@ public class ClientService {
         return null;
     }
 
-    public Map<String, String> getAuctionRecordList(String account) {
+    public Map<String, AuctionRecord> getAuctionRecordList(String account) {
         return auctionRecordService.getListOfAllRecords(account);
     }
 
@@ -260,5 +260,13 @@ public class ClientService {
 
     public List<EventRecord> getAllVastTagEvents(String requestId) {
         return eventRecordDao.findAllByTagRequestId(requestId);
+    }
+
+    public void deleteVastRecord(String account, String vastId) {
+        vastService.deleteVastTagRecord(account, vastId);
+    }
+
+    public void deleteAllVastRecords(String account) {
+        vastService.deleteAllVastTagRecords(account);
     }
 }

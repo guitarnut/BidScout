@@ -124,4 +124,12 @@ public class VastService {
     public List<VastTagRecord> getAllVastTagRecords(String account) {
         return vastTagRecordDao.findAllByOwner(account);
     }
+
+    public void deleteVastTagRecord(String account, String vastId) {
+        vastTagRecordDao.deleteByOwnerAndId(account, vastId);
+    }
+
+    public void deleteAllVastTagRecords(String account) {
+        vastTagRecordDao.deleteAllByOwner(account);
+    }
 }

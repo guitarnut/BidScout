@@ -12,4 +12,6 @@ public interface VastTagRecordDao extends MongoRepository<VastTagRecord, String>
     VastTagRecord findFirstById(String id);
     VastTagRecord findFirstByOwnerAndId(String account, String requestId);
     List<VastTagRecord> findAllByOwner(String owner);
+    void deleteByOwnerAndId(String owner, String id);
+    void deleteAllByOwner(String owner);
 }

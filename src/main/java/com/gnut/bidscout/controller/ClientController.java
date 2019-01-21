@@ -39,7 +39,7 @@ public class ClientController {
 
     @RequestMapping(value = "/bid/all/{account}", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
-    public Map<String, String> getBidRecords(
+    public Map<String, AuctionRecord> getBidRecords(
             @PathVariable("account") String account,
             HttpServletResponse response
     ) {
@@ -320,6 +320,26 @@ public class ClientController {
             HttpServletResponse response
     ) {
         return service.getAllVastTagEvents(requestId);
+    }
+
+
+    @RequestMapping(value = "/vast/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public void deleteVastRecord(
+            @PathVariable("id") String vastId,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        service.deleteVastRecord(account, vastId);
+    }
+
+    @RequestMapping(value = "/vast/deleteall/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public void deleteAllVastRecords(
+            @PathVariable("id") String account,
+            HttpServletResponse response
+    ) {
+        service.deleteAllVastRecords(account);
     }
 
 }
