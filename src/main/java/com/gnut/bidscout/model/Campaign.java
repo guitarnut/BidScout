@@ -18,7 +18,7 @@ public class Campaign implements Advertisment {
     private Flags flags;
     private List<String> creatives = new ArrayList<>();
     private Requirements requirements;
-    private Statistics statistics;
+    private Statistics statistics = new Statistics();
     private String nurl;
     private long impressionExpiry;
     private boolean syncUsers;

@@ -31,7 +31,7 @@ public class Creative implements Advertisment {
     private String adm;
     private Limits limits;
     private Requirements requirements;
-    private Statistics statistics;
+    private Statistics statistics = new Statistics();
     private float minBid;
     private float maxBid;
     private boolean syncUsers;

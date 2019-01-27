@@ -19,12 +19,21 @@ public class EligibleService {
         this.creativeService = creativeService;
     }
 
-    public Set<Creative> getEligibleCreatives(RequestTargetingData targetingData, Campaign campaign, AuctionRecord record) {
+    public Set<Creative> getEligibleCreatives(
+            RequestTargetingData targetingData,
+            Campaign campaign,
+            AuctionRecord record,
+            Set<Creative> campaignCreatives
+    ) {
         final Set<Creative> eligible = new HashSet<>();
         if (campaign.getCreatives() == null) {
             return eligible;
         }
-        final Iterable<Creative> creatives = creativeService.getCreatives(campaign.getCreatives());
+        final Iterable<Creative> creatives = campaignCreatives.isEmpty() ? creativeService.getCreatives(campaign.getCreatives()) : campaignCreatives;
+        if (campaignCreatives.isEmpty()) {
+            // store these so we don't look them up in mongo again
+            creatives.forEach(campaignCreatives::add);
+        }
 
         if (creatives == null) {
             record.getTargetingFailures().put(campaign.getName(), TargetFailure.CREATIVES_ALIGNED.value());

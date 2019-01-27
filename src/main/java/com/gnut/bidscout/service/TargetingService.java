@@ -1,8 +1,10 @@
 package com.gnut.bidscout.service;
 
+import com.gnut.bidscout.model.AuctionImp;
 import com.gnut.bidscout.model.RequestTargetingData;
 import com.google.common.base.Strings;
 import com.iab.openrtb.request.BidRequest;
+import com.iab.openrtb.request.Imp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +20,11 @@ public class TargetingService {
         this.syncService = syncService;
     }
 
-    public RequestTargetingData generateTargetingData(BidRequest bidRequest, HttpServletRequest request) {
+    public RequestTargetingData generateTargetingData(AuctionImp auctionImp, HttpServletRequest request) {
         final RequestTargetingData data = new RequestTargetingData();
         final String userId = syncService.getUserCookieValue(request);
+        final BidRequest bidRequest = auctionImp.getBidRequest();
+        final Imp imp = auctionImp.getImpression();
 
         if (bidRequest.getApp() != null) {
             data.setPlatform(RequestTargetingData.Platform.INAPP);
@@ -39,17 +43,17 @@ public class TargetingService {
             data.setUserMatch(true);
         }
 
-        data.setWidths(Arrays.asList(bidRequest.getImp().get(0).getBanner().getW()));
-        data.setHeights(Arrays.asList(bidRequest.getImp().get(0).getBanner().getH()));
-        data.setSecure(bidRequest.getImp().get(0).getSecure() == 1);
-        data.setBidfloor(bidRequest.getImp().get(0).getBidfloor());
+        data.setWidths(Arrays.asList(imp.getBanner().getW()));
+        data.setHeights(Arrays.asList(imp.getBanner().getH()));
+        data.setSecure(imp.getSecure() == 1);
+        data.setBidfloor(imp.getBidfloor());
         data.setBadv(bidRequest.getBadv());
-        data.setBattr(bidRequest.getImp().get(0).getBanner().getBattr());
-        data.setBtype(bidRequest.getImp().get(0).getBanner().getBtype());
+        data.setBattr(imp.getBanner().getBattr());
+        data.setBtype(imp.getBanner().getBtype());
         data.setBadv(bidRequest.getBcat());
 
-        if(bidRequest.getImp().get(0).getPmp() != null) {
-            data.setDealIds(bidRequest.getImp().get(0).getPmp().getDeals());
+        if(imp.getPmp() != null) {
+            data.setDealIds(imp.getPmp().getDeals());
         }
 
         return data;

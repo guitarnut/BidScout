@@ -1,15 +1,13 @@
 package com.gnut.bidscout.service;
 
 import com.gnut.bidscout.builder.BidResponseBuilder;
-import com.gnut.bidscout.model.Campaign;
-import com.gnut.bidscout.model.Creative;
+import com.gnut.bidscout.model.AuctionImp;
 import com.iab.openrtb.request.BidRequest;
-import com.iab.openrtb.request.Imp;
 import com.iab.openrtb.response.BidResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
+import java.util.Set;
 
 @Component
 public class BidResponseService {
@@ -21,14 +19,10 @@ public class BidResponseService {
     }
 
     public BidResponse buildBidResponse(
-            BigDecimal price,
             BidRequest bidRequest,
-            Imp selectedImpression,
-            Campaign campaign,
-            Creative creative,
-            String dealId
+            Set<AuctionImp> auctionImp
     ) {
-        return builder.buildBidResponse(price, bidRequest, selectedImpression, campaign, creative, dealId);
+        return builder.buildBidResponse(bidRequest, auctionImp);
     }
 
     public BidResponse buildNBRBidResponse(

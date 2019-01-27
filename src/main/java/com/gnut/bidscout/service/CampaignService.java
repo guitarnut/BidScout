@@ -111,19 +111,20 @@ public class CampaignService {
     }
 
     public Optional<EligibleCampaignData> targetCampaign(
-            String owner, String campaignId, BidRequest bidRequest, HttpServletRequest request, AuctionRecord auctionRecord
+            Campaign campaign,
+            AuctionImp auctionImp,
+            HttpServletRequest request,
+            AuctionRecord auctionRecord,
+            Set<Creative> campaignCreatives
     ) {
-        final Optional<Campaign> campaign = selectCampaign(owner, campaignId);
-        if (campaign.isPresent()) {
-            final RequestTargetingData targetingData = targetingService.generateTargetingData(bidRequest, request);
+        final RequestTargetingData targetingData = targetingService.generateTargetingData(auctionImp, request);
 
-            if (eligibleService.isEligible(targetingData, campaign.get().getRequirements(), campaign, Optional.empty(), auctionRecord)) {
-                final EligibleCampaignData campaignData = new EligibleCampaignData();
-                campaignData.setCampaign(campaign.get());
-                campaignData.setCreatives(eligibleService.getEligibleCreatives(targetingData, campaign.get(), auctionRecord));
-                campaignData.setData(targetingData);
-                return Optional.of(campaignData);
-            }
+        if (eligibleService.isEligible(targetingData, campaign.getRequirements(), Optional.of(campaign), Optional.empty(), auctionRecord)) {
+            final EligibleCampaignData campaignData = new EligibleCampaignData();
+            campaignData.setCampaign(campaign);
+            campaignData.setCreatives(eligibleService.getEligibleCreatives(targetingData, campaign, auctionRecord, campaignCreatives));
+            campaignData.setData(targetingData);
+            return Optional.of(campaignData);
         }
         return Optional.empty();
     }
@@ -152,15 +153,6 @@ public class CampaignService {
             });
             return results;
         }
-    }
-
-    private Optional<Campaign> selectCampaign(String owner, String campaignId) {
-        // Todo: Target off of request
-        List<Campaign> campaigns = campaignDao.findAllByEnabledAndOwnerAndId(true, owner, campaignId);
-        if (campaigns.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(campaigns.get(0));
     }
 
     public void deleteCampaign(String id, String account) {

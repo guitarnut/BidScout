@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A {@link SeatBid} object contains one or more Bid objects, each of which
@@ -161,7 +163,7 @@ public class Bid {
     Integer exp;
 
     /** Placeholder for bidder-specific extensions to OpenRTB. */
-    ObjectNode ext;
+    Map<String, Object> ext = new HashMap<>();
 
     public Bid(){}
 
@@ -365,11 +367,11 @@ public class Bid {
         this.exp = exp;
     }
 
-    public ObjectNode getExt() {
+    public Map<String, Object> getExt() {
         return ext;
     }
 
-    public void setExt(ObjectNode ext) {
+    public void setExt(Map<String, Object> ext) {
         this.ext = ext;
     }
 }
