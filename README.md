@@ -25,5 +25,3 @@ Vast tag macros
 Handle multiple creative types
 
 Handle atomic operations on mongo records
-
-Load all creatives up front, regardless of targeting, once.
