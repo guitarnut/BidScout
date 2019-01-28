@@ -132,15 +132,15 @@ public class BidRequestValidator {
     }
 
     private void validateSiteObject(Site s, AuctionRecord record) {
-        if (Strings.isNullOrEmpty(s.getId())) {
-            record.getBidRequestErrors().add(BidRequestError.NO_SITE_ID.value());
-        }
         if (s.getPublisher() == null) {
             record.getBidRequestErrors().add(BidRequestError.NO_PUBLISHER.value());
         }
     }
 
     private void checkSiteObjectForWarnings(Site s, AuctionRecord record) {
+        if (Strings.isNullOrEmpty(s.getId())) {
+            record.getBidRequestErrors().add(BidRequestError.NO_SITE_ID.value());
+        }
         if (Strings.isNullOrEmpty(s.getDomain())) {
             record.getBidRequestErrors().add(BidRequestError.NO_SITE_DOMAIN.value());
         } else if (s.getDomain().toLowerCase().contains(INVALID_DOMAIN)) {
