@@ -3,7 +3,6 @@ package com.gnut.bidscout.service;
 import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.values.TargetFailure;
 import com.google.common.base.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -12,30 +11,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class EligibleService {
-    private final CreativeService creativeService;
-
-    @Autowired
-    public EligibleService(CreativeService creativeService) {
-        this.creativeService = creativeService;
-    }
 
     public Set<Creative> getEligibleCreatives(
             RequestTargetingData targetingData,
             Campaign campaign,
             AuctionRecord record,
-            Set<Creative> campaignCreatives
+            Iterable<Creative> creatives
     ) {
         final Set<Creative> eligible = new HashSet<>();
-        if (campaign.getCreatives() == null) {
-            return eligible;
-        }
-        final Iterable<Creative> creatives = campaignCreatives.isEmpty() ? creativeService.getCreatives(campaign.getCreatives()) : campaignCreatives;
-        if (campaignCreatives.isEmpty()) {
-            // store these so we don't look them up in mongo again
-            creatives.forEach(campaignCreatives::add);
-        }
-
-        if (creatives == null) {
+        if (campaign.getCreatives() == null || creatives == null) {
             record.getTargetingFailures().put(campaign.getName(), TargetFailure.CREATIVES_ALIGNED.value());
             return eligible;
         }

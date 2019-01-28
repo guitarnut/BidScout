@@ -4,10 +4,7 @@ import com.iab.openrtb.request.BidRequest;
 import com.iab.openrtb.response.BidResponse;
 import org.springframework.data.annotation.Id;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AuctionRecord {
     @Id
@@ -29,7 +26,7 @@ public class AuctionRecord {
     private String campaign;
     private String creative;
     private Map<String, String> targetingFailures = new HashMap<>();
-    private List<String> bidRequestErrors = new ArrayList<>();
+    private Set<String> bidRequestErrors = new HashSet<>();
 
     public AuctionRecord(){}
 
@@ -169,11 +166,11 @@ public class AuctionRecord {
         this.creative = creative;
     }
 
-    public List<String> getBidRequestErrors() {
+    public Set<String> getBidRequestErrors() {
         return bidRequestErrors;
     }
 
-    public void setBidRequestErrors(List<String> bidRequestErrors) {
+    public void setBidRequestErrors(Set<String> bidRequestErrors) {
         this.bidRequestErrors = bidRequestErrors;
     }
 

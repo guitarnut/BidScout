@@ -6,6 +6,7 @@ public class Xml {
     private String id;
     private String owner;
     private String name;
+    private String type;
     private Vast vast;
 
     public void copyValues(Xml xml) {
@@ -13,6 +14,7 @@ public class Xml {
         this.owner = xml.getOwner();
         this.name = xml.getName();
         this.vast = xml.getVast();
+        this.type = xml.getType();
     }
 
     public String getId() {
@@ -45,5 +47,13 @@ public class Xml {
 
     public void setVast(Vast vast) {
         this.vast = vast;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

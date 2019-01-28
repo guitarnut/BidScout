@@ -148,17 +148,8 @@ public class ClientService {
         return null;
     }
 
+    @Deprecated
     public List<List<String>> getBidErrors(String account) {
-        List<AuctionRecord> record = auctionDao.findAllByBidRequestErrorsIsNotNullAndOwner(account);
-        if (record != null) {
-            final List<List<String>> result = new ArrayList<>();
-            record.forEach(r -> {
-                if (r.getBidRequestErrors() != null && !r.getBidRequestErrors().isEmpty()) {
-                    result.add(r.getBidRequestErrors());
-                }
-            });
-            return result;
-        }
         return null;
     }
 

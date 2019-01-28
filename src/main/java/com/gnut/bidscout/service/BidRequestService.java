@@ -69,8 +69,6 @@ public class BidRequestService {
             campaign.getStatistics().setRequests(campaign.getStatistics().getRequests() + 1);
         }
         final AuctionRecord record = new AuctionRecord();
-        record.setTargetingFailures(new HashMap<>());
-        record.setBidRequestErrors(new ArrayList<>());
         record.setRequestTimestamp(System.currentTimeMillis());
         record.setIp(request.getRemoteAddr());
         record.setUserAgent(request.getHeader("User-Agent"));
@@ -120,10 +118,10 @@ public class BidRequestService {
 
         BidResponse bidResponse = null;
         final Set<AuctionImp> auctionImps = new HashSet<>();
-        final Set<String> creativesUsed = new HashSet<>();
-        final Set<Creative> campaignCreatives = new HashSet<>();
 
         if (bidRequestValidator.validateBidRequest(bidRequest, record)) {
+            final Set<String> creativesUsedInBids = new HashSet<>();
+            final Iterable<Creative> availableCampaignCreatives = creativeService.getCreatives(campaign.getCreatives());
             final BidRequest br = bidRequest;
 
             bidRequest.getImp().forEach(imp -> {
@@ -132,14 +130,14 @@ public class BidRequestService {
                 auctionImp.setImpression(imp);
 
                 final Optional<EligibleCampaignData> data = campaignService.targetCampaign(
-                        campaign, auctionImp, request, record, campaignCreatives
+                        campaign, auctionImp, request, record, availableCampaignCreatives
                 );
                 if (data.isPresent() && !data.get().getCreatives().isEmpty()) {
                     Creative creative = null;
                     final AtomicBoolean creativeFound = new AtomicBoolean(false);
                     for (Creative c : data.get().getCreatives()) {
-                        if (!creativesUsed.contains(c.getId())) {
-                            creativesUsed.add(c.getId());
+                        if (!creativesUsedInBids.contains(c.getId())) {
+                            creativesUsedInBids.add(c.getId());
                             creative = c;
                             creativeFound.getAndSet(true);
                             break;

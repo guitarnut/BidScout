@@ -2,7 +2,6 @@ package com.gnut.bidscout.service;
 
 import com.gnut.bidscout.db.CampaignDao;
 import com.gnut.bidscout.model.*;
-import com.iab.openrtb.request.BidRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -115,7 +114,7 @@ public class CampaignService {
             AuctionImp auctionImp,
             HttpServletRequest request,
             AuctionRecord auctionRecord,
-            Set<Creative> campaignCreatives
+            Iterable<Creative> campaignCreatives
     ) {
         final RequestTargetingData targetingData = targetingService.generateTargetingData(auctionImp, request);
 
@@ -148,7 +147,6 @@ public class CampaignService {
         } else {
             final Map<String, String> results = new HashMap<>();
             campaigns.forEach(c -> {
-
                 results.put(c.getId(), c.getName());
             });
             return results;
