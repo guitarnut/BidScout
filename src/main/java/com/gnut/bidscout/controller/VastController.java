@@ -41,7 +41,6 @@ public class VastController {
     }
 
     @RequestMapping(value = "/view/{bidder}/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-    @ResponseBody
     public Vast getVast(
             @PathVariable(value = "bidder") String bidder,
             @PathVariable(value = "id") String id,
