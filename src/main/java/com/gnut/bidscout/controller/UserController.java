@@ -23,9 +23,10 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public Users login(
-            @RequestBody Users user
+            @RequestBody Users user,
+            HttpServletResponse response
     ) {
-        return service.login(user.getUsername());
+        return service.login(user.getUsername(), response);
     }
 
     @RequestMapping(value = "/create", produces = "application/json")

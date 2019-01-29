@@ -20,13 +20,14 @@ public class UserService {
         this.usersDao = usersDao;
     }
 
-    public Users login(String username) {
+    public Users login(String username, HttpServletResponse response) {
         final Users user = usersDao.findByUsername(username);
-        if(user != null) {
+        if(user != null && user.isEnabled()) {
             user.setLastLogin(System.currentTimeMillis());
             usersDao.save(user);
             return user;
         } else {
+            response.setStatus(401);
             return null;
         }
     }
