@@ -39,6 +39,7 @@ public class BidRequestService {
     private final BidResponseService bidResponseService;
     private final BidRequestValidator bidRequestValidator;
     private final AuctionDao auctionDao;
+    private final UserAccountStatisticsService userStatsService;
 
     static {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -51,16 +52,23 @@ public class BidRequestService {
             CreativeService creativeService,
             BidResponseService bidResponseService,
             BidRequestValidator bidRequestValidator,
-            AuctionDao auctionDao
+            AuctionDao auctionDao,
+            UserAccountStatisticsService userStatsService
     ) {
         this.campaignService = campaignService;
         this.creativeService = creativeService;
         this.bidResponseService = bidResponseService;
         this.bidRequestValidator = bidRequestValidator;
         this.auctionDao = auctionDao;
+        this.userStatsService = userStatsService;
     }
 
     public BidResponse handleRequest(String bidder, String campaignId, HttpServletRequest request, HttpServletResponse response) {
+        // daily limit met?
+        if (!userStatsService.addBidRequest(bidder)) {
+            return generateNoContentResponse(response);
+        }
+
         BidRequest bidRequest = null;
         BidRequestError bidRequestError = null;
 
@@ -206,7 +214,9 @@ public class BidRequestService {
 
         executorService.submit(() -> {
             campaignService.saveCampaign(campaign);
-            auctionDao.save(record);
+            if (userStatsService.addAuctionRecord(bidder)) {
+                auctionDao.save(record);
+            }
         });
 
         if (bidResponse != null) {

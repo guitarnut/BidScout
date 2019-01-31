@@ -289,6 +289,16 @@ public class ClientController {
         return service.getXml(account, xmlId);
     }
 
+    @RequestMapping(value = "/xml/delete/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public void deleteXml(
+            @PathVariable("id") String xmlId,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        service.deleteXml(account, xmlId);
+    }
+
     /**
      * ------------- VAST Transactions -------------
      */

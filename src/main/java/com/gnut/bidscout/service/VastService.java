@@ -22,12 +22,19 @@ public class VastService {
     private final XmlDao xmlDao;
     private final VastTagRecordDao vastTagRecordDao;
     private final VideoEventsBuilder eventsBuilder;
+    private final UserAccountStatisticsService statisticsService;
 
     @Autowired
-    public VastService(XmlDao xmlDao, VastTagRecordDao vastTagRecordDao, VideoEventsBuilder eventsBuilder) {
+    public VastService(
+            XmlDao xmlDao,
+            VastTagRecordDao vastTagRecordDao,
+            VideoEventsBuilder eventsBuilder,
+            UserAccountStatisticsService statisticsService
+    ) {
         this.xmlDao = xmlDao;
         this.vastTagRecordDao = vastTagRecordDao;
         this.eventsBuilder = eventsBuilder;
+        this.statisticsService = statisticsService;
     }
 
     public void saveXml(String account, Xml xml) {
@@ -49,6 +56,11 @@ public class VastService {
     }
 
     public Vast serveVast(String account, String id, HttpServletRequest request) {
+        // daily limit met?
+        if (!statisticsService.addVastTagRequest(account)) {
+            return null;
+        }
+
         Xml xml = xmlDao.findByOwnerAndId(account, id);
         if (xml != null) {
             long timestamp = System.currentTimeMillis();
@@ -64,7 +76,9 @@ public class VastService {
             vastTagRecord.setHost(request.getHeader("Host"));
             vastTagRecord.setOwner(account);
 
-            vastTagRecordDao.save(vastTagRecord);
+            if (statisticsService.addVastTagRecord(account)) {
+                vastTagRecordDao.save(vastTagRecord);
+            }
 
             addLinearTrackingEventsToServedVast(xml.getVast(), vastTagRecord.getId());
             addVideoClickToServedVast(xml.getVast(), vastTagRecord.getId());

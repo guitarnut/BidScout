@@ -17,7 +17,13 @@ public class CampaignService {
     private final EligibleService eligibleService;
 
     @Autowired
-    public CampaignService(SyncService syncService, CampaignDao campaignDao, CreativeService creativeService, TargetingService targetingService, EligibleService eligibleService) {
+    public CampaignService(
+            SyncService syncService,
+            CampaignDao campaignDao,
+            CreativeService creativeService,
+            TargetingService targetingService,
+            EligibleService eligibleService
+    ) {
         this.syncService = syncService;
         this.campaignDao = campaignDao;
         this.creativeService = creativeService;

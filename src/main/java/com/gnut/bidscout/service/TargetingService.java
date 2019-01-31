@@ -45,7 +45,7 @@ public class TargetingService {
 
         data.setWidths(Arrays.asList(imp.getBanner().getW()));
         data.setHeights(Arrays.asList(imp.getBanner().getH()));
-        data.setSecure(imp.getSecure() == 1);
+        data.setSecure(request.isSecure());
         data.setBidfloor(imp.getBidfloor());
         data.setBadv(bidRequest.getBadv());
         data.setBattr(imp.getBanner().getBattr());

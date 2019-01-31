@@ -1,11 +1,7 @@
 package com.gnut.bidscout.model;
 
-import com.iab.openrtb.request.User;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Users {

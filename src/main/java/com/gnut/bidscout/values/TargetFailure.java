@@ -4,7 +4,7 @@ public enum TargetFailure {
     CREATIVES_ALIGNED("No creatives aligned"),
     SIZE_MATCH("No size match"),
     MAX_BID_BELOW_FLOOR("Max bid amount is below floor"),
-    MAX_BID_BELOW_FLOOR_AND_DEAL_FLOOR("Max bid amount is below floor and deal floor"),
+    MAX_BID_BELOW_FLOOR_AND_DEAL_FLOOR("Max bid is below floor and deal floor"),
     BADV("Blocked ad domain"),
     BATTR("Blocked attribute"),
     DEAL_ID("No matching deal id"),
@@ -25,7 +25,8 @@ public enum TargetFailure {
     REQUEST_LIMIT_REACHED("Request limit reached"),
     BID_LIMIT_REACHED("Bid limit reached"),
     IMPRESSION_LIMIT_REACHED("Impression limit reached"),
-    REVENUE_LIMIT_REACHED("Revenue limit reached");
+    REVENUE_LIMIT_REACHED("Revenue limit reached"),
+    NOT_SECURE("Request is not HTTPS");
 
     private String v;
 

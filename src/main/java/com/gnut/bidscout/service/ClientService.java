@@ -22,6 +22,7 @@ public class ClientService {
     private final AuctionRecordService auctionRecordService;
     private final VastService vastService;
     private final EventRecordDao eventRecordDao;
+    private final UserAccountStatisticsService statisticsService;
 
     static {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -36,7 +37,8 @@ public class ClientService {
             CreativeService creativeService,
             AuctionRecordService auctionRecordService,
             VastService vastService,
-            EventRecordDao eventRecordDao
+            EventRecordDao eventRecordDao,
+            UserAccountStatisticsService statisticsService
     ) {
         this.auctionDao = auctionDao;
         this.impressionService = impressionService;
@@ -46,6 +48,7 @@ public class ClientService {
         this.auctionRecordService = auctionRecordService;
         this.vastService = vastService;
         this.eventRecordDao = eventRecordDao;
+        this.statisticsService = statisticsService;
     }
 
     /**
@@ -53,6 +56,9 @@ public class ClientService {
      */
 
     public Campaign saveCampaign(String account, Campaign campaign) {
+        if (!statisticsService.addCampaign(account)) {
+            return null;
+        }
         campaign.setOwner(account);
         if (!Strings.isNullOrEmpty(campaign.getId())) {
             Campaign c = campaignService.getCampaign(account, campaign.getId());
@@ -81,6 +87,7 @@ public class ClientService {
     }
 
     public void deleteCampaign(String account, String creativeId) {
+        statisticsService.removeCampaign(account);
         campaignService.deleteCampaign(creativeId, account);
     }
 
@@ -89,6 +96,9 @@ public class ClientService {
      */
 
     public Creative saveCreative(String account, Creative creative) {
+        if (!statisticsService.addCreative(account)) {
+            return null;
+        }
         creative.setOwner(account);
         if (!Strings.isNullOrEmpty(creative.getId())) {
             Creative c = creativeService.getCreative(account, creative.getId());
@@ -133,6 +143,7 @@ public class ClientService {
     }
 
     public void deleteCreative(String account, String creativeId) {
+        statisticsService.removeCreative(account);
         creativeService.deleteCreative(creativeId, account);
     }
 
@@ -158,10 +169,12 @@ public class ClientService {
     }
 
     public void deleteAllBids(String account) {
+        statisticsService.removeAllAuctionRecords(account);
         auctionRecordService.deleteAllBids(account);
     }
 
     public void deleteBid(String account, String id) {
+        statisticsService.removeAuctionRecord(account);
         auctionRecordService.deleteBid(account, id);
     }
 
@@ -186,6 +199,9 @@ public class ClientService {
      */
 
     public void saveXml(String account, Xml xml) {
+        if (!statisticsService.addVast(account)) {
+            return;
+        }
         xml.setOwner(account);
         if (!Strings.isNullOrEmpty(xml.getId())) {
             Xml x = vastService.getXml(account, xml.getId());
@@ -207,6 +223,7 @@ public class ClientService {
     }
 
     public void deleteXml(String account, String xmlId) {
+        statisticsService.removeVast(account);
         vastService.deleteXml(account, xmlId);
     }
 
@@ -254,10 +271,12 @@ public class ClientService {
     }
 
     public void deleteVastRecord(String account, String vastId) {
+        statisticsService.removeVastTagRecord(account);
         vastService.deleteVastTagRecord(account, vastId);
     }
 
     public void deleteAllVastRecords(String account) {
+        statisticsService.removeAllVastTagRecords(account);
         vastService.deleteAllVastTagRecords(account);
     }
 }

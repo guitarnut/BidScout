@@ -245,6 +245,10 @@ public class EligibleService {
                     }
                 }
             }
+            if (filter.isSecure() && !targetingData.isSecure()) {
+                record.getTargetingFailures().put(targetName, TargetFailure.NOT_SECURE.value());
+                return false;
+            }
         }
 
         return true;
