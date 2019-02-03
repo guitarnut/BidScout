@@ -24,6 +24,19 @@ public class ClientController {
     }
 
     /**
+     * ------------- Account Status -------------
+     */
+
+    @RequestMapping(value = "/account/status/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public UserAccountStatistics getBid(
+            @PathVariable("id") String id,
+            HttpServletResponse response
+    ) {
+        return service.getAccountStatus(id);
+    }
+
+    /**
      * ------------- Bids -------------
      */
 

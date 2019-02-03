@@ -13,11 +13,13 @@ import java.util.*;
 public class CreativeService {
     private final CreativeDao creativeDao;
     private final CampaignDao campaignDao;
+    private final UserAccountStatisticsService statisticsService;
 
     @Autowired
-    public CreativeService(CreativeDao creativeDao, CampaignDao campaignDao) {
+    public CreativeService(CreativeDao creativeDao, CampaignDao campaignDao, UserAccountStatisticsService statisticsService) {
         this.creativeDao = creativeDao;
         this.campaignDao = campaignDao;
+        this.statisticsService = statisticsService;
     }
 
     public Creative saveCreative(Creative creative) {
@@ -101,6 +103,7 @@ public class CreativeService {
                 }
             });
             creativeDao.deleteById(id);
+            statisticsService.removeCreative(account);
         }
     }
 }

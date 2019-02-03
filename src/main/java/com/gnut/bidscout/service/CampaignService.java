@@ -15,6 +15,7 @@ public class CampaignService {
     private final CreativeService creativeService;
     private final TargetingService targetingService;
     private final EligibleService eligibleService;
+    private final UserAccountStatisticsService statisticsService;
 
     @Autowired
     public CampaignService(
@@ -22,13 +23,15 @@ public class CampaignService {
             CampaignDao campaignDao,
             CreativeService creativeService,
             TargetingService targetingService,
-            EligibleService eligibleService
+            EligibleService eligibleService,
+            UserAccountStatisticsService statisticsService
     ) {
         this.syncService = syncService;
         this.campaignDao = campaignDao;
         this.creativeService = creativeService;
         this.targetingService = targetingService;
         this.eligibleService = eligibleService;
+        this.statisticsService = statisticsService;
     }
 
     public void incrementClick(String id) {
@@ -162,6 +165,7 @@ public class CampaignService {
     public void deleteCampaign(String id, String account) {
         if (campaignDao.findByIdAndOwner(id, account) != null) {
             campaignDao.deleteById(id);
+            statisticsService.removeCampaign(account);
         }
     }
 }

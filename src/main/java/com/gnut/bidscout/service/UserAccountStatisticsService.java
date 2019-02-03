@@ -268,4 +268,8 @@ public class UserAccountStatisticsService {
             account.setVastTagRequestsOverage(0);
         }
     }
+
+    public UserAccountStatistics getAccountStatus(String id) {
+        return statisticsDao.findOneByUser(id);
+    }
 }

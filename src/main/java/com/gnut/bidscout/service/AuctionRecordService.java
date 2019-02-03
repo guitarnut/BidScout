@@ -13,10 +13,14 @@ import java.util.Map;
 @Component
 public class AuctionRecordService {
     private final AuctionDao auctionDao;
-
+    private final UserAccountStatisticsService statisticsService;
     @Autowired
-    public AuctionRecordService(AuctionDao auctionDao) {
+    public AuctionRecordService(
+            AuctionDao auctionDao,
+            UserAccountStatisticsService statisticsService
+    ) {
         this.auctionDao = auctionDao;
+        this.statisticsService = statisticsService;
     }
 
     public Map<String, AuctionRecord> getListOfAllRecords(String account) {
@@ -37,6 +41,7 @@ public class AuctionRecordService {
         AuctionRecord record = auctionDao.findFirstByIdAndOwner(id, account);
         if (record != null) {
             auctionDao.deleteById(id);
+            statisticsService.removeAuctionRecord(account);
         }
     }
 
@@ -46,6 +51,7 @@ public class AuctionRecordService {
             allRecords.forEach(r -> {
                 auctionDao.deleteById(r.getId());
             });
+            statisticsService.removeAllAuctionRecords(account);
         }
     }
 }

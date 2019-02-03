@@ -87,7 +87,6 @@ public class ClientService {
     }
 
     public void deleteCampaign(String account, String creativeId) {
-        statisticsService.removeCampaign(account);
         campaignService.deleteCampaign(creativeId, account);
     }
 
@@ -143,7 +142,6 @@ public class ClientService {
     }
 
     public void deleteCreative(String account, String creativeId) {
-        statisticsService.removeCreative(account);
         creativeService.deleteCreative(creativeId, account);
     }
 
@@ -169,12 +167,10 @@ public class ClientService {
     }
 
     public void deleteAllBids(String account) {
-        statisticsService.removeAllAuctionRecords(account);
         auctionRecordService.deleteAllBids(account);
     }
 
     public void deleteBid(String account, String id) {
-        statisticsService.removeAuctionRecord(account);
         auctionRecordService.deleteBid(account, id);
     }
 
@@ -223,7 +219,6 @@ public class ClientService {
     }
 
     public void deleteXml(String account, String xmlId) {
-        statisticsService.removeVast(account);
         vastService.deleteXml(account, xmlId);
     }
 
@@ -271,12 +266,14 @@ public class ClientService {
     }
 
     public void deleteVastRecord(String account, String vastId) {
-        statisticsService.removeVastTagRecord(account);
         vastService.deleteVastTagRecord(account, vastId);
     }
 
     public void deleteAllVastRecords(String account) {
-        statisticsService.removeAllVastTagRecords(account);
         vastService.deleteAllVastTagRecords(account);
+    }
+
+    public UserAccountStatistics getAccountStatus(String id) {
+        return statisticsService.getAccountStatus(id);
     }
 }

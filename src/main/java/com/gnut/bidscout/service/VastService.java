@@ -107,6 +107,7 @@ public class VastService {
         Xml result = xmlDao.findByOwnerAndId(account, xmlId);
         if (result != null) {
             xmlDao.delete(result);
+            statisticsService.removeVast(account);
         }
     }
 
@@ -141,9 +142,11 @@ public class VastService {
 
     public void deleteVastTagRecord(String account, String vastId) {
         vastTagRecordDao.deleteByOwnerAndId(account, vastId);
+        statisticsService.removeVastTagRecord(account);
     }
 
     public void deleteAllVastTagRecords(String account) {
         vastTagRecordDao.deleteAllByOwner(account);
+        statisticsService.removeAllVastTagRecords(account);
     }
 }
