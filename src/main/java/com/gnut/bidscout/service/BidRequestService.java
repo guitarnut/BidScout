@@ -86,12 +86,18 @@ public class BidRequestService {
         record.setCampaign(campaignId);
         record.setOwner(bidder);
 
+        final String bidRequestString = stringifyPostData(request);
+
         try {
-            bidRequest = objectMapper.readValue(stringifyPostData(request), BidRequest.class);
-            record.setBidRequest(bidRequest);
-            record.setBidRequestId(bidRequest.getId());
+            if (!Strings.isNullOrEmpty(bidRequestString)) {
+                bidRequest = objectMapper.readValue(bidRequestString, BidRequest.class);
+                record.setBidRequest(bidRequest);
+                record.setBidRequestId(bidRequest.getId());
+            }
         } catch (IOException ex) {
             // noop
+            record.setMarkup(bidRequestString);
+            record.setBidRequestId("Error " + String.valueOf(System.currentTimeMillis()));
         }
 
         boolean saveAuctionRecord = true;
@@ -116,7 +122,9 @@ public class BidRequestService {
             record.getBidRequestErrors().add(bidRequestError.value());
             if (saveAuctionRecord) {
                 executorService.submit(() -> {
-                    auctionDao.save(record);
+                    if (userStatsService.addAuctionRecord(bidder)) {
+                        auctionDao.save(record);
+                    }
                 });
             }
             return bidResponseService.buildNBRBidResponse(

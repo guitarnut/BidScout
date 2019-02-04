@@ -20,12 +20,12 @@ public class RequestTargetingData {
     private String idfa;
     private String buyeruid;
     private List<Deal> dealIds = new ArrayList<>();
-    private List<Integer> widths;
-    private List<Integer> heights;
-    private List<String> badv;
-    private List<String> bcat;
-    private List<Integer> battr;
-    private List<Integer> btype;
+    private List<Integer> widths = new ArrayList<>();
+    private List<Integer> heights = new ArrayList<>();
+    private List<String> badv = new ArrayList<>();
+    private List<String> bcat = new ArrayList<>();
+    private List<Integer> battr = new ArrayList<>();
+    private List<Integer> btype = new ArrayList<>();
     private boolean secure;
     private float bidfloor;
     private boolean userMatch;

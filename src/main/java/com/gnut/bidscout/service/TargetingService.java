@@ -43,16 +43,33 @@ public class TargetingService {
             data.setUserMatch(true);
         }
 
-        data.setWidths(Arrays.asList(imp.getBanner().getW()));
-        data.setHeights(Arrays.asList(imp.getBanner().getH()));
+        if (imp.getBanner() != null) {
+            data.setWidths(Arrays.asList(imp.getBanner().getW()));
+            data.setHeights(Arrays.asList(imp.getBanner().getH()));
+            if (imp.getBanner().getBattr() != null) {
+                data.setBattr(imp.getBanner().getBattr());
+            }
+            if (imp.getBanner().getBtype() != null) {
+                data.setBtype(imp.getBanner().getBtype());
+            }
+        } else if (imp.getVideo() != null) {
+            data.setWidths(Arrays.asList(imp.getVideo().getW()));
+            data.setHeights(Arrays.asList(imp.getVideo().getH()));
+            if (imp.getVideo().getBattr() != null) {
+                data.setBattr(imp.getVideo().getBattr());
+            }
+        }
+
         data.setSecure(request.isSecure());
         data.setBidfloor(imp.getBidfloor());
-        data.setBadv(bidRequest.getBadv());
-        data.setBattr(imp.getBanner().getBattr());
-        data.setBtype(imp.getBanner().getBtype());
-        data.setBadv(bidRequest.getBcat());
+        if(bidRequest.getBadv() != null) {
+            data.setBadv(bidRequest.getBadv());
+        }
+        if(bidRequest.getBcat() != null) {
+            data.setBadv(bidRequest.getBcat());
+        }
 
-        if(imp.getPmp() != null) {
+        if (imp.getPmp() != null) {
             data.setDealIds(imp.getPmp().getDeals());
         }
 

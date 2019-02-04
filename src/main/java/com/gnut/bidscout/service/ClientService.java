@@ -56,12 +56,12 @@ public class ClientService {
      */
 
     public Campaign saveCampaign(String account, Campaign campaign) {
-        if (!statisticsService.addCampaign(account)) {
+        Campaign c = campaignService.getCampaign(account, campaign.getId());
+        if (c == null && !statisticsService.addCampaign(account)) {
             return null;
         }
         campaign.setOwner(account);
         if (!Strings.isNullOrEmpty(campaign.getId())) {
-            Campaign c = campaignService.getCampaign(account, campaign.getId());
             if (c != null) {
                 c.copyValues(campaign);
             }
@@ -95,12 +95,12 @@ public class ClientService {
      */
 
     public Creative saveCreative(String account, Creative creative) {
-        if (!statisticsService.addCreative(account)) {
+        Creative c = creativeService.getCreative(account, creative.getId());
+        if (c == null && !statisticsService.addCreative(account)) {
             return null;
         }
         creative.setOwner(account);
         if (!Strings.isNullOrEmpty(creative.getId())) {
-            Creative c = creativeService.getCreative(account, creative.getId());
             if (c != null) {
                 c.copyValues(creative);
             }
@@ -195,12 +195,12 @@ public class ClientService {
      */
 
     public void saveXml(String account, Xml xml) {
-        if (!statisticsService.addVast(account)) {
+        Xml x = vastService.getXml(account, xml.getId());
+        if (x == null && !statisticsService.addVast(account)) {
             return;
         }
         xml.setOwner(account);
         if (!Strings.isNullOrEmpty(xml.getId())) {
-            Xml x = vastService.getXml(account, xml.getId());
             if (x != null) {
                 x.copyValues(xml);
             }
