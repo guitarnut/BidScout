@@ -66,7 +66,7 @@ public class Site {
     Content content;
 
     /** Comma separated list of keywords about the site. */
-    String keywords;
+    List<String> keywords;
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
     Map<Object, Object> ext;
@@ -177,11 +177,11 @@ public class Site {
         this.content = content;
     }
 
-    public String getKeywords() {
+    public List<String> getKeywords() {
         return keywords;
     }
 
-    public void setKeywords(String keywords) {
+    public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
     }
 

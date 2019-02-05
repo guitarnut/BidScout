@@ -87,7 +87,7 @@ public class Content {
     Integer qagmediarating;
 
     /** Comma separated list of keywords describing the content. */
-    String keywords;
+    List<String> keywords;
 
     /** 0 = not live, 1 = content is live (e.g., stream, live blog). */
     Integer livestream;
@@ -254,11 +254,11 @@ public class Content {
         this.qagmediarating = qagmediarating;
     }
 
-    public String getKeywords() {
+    public List<String> getKeywords() {
         return keywords;
     }
 
-    public void setKeywords(String keywords) {
+    public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
     }
 

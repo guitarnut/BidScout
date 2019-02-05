@@ -68,7 +68,7 @@ public class App {
     Content content;
 
     /** Comma separated list of keywords about the app. */
-    String keywords;
+    List<String> keywords;
 
     /** Placeholder for exchange-specific extensions to OpenRTB. */
     Map<Object, Object> ext;
@@ -179,11 +179,11 @@ public class App {
         this.content = content;
     }
 
-    public String getKeywords() {
+    public List<String> getKeywords() {
         return keywords;
     }
 
-    public void setKeywords(String keywords) {
+    public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
     }
 

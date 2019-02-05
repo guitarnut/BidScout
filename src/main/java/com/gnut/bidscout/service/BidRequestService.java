@@ -101,6 +101,7 @@ public class BidRequestService {
         }
 
         boolean saveAuctionRecord = true;
+
         if (campaign == null) {
             bidRequestError = BidRequestError.NO_CAMPAIGN;
         } else if (bidRequest == null) {
@@ -109,7 +110,7 @@ public class BidRequestService {
             bidRequestError = BidRequestError.CAMPAIGN_NOT_ENABLED;
         } else if (Strings.isNullOrEmpty(bidRequest.getId())) {
             bidRequestError = BidRequestError.BID_REQUEST_ID_MISSING;
-            saveAuctionRecord = false;
+            record.setBidRequestId("Error " + String.valueOf(System.currentTimeMillis()));
         } else if (auctionDao.findFirstByBidRequestIdAndOwner(bidRequest.getId(), record.getOwner()) != null) {
             bidRequestError = BidRequestError.BID_REQUEST_ID_NOT_UNIQUE;
             saveAuctionRecord = false;
@@ -120,6 +121,10 @@ public class BidRequestService {
                 incrementCampaignNBR(campaign);
             });
             record.getBidRequestErrors().add(bidRequestError.value());
+            final BidResponse bidResponse = bidResponseService.buildNBRBidResponse(
+                    bidRequest, BidResponseBuilder.NBR.INVALID_REQUEST, bidRequestError.value()
+            );
+            record.setBidResponse(bidResponse);
             if (saveAuctionRecord) {
                 executorService.submit(() -> {
                     if (userStatsService.addAuctionRecord(bidder)) {
@@ -127,9 +132,7 @@ public class BidRequestService {
                     }
                 });
             }
-            return bidResponseService.buildNBRBidResponse(
-                    bidRequest, BidResponseBuilder.NBR.INVALID_REQUEST, bidRequestError.value()
-            );
+            return bidResponse;
         }
 
         BidResponse bidResponse = null;

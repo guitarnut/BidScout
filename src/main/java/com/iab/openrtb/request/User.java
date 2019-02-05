@@ -42,7 +42,7 @@ public class User {
     String language;
 
     /** Comma separated list of keywords, interests, or intent. */
-    String keywords;
+    List<String> keywords;
 
     /**
      * Optional feature to pass bidder data that was set in the exchange’s
@@ -109,11 +109,11 @@ public class User {
         this.language = language;
     }
 
-    public String getKeywords() {
+    public List<String> getKeywords() {
         return keywords;
     }
 
-    public void setKeywords(String keywords) {
+    public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
     }
 
