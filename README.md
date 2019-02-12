@@ -15,3 +15,8 @@ Mongo record TTL for auctions, impressions, etc
 Delete imps and events when deleting an auction record or vast record
 Handle excessive event and imp pixel fires
 Handle user sync stuff
+
+
+ses-smtp-user.20190205-140819
+AKIAJ4P2FUUFRQLSUMCQ
+BGx3EWihVCUKIwtm3CcnG0ooeeYiE6hudIvggu2aqQSk 

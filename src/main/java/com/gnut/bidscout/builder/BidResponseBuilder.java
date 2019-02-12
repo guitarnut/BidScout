@@ -8,6 +8,7 @@ import com.gnut.bidscout.html.AdMarkup;
 import com.gnut.bidscout.model.AuctionImp;
 import com.gnut.bidscout.model.Creative;
 import com.gnut.bidscout.model.Xml;
+import com.gnut.bidscout.service.VastService;
 import com.google.common.base.Strings;
 import com.iab.openrtb.request.BidRequest;
 import com.iab.openrtb.response.Bid;
@@ -48,14 +49,17 @@ public class BidResponseBuilder {
     private static final XmlMapper mapper = new XmlMapper();
     private final AdMarkup adMarkup;
     private final XmlDao xmlDao;
+    private final VastService vastService;
 
     @Autowired
     public BidResponseBuilder(
             AdMarkup adMarkup,
-            XmlDao xmlDao
+            XmlDao xmlDao,
+            VastService vastService
     ) {
         this.adMarkup = adMarkup;
         this.xmlDao = xmlDao;
+        this.vastService = vastService;
     }
 
     public BidResponse buildBidResponse(
@@ -104,6 +108,18 @@ public class BidResponseBuilder {
                 } else if (!Strings.isNullOrEmpty(creative.getXmlId())) {
                     Xml xml = xmlDao.findByOwnerAndId(creative.getOwner(), creative.getXmlId());
                     if (xml != null) {
+                        vastService.addLinearTrackingEventsToCreativeXML(xml.getVast(), bidRequest.getId());
+                        vastService.addVideoClickToCreativeXML(xml.getVast(), bidRequest.getId());
+                        vastService.addImpressionToCreativeXML(
+                                xml.getVast(),
+                                imp.getCampaign().getOwner(),
+                                bidRequest.getId(),
+                                imp.getImpression().getId(),
+                                imp.getCampaign().getId(),
+                                imp.getCreative().getId(),
+                                String.valueOf(imp.getPrice())
+                        );
+
                         String xmlString = "";
                         try {
                             xmlString = mapper.writeValueAsString(xml.getVast());

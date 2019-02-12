@@ -72,7 +72,7 @@ public class AdMarkup {
         String sync = "";
         if (campaign.isSyncUsers() || creative.isSyncUsers()) {
             adm.append(SYNC_IMG_HIDDEN);
-            sync = HOST + SYNC_URL;
+            sync = buildSyncUrl(campaign, creative);
         }
 
         adm.append(HTML_CLOSE);
@@ -96,7 +96,7 @@ public class AdMarkup {
         String sync = "";
         if (campaign.isSyncUsers() || creative.isSyncUsers()) {
             adm.append(SYNC_IMG_HIDDEN);
-            sync = HOST + SYNC_URL;
+            sync = buildSyncUrl(campaign, creative);
         }
 
         adm.append("<p style=\"font-size: 11px; padding: 5px;\">")
@@ -128,7 +128,7 @@ public class AdMarkup {
         String sync = "";
         if (campaign.isSyncUsers() || creative.isSyncUsers()) {
             adm.append(SYNC_IMG_HIDDEN);
-            sync = SYNC_URL;
+            sync = buildSyncUrl(campaign, creative);
         }
 
         adm.append(HTML_CLOSE);
@@ -173,6 +173,20 @@ public class AdMarkup {
                 .append(campaign.getOwner())
                 .append("/")
                 .append(bidRequestId)
+                .append("/")
+                .append(campaign.getId())
+                .append("/")
+                .append(creative.getId())
+                .append("?cb=")
+                .append(System.currentTimeMillis())
+                .toString();
+    }
+
+    private String buildSyncUrl(Campaign campaign, Creative creative) {
+        StringBuilder click = new StringBuilder();
+        return click.append(HOST + SYNC_URL)
+                .append("/")
+                .append(campaign.getOwner())
                 .append("/")
                 .append(campaign.getId())
                 .append("/")

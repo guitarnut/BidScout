@@ -49,4 +49,12 @@ public class VastController {
     ) {
         return service.getVast(bidder, id);
     }
+
+//    @RequestMapping(value = "/email", method = RequestMethod.GET)
+//    public void getVast(
+//            HttpServletRequest request,
+//            HttpServletResponse response
+//    ) {
+//        service.sendEmail();
+//    }
 }

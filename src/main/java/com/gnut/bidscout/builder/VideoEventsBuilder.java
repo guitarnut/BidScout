@@ -1,9 +1,12 @@
 package com.gnut.bidscout.builder;
 
+import com.iab.openrtb.vast.ad.Impression;
 import com.iab.openrtb.vast.ad.creative.linear.trackingevents.Tracking;
 import com.iab.openrtb.vast.ad.creative.linear.videoclicks.ClickTracking;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.*;
 
@@ -11,6 +14,7 @@ import java.util.*;
 public class VideoEventsBuilder {
     private static final String VIDEO_EVENT_URL = "/event/video";
     private static final String VIDEO_CLICK_TRACKING_URL = "/event/video/clicked";
+    private static final String IMP_URL = "/event/imp";
 
     private static final List<String> PLAYER_EVENTS = Arrays.asList(
             "mute",
@@ -60,5 +64,33 @@ public class VideoEventsBuilder {
             result.add(t);
         });
         return result;
+    }
+
+    @RequestMapping(value="/imp/{id}/{bid}/{campaign}/{creative}/{bidprice}/{cp}", method = RequestMethod.GET)
+    public Impression getImpression(String id, String bidRequestId, String impressionId, String campaign, String creative, String bidPrice) {
+        StringBuilder impPath = new StringBuilder();
+        impPath.append(HOST + IMP_URL)
+                .append("/")
+                .append(id)
+                .append("/")
+                .append(bidRequestId)
+                .append("/")
+                .append(campaign)
+                .append("/")
+                .append(creative)
+                .append("/")
+                .append(bidPrice)
+                .append("/")
+                .append("${AUCTION_PRICE}")
+                .append("/")
+                .append("?cb=")
+                .append(System.currentTimeMillis())
+                .toString();
+
+        Impression impression = new Impression();
+        impression.setId(impressionId);
+        impression.setValue(impPath.toString());
+
+        return impression;
     }
 }

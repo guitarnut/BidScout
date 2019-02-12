@@ -6,6 +6,7 @@ import com.gnut.bidscout.db.XmlDao;
 import com.gnut.bidscout.model.VastTagRecord;
 import com.gnut.bidscout.model.Xml;
 import com.iab.openrtb.vast.Vast;
+import com.iab.openrtb.vast.ad.Impression;
 import com.iab.openrtb.vast.ad.creative.linear.VideoClicks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ import java.util.Map;
 @Component
 public class VastService {
 
+
+    //    @Autowired
+//    public JavaMailSender emailSender;
     private final XmlDao xmlDao;
     private final VastTagRecordDao vastTagRecordDao;
     private final VideoEventsBuilder eventsBuilder;
@@ -82,6 +86,8 @@ public class VastService {
 
             addLinearTrackingEventsToServedVast(xml.getVast(), vastTagRecord.getId());
             addVideoClickToServedVast(xml.getVast(), vastTagRecord.getId());
+            addImpressionToServedVast(xml.getVast(), "{request_id}");
+
             return xml.getVast();
         } else {
             return null;
@@ -93,6 +99,7 @@ public class VastService {
         if (xml != null) {
             addLinearTrackingEventsToServedVast(xml.getVast(), "{request_id}");
             addVideoClickToServedVast(xml.getVast(), "{request_id}");
+            addImpressionToServedVast(xml.getVast(), "{request_id}");
             return xml.getVast();
         } else {
             return null;
@@ -120,6 +127,15 @@ public class VastService {
         );
     }
 
+    public void addLinearTrackingEventsToCreativeXML(Vast vast, String requestId) {
+        vast.getAd().getInLine().getCreative().get(0).getLinear().setTrackingEvent(
+                eventsBuilder.getTrackingEventsLinear(requestId)
+        );
+        vast.getAd().getInLine().getCreative().get(0).getLinear().getTrackingEvent().addAll(
+                eventsBuilder.getTrackingEventsPlayer(requestId)
+        );
+    }
+
     private void addVideoClickToServedVast(Vast vast, String requestId) {
         vast.getAd().getInLine().getCreative().get(0).getLinear().setVideoClicks(
                 new VideoClicks()
@@ -129,7 +145,43 @@ public class VastService {
         );
     }
 
-    private void addImpressionToServedVast(Vast vast) {
+    public void addVideoClickToCreativeXML(Vast vast, String requestId) {
+        vast.getAd().getInLine().getCreative().get(0).getLinear().setVideoClicks(
+                new VideoClicks()
+        );
+        vast.getAd().getInLine().getCreative().get(0).getLinear().getVideoClicks().setClickTracking(
+                eventsBuilder.getClickTracking(requestId)
+        );
+    }
+
+
+    /**
+     * String id,
+     * HttpServletRequest request,
+     * HttpServletResponse response,
+     * String bid,
+     * String campaign,
+     * String creative,
+     * String bidPrice,
+     * String cp,
+     * String cb
+     */
+    private void addImpressionToServedVast(Vast vast, String requestId) {
+    }
+
+    public void addImpressionToCreativeXML(
+            Vast vast,
+            String id,
+            String bidRequestId,
+            String impressionId,
+            String campaign,
+            String creative,
+            String bidPrice
+    ) {
+        final Impression impression = eventsBuilder.getImpression(
+                id, bidRequestId, impressionId, campaign, creative, bidPrice
+        );
+        vast.getAd().getInLine().setImpression(impression);
     }
 
     public VastTagRecord getVastTagRecord(String account, String requestId) {
@@ -149,4 +201,13 @@ public class VastService {
         vastTagRecordDao.deleteAllByOwner(account);
         statisticsService.removeAllVastTagRecords(account);
     }
+
+//    public void sendEmail() {
+//            SimpleMailMessage message = new SimpleMailMessage();
+//            message.setFrom("guitar_nut@hotmail.com");
+//            message.setTo("guitar_nut@hotmail.com");
+//            message.setSubject("Test");
+//            message.setText("Hello-\nThis is your test email.");
+//            emailSender.send(message);
+//    }
 }
