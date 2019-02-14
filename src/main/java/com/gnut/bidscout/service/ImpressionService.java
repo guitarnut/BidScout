@@ -37,6 +37,10 @@ public class ImpressionService {
         return impressionDao.findAllByOwnerAndBidRequestId(id, bidId);
     }
 
+    public List<ImpressionRecord> getVastImpressions(String account, String id) {
+        return impressionDao.findAllByVastTagRequestId(id);
+    }
+
     public void handleRequest(
             String id,
             HttpServletRequest request,
@@ -107,6 +111,57 @@ public class ImpressionService {
         if (validImpression) {
             campaignService.incrementImpression(record.getCampaign(), record.getCp());
             creativeService.incrementImpression(record.getCreative(), record.getCp());
+        }
+
+        impressionDao.save(record);
+        response.setStatus(204);
+    }
+
+    public void handleVastRequest(String id, HttpServletRequest request, HttpServletResponse response, String cp, String cb) {
+        ImpressionRecord record = new ImpressionRecord();
+        record.setImpressionTimestamp(System.currentTimeMillis());
+        record.setVastTagRequestId(id);
+        record.setIp(request.getRemoteAddr());
+        record.setUserAgent(request.getHeader("User-Agent"));
+        record.setCookies(request.getHeader("Cookie"));
+        record.setxForwardedFor(request.getHeader("X-Forwarded-For"));
+        record.setHost(request.getHeader("Host"));
+        record.setUrl(request.getRequestURL().toString());
+        record.setUserCookie(syncService.getUserCookieValue(request));
+        record.setSyncCookie(syncService.getSyncCookieValue(request));
+        record.setImpressionCookie(syncService.getImpCookieValue(request));
+
+        try {
+            record.setCb(Long.valueOf(cb));
+        } catch (NumberFormatException ex) {
+            // Todo: Handle invalid
+            record.setCb(-1);
+            response.setStatus(204);
+            return;
+        }
+
+        try {
+            record.setCp(Float.valueOf(cp));
+            syncService.updateUserImpressionCount(request);
+        } catch (NumberFormatException ex) {
+            record.setCp(0);
+        }
+
+        record.setValidKnownUser(syncService.isValidUserRefreshedExistingCookies(request, response));
+        boolean validImpression = true;
+
+        if (impressionCache.addImpression(record.getVastTagRequestId()) > 1) {
+            record.setDuplicate(true);
+            // Todo: collect vast tag stats
+            validImpression = false;
+        }
+
+        if (record.getCp() <= 0) {
+            validImpression = false;
+        }
+
+        if (validImpression) {
+            // Todo: collect vast tag stats
         }
 
         impressionDao.save(record);

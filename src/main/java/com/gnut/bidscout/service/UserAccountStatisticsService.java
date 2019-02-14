@@ -270,6 +270,17 @@ public class UserAccountStatisticsService {
     }
 
     public UserAccountStatistics getAccountStatus(String id) {
-        return statisticsDao.findOneByUser(id);
+        UserAccountStatistics stats = statisticsDao.findOneByUser(id);
+        if (stats != null) {
+            if (stats.getPeriodEnd() < System.currentTimeMillis()) {
+                stats.setPeriodEnd(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
+                stats.setVastTagRequests(0);
+                stats.setBidRequests(0);
+                stats.setVastTagRequestsOverage(0);
+                stats.setBidRequestsOverage(0);
+                statisticsDao.save(stats);
+            }
+        }
+        return stats;
     }
 }

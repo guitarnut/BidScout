@@ -40,6 +40,18 @@ public class EventController {
     }
 
     @CrossOrigin(origins = "*", maxAge = 3600)
+    @RequestMapping(value="/imp/{id}/{cp}", method = RequestMethod.GET)
+    public void handleVastTagImp(
+            @PathVariable(value = "id") String id,
+            @PathVariable(value = "cp") String cp,
+            @RequestParam(value = "cb") String cb,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        impressionService.handleVastRequest(id, request, response, cp, cb);
+    }
+
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value="/click/{id}/{bid}/{campaign}/{creative}", method = RequestMethod.GET)
     public void handleClick(
             @PathVariable(value = "id") String id,

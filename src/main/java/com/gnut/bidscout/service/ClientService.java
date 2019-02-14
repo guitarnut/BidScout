@@ -276,4 +276,8 @@ public class ClientService {
     public UserAccountStatistics getAccountStatus(String id) {
         return statisticsService.getAccountStatus(id);
     }
+
+    public List<ImpressionRecord> getVastImpressions(String account, String id) {
+        return impressionService.getVastImpressions(account, id);
+    }
 }

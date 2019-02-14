@@ -9,6 +9,7 @@ public class ImpressionRecord {
     private String id;
     private String owner;
     private String bidRequestId;
+    private String vastTagRequestId;
     private String campaign;
     private String creative;
     private long cb;
@@ -51,6 +52,14 @@ public class ImpressionRecord {
 
     public void setBidRequestId(String bidRequestId) {
         this.bidRequestId = bidRequestId;
+    }
+
+    public String getVastTagRequestId() {
+        return vastTagRequestId;
+    }
+
+    public void setVastTagRequestId(String vastTagRequestId) {
+        this.vastTagRequestId = vastTagRequestId;
     }
 
     public String getCampaign() {

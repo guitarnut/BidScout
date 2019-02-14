@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface ImpressionDao extends MongoRepository<ImpressionRecord, String> {
     List<ImpressionRecord> findAllByOwnerAndBidRequestId(String id, String bid);
+    List<ImpressionRecord> findAllByVastTagRequestId(String tag);
 }

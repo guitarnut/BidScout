@@ -86,7 +86,7 @@ public class VastService {
 
             addLinearTrackingEventsToServedVast(xml.getVast(), vastTagRecord.getId());
             addVideoClickToServedVast(xml.getVast(), vastTagRecord.getId());
-            addImpressionToServedVast(xml.getVast(), "{request_id}");
+            addImpressionToServedVast(xml.getVast(), vastTagRecord.getId());
 
             return xml.getVast();
         } else {
@@ -167,6 +167,10 @@ public class VastService {
      * String cb
      */
     private void addImpressionToServedVast(Vast vast, String requestId) {
+        final Impression impression = eventsBuilder.getVastTagImpression(
+                requestId
+        );
+        vast.getAd().getInLine().setImpression(impression);
     }
 
     public void addImpressionToCreativeXML(

@@ -101,6 +101,16 @@ public class ClientController {
         return service.getImpressions(account, id);
     }
 
+    @RequestMapping(value = "/impressions/vast/{account}/{id}", method = RequestMethod.POST, produces = "application/json")
+    @ResponseBody
+    public List<ImpressionRecord> getVastImpressions(
+            @PathVariable("id") String id,
+            @PathVariable("account") String account,
+            HttpServletResponse response
+    ) {
+        return service.getVastImpressions(account, id);
+    }
+
     /**
      * ------------- Clicks -------------
      */

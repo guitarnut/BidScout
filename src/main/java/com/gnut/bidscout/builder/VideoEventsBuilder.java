@@ -66,7 +66,6 @@ public class VideoEventsBuilder {
         return result;
     }
 
-    @RequestMapping(value="/imp/{id}/{bid}/{campaign}/{creative}/{bidprice}/{cp}", method = RequestMethod.GET)
     public Impression getImpression(String id, String bidRequestId, String impressionId, String campaign, String creative, String bidPrice) {
         StringBuilder impPath = new StringBuilder();
         impPath.append(HOST + IMP_URL)
@@ -89,6 +88,25 @@ public class VideoEventsBuilder {
 
         Impression impression = new Impression();
         impression.setId(impressionId);
+        impression.setValue(impPath.toString());
+
+        return impression;
+    }
+
+    public Impression getVastTagImpression(String tagRequestId) {
+        StringBuilder impPath = new StringBuilder();
+        impPath.append(HOST + IMP_URL)
+                .append("/")
+                .append(tagRequestId)
+                .append("/")
+                .append("${AUCTION_PRICE}")
+                .append("/")
+                .append("?cb=")
+                .append(System.currentTimeMillis())
+                .toString();
+
+        Impression impression = new Impression();
+        impression.setId(tagRequestId);
         impression.setValue(impPath.toString());
 
         return impression;
