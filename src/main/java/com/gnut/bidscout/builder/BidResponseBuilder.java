@@ -8,7 +8,7 @@ import com.gnut.bidscout.html.AdMarkup;
 import com.gnut.bidscout.model.AuctionImp;
 import com.gnut.bidscout.model.Creative;
 import com.gnut.bidscout.model.Xml;
-import com.gnut.bidscout.service.VastService;
+import com.gnut.bidscout.service.inventory.VastService;
 import com.google.common.base.Strings;
 import com.iab.openrtb.request.BidRequest;
 import com.iab.openrtb.response.Bid;

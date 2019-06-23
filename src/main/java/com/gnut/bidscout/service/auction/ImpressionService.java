@@ -1,8 +1,11 @@
-package com.gnut.bidscout.service;
+package com.gnut.bidscout.service.auction;
 
 import com.gnut.bidscout.cache.ImpressionCache;
 import com.gnut.bidscout.db.ImpressionDao;
 import com.gnut.bidscout.model.ImpressionRecord;
+import com.gnut.bidscout.service.inventory.CampaignService;
+import com.gnut.bidscout.service.inventory.CreativeService;
+import com.gnut.bidscout.service.SyncService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

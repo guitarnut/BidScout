@@ -1,11 +1,11 @@
-package com.gnut.bidscout.service;
+package com.gnut.bidscout.service.auction;
 
 import com.gnut.bidscout.db.AuctionDao;
 import com.gnut.bidscout.model.AuctionRecord;
+import com.gnut.bidscout.service.user.UserAccountStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

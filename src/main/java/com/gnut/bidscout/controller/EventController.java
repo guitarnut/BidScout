@@ -1,7 +1,7 @@
 package com.gnut.bidscout.controller;
 
 import com.gnut.bidscout.service.ClickService;
-import com.gnut.bidscout.service.ImpressionService;
+import com.gnut.bidscout.service.auction.ImpressionService;
 import com.gnut.bidscout.service.VideoEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.gnut.bidscout.service;
+package com.gnut.bidscout.service.auction;
 
 import com.gnut.bidscout.builder.BidResponseBuilder;
 import com.gnut.bidscout.model.AuctionImp;

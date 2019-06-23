@@ -1,6 +1,6 @@
 package com.gnut.bidscout.controller;
 
-import com.gnut.bidscout.service.VastService;
+import com.gnut.bidscout.service.inventory.VastService;
 import com.iab.openrtb.vast.Vast;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

@@ -1,4 +1,4 @@
-package com.gnut.bidscout.service;
+package com.gnut.bidscout.service.user;
 
 import com.gnut.bidscout.db.UserAccountStatisticsDao;
 import com.gnut.bidscout.model.UserAccountStatistics;

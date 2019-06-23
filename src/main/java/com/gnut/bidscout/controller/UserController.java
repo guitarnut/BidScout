@@ -2,7 +2,7 @@ package com.gnut.bidscout.controller;
 
 import com.gnut.bidscout.model.UserProfile;
 import com.gnut.bidscout.model.Users;
-import com.gnut.bidscout.service.UserService;
+import com.gnut.bidscout.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;

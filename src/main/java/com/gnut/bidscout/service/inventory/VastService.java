@@ -1,10 +1,11 @@
-package com.gnut.bidscout.service;
+package com.gnut.bidscout.service.inventory;
 
 import com.gnut.bidscout.builder.VideoEventsBuilder;
 import com.gnut.bidscout.db.VastTagRecordDao;
 import com.gnut.bidscout.db.XmlDao;
 import com.gnut.bidscout.model.VastTagRecord;
 import com.gnut.bidscout.model.Xml;
+import com.gnut.bidscout.service.user.UserAccountStatisticsService;
 import com.iab.openrtb.vast.Vast;
 import com.iab.openrtb.vast.ad.Impression;
 import com.iab.openrtb.vast.ad.creative.linear.VideoClicks;

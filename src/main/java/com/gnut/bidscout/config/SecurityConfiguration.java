@@ -1,6 +1,6 @@
 package com.gnut.bidscout.config;
 
-import com.gnut.bidscout.service.MongoUserDetailsService;
+import com.gnut.bidscout.service.user.MongoUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

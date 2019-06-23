@@ -1,7 +1,11 @@
-package com.gnut.bidscout.service;
+package com.gnut.bidscout.service.inventory;
 
 import com.gnut.bidscout.db.CampaignDao;
 import com.gnut.bidscout.model.*;
+import com.gnut.bidscout.service.EligibleService;
+import com.gnut.bidscout.service.SyncService;
+import com.gnut.bidscout.service.TargetingService;
+import com.gnut.bidscout.service.user.UserAccountStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

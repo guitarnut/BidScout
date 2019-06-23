@@ -2,6 +2,8 @@ package com.gnut.bidscout.service;
 
 import com.gnut.bidscout.db.ClickDao;
 import com.gnut.bidscout.model.ClickRecord;
+import com.gnut.bidscout.service.inventory.CampaignService;
+import com.gnut.bidscout.service.inventory.CreativeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

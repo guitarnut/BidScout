@@ -1,4 +1,4 @@
-package com.gnut.bidscout.service;
+package com.gnut.bidscout.service.auction;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -7,6 +7,9 @@ import com.gnut.bidscout.builder.BidResponseBuilder;
 import com.gnut.bidscout.db.AuctionDao;
 import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.rtb.BidRequestValidator;
+import com.gnut.bidscout.service.inventory.CampaignService;
+import com.gnut.bidscout.service.inventory.CreativeService;
+import com.gnut.bidscout.service.user.UserAccountStatisticsService;
 import com.gnut.bidscout.values.BidRequestError;
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;

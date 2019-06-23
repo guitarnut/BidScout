@@ -1,6 +1,6 @@
 package com.gnut.bidscout.controller;
 
-import com.gnut.bidscout.service.BidRequestService;
+import com.gnut.bidscout.service.auction.BidRequestService;
 import com.iab.openrtb.response.BidResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
