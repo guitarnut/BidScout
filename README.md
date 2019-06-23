@@ -7,7 +7,6 @@ Lists for common values (battr, mimes, etc) with descriptions
 Add limits to request QPS with shutoff feature
 Create user lite record without password and stuff...
 Platform targeting
-Vast tag impression
 Vast vs Bid XML events
 Vast tag macros
 Handle multiple creative types
@@ -16,3 +15,4 @@ Mongo record TTL for auctions, impressions, etc
 Delete imps and events when deleting an auction record or vast record
 Handle excessive event and imp pixel fires
 -Handle user sync stuff
+Custom adm issue when editing creative, adm disappears
