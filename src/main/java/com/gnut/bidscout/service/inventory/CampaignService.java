@@ -8,9 +8,11 @@ import com.gnut.bidscout.service.TargetingService;
 import com.gnut.bidscout.service.user.AccountService;
 import com.gnut.bidscout.service.user.UserAccountStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Component
@@ -162,13 +164,18 @@ public class CampaignService {
         return campaignDao.findByCreativesContainsAndOwner(id, owner);
     }
 
-    public Campaign saveCampaign(Campaign c) {
+    public Campaign createCampaign(HttpServletResponse response, Campaign c) {
         Campaign campaign = campaignDao.findByName(c.getName());
-        if (campaign != null) {
-            return campaign;
+        if (campaign != null || !accountService.addCampaign()) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return null;
         } else {
             return campaignDao.save(c);
         }
+    }
+
+    public Campaign saveCampaign(Campaign c) {
+        return campaignDao.save(c);
     }
 
     public Campaign saveCampaign(String id, Campaign c) {
@@ -255,5 +262,40 @@ public class CampaignService {
         } else {
             return new Limits();
         }
+    }
+
+    public void addCreative(HttpServletResponse response, String id, String creativeId) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            Creative creative = creativeService.getCreative(creativeId);
+            if (creative != null && !campaign.get().getCreatives().contains(creativeId)) {
+                campaign.get().getCreatives().add(creative.getId());
+                campaignDao.save(campaign.get());
+            }
+        } else {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        }
+    }
+
+    public void removeCreative(HttpServletResponse response, String id, String creativeId) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            if (campaign.get().getCreatives().contains(creativeId)) {
+                campaign.get().getCreatives().remove(creativeId);
+                campaignDao.save(campaign.get());
+            }
+        } else {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        }
+    }
+
+    public Campaign resetStatistics(String id) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            campaign.get().setStatistics(new Statistics());
+            campaignDao.save(campaign.get());
+            return campaign.get();
+        }
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package com.gnut.bidscout.controller.client;
 
+import com.gnut.bidscout.model.AuctionRecord;
 import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.VastTagRecord;
 import com.gnut.bidscout.service.history.VastTagRecordService;
@@ -26,5 +27,23 @@ public class VastRecordController {
             HttpServletResponse response
     ) {
         return service.getAllVastTagRecords();
+    }
+
+    @RequestMapping(value = "/vasttagrecord/{id}/view", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public VastTagRecord view(
+            @PathVariable("id") String id,
+            HttpServletResponse response
+    ) {
+        return service.view(id);
+    }
+
+    @RequestMapping(value = "/vasttagrecord/{id}/delete", method = RequestMethod.DELETE, produces = "application/json")
+    @ResponseBody
+    public void delete(
+            @PathVariable("id") String id,
+            HttpServletResponse response
+    ) {
+        service.delete(id);
     }
 }

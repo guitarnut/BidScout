@@ -9,6 +9,8 @@ import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.rtb.BidRequestValidator;
 import com.gnut.bidscout.service.inventory.CampaignService;
 import com.gnut.bidscout.service.inventory.CreativeService;
+import com.gnut.bidscout.service.inventory.DisplayAdService;
+import com.gnut.bidscout.service.inventory.VideoAdService;
 import com.gnut.bidscout.service.user.UserAccountStatisticsService;
 import com.gnut.bidscout.values.BidRequestError;
 import com.google.common.base.Charsets;
@@ -39,6 +41,8 @@ public class BidRequestService {
     private final ExecutorService executorService = Executors.newFixedThreadPool(50);
     private final CampaignService campaignService;
     private final CreativeService creativeService;
+    private final DisplayAdService displayAdService;
+    private final VideoAdService videoAdService;
     private final BidResponseService bidResponseService;
     private final BidRequestValidator bidRequestValidator;
     private final AuctionDao auctionDao;
@@ -53,6 +57,8 @@ public class BidRequestService {
     public BidRequestService(
             CampaignService campaignService,
             CreativeService creativeService,
+            DisplayAdService displayAdService,
+            VideoAdService videoAdService,
             BidResponseService bidResponseService,
             BidRequestValidator bidRequestValidator,
             AuctionDao auctionDao,
@@ -60,6 +66,8 @@ public class BidRequestService {
     ) {
         this.campaignService = campaignService;
         this.creativeService = creativeService;
+        this.displayAdService = displayAdService;
+        this.videoAdService = videoAdService;
         this.bidResponseService = bidResponseService;
         this.bidRequestValidator = bidRequestValidator;
         this.auctionDao = auctionDao;
@@ -114,10 +122,11 @@ public class BidRequestService {
         } else if (Strings.isNullOrEmpty(bidRequest.getId())) {
             bidRequestError = BidRequestError.BID_REQUEST_ID_MISSING;
             record.setBidRequestId("Error " + String.valueOf(System.currentTimeMillis()));
-        } else if (auctionDao.findFirstByBidRequestIdAndOwner(bidRequest.getId(), record.getOwner()) != null) {
-            bidRequestError = BidRequestError.BID_REQUEST_ID_NOT_UNIQUE;
-            saveAuctionRecord = false;
         }
+//        } else if (auctionDao.findFirstByBidRequestIdAndOwner(bidRequest.getId(), record.getOwner()) != null) {
+//            bidRequestError = BidRequestError.BID_REQUEST_ID_NOT_UNIQUE;
+//            saveAuctionRecord = false;
+//        }
 
         if (bidRequestError != null) {
             executorService.submit(() -> {
@@ -199,7 +208,19 @@ public class BidRequestService {
 
                             auctionImp.setCampaign(campaign);
                             auctionImp.setCreative(creative);
-                            auctionImps.add(auctionImp);
+                            if (creative.getType() == Creative.Type.DISPLAY) {
+                                Optional<DisplayAd> ad = displayAdService.getDisplayAd(creative.getId());
+                                if (ad.isPresent()) {
+                                    auctionImp.setDisplayAd(ad.get());
+                                    auctionImps.add(auctionImp);
+                                }
+                            } else if (creative.getType() == Creative.Type.VAST) {
+                                Optional<VideoAd> ad = videoAdService.getVideoAd(creative.getId());
+                                if (ad.isPresent()) {
+                                    auctionImp.setVideoAd(ad.get());
+                                    auctionImps.add(auctionImp);
+                                }
+                            }
                         }
 
                         final Creative creativeToSave = creative;

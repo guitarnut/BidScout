@@ -11,6 +11,8 @@ public class AuctionImp {
     private Imp impression;
     private Campaign campaign;
     private Creative creative;
+    private DisplayAd displayAd;
+    private VideoAd videoAd;
     private Bid bid;
     private BigDecimal price;
     private String selectedDeal;
@@ -45,6 +47,22 @@ public class AuctionImp {
 
     public void setCreative(Creative creative) {
         this.creative = creative;
+    }
+
+    public DisplayAd getDisplayAd() {
+        return displayAd;
+    }
+
+    public void setDisplayAd(DisplayAd displayAd) {
+        this.displayAd = displayAd;
+    }
+
+    public VideoAd getVideoAd() {
+        return videoAd;
+    }
+
+    public void setVideoAd(VideoAd videoAd) {
+        this.videoAd = videoAd;
     }
 
     public Bid getBid() {

@@ -23,18 +23,60 @@ public class AccountService {
         return stats.size() > 0 ? stats.get(0) : null;
     }
 
-    public void addCampaign() {
+    public boolean addCampaign() {
         List<UserAccountStatistics> stats = statisticsDao.findAll();
         if (stats.size() > 0) {
-            stats.get(0).setCampaigns(stats.get(0).getCampaigns() + 1);
-            statisticsDao.save(stats.get(0));
+            UserAccountStatistics u = stats.get(0);
+            if (u.getCampaignsLimit() > u.getCampaigns()) {
+                u.setCampaigns(u.getCampaigns() + 1);
+                statisticsDao.save(u);
+                return true;
+            }
         }
+        return false;
     }
 
     public void deleteCampaign() {
         List<UserAccountStatistics> stats = statisticsDao.findAll();
         if (stats.size() > 0) {
             stats.get(0).setCampaigns(stats.get(0).getCampaigns() - 1);
+            statisticsDao.save(stats.get(0));
+        }
+    }
+
+    public boolean addCreative() {
+        List<UserAccountStatistics> stats = statisticsDao.findAll();
+        if (stats.size() > 0) {
+            UserAccountStatistics u = stats.get(0);
+            if (u.getCreativesLimit() > u.getCreatives()) {
+                u.setCreatives(u.getCreatives() + 1);
+                statisticsDao.save(u);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void deleteCreative() {
+        List<UserAccountStatistics> stats = statisticsDao.findAll();
+        if (stats.size() > 0) {
+            stats.get(0).setCreatives(stats.get(0).getCreatives() - 1);
+            statisticsDao.save(stats.get(0));
+        }
+    }
+
+    public void deleteAuctionRecord() {
+        List<UserAccountStatistics> stats = statisticsDao.findAll();
+        if (stats.size() > 0) {
+            stats.get(0).setAuctionRecords(stats.get(0).getAuctionRecords() - 1);
+            statisticsDao.save(stats.get(0));
+        }
+    }
+
+    public void deleteVastTagRecord() {
+        List<UserAccountStatistics> stats = statisticsDao.findAll();
+        if (stats.size() > 0) {
+            stats.get(0).setVastRecords(stats.get(0).getVastRecords() - 1);
             statisticsDao.save(stats.get(0));
         }
     }

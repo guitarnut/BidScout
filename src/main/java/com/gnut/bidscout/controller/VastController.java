@@ -50,6 +50,15 @@ public class VastController {
         return service.getVast(bidder, id);
     }
 
+    // Todo: Handle tag parameters
+    @RequestMapping(value = "/tag/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
+    public Vast vastTag(
+            @PathVariable(value = "id") String id,
+            HttpServletResponse response
+    ) {
+        return service.createVastDocument(response, id);
+    }
+
 //    @RequestMapping(value = "/email", method = RequestMethod.GET)
 //    public void getVast(
 //            HttpServletRequest request,

@@ -27,7 +27,7 @@ public class CampaignController {
             @RequestBody Campaign campaign,
             HttpServletResponse response
     ) {
-        return campaignService.saveCampaign(campaign);
+        return campaignService.createCampaign(response, campaign);
     }
 
     @RequestMapping(value = "/campaign/all", method = RequestMethod.GET, produces = "application/json")
@@ -102,5 +102,34 @@ public class CampaignController {
             HttpServletResponse response
     ) {
         return campaignService.getCampaignLimits(id);
+    }
+
+    @RequestMapping(value = "/campaign/{id}/creative/add", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public void addCreative(
+            @PathVariable("id") String id,
+            @RequestParam("id") String creative,
+            HttpServletResponse response
+    ) {
+        campaignService.addCreative(response, id, creative);
+    }
+
+    @RequestMapping(value = "/campaign/{id}/creative/remove", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public void removeCreative(
+            @PathVariable("id") String id,
+            @RequestParam("id") String creative,
+            HttpServletResponse response
+    ) {
+        campaignService.removeCreative(response, id, creative);
+    }
+
+    @RequestMapping(value = "/campaign/{id}/statistics/reset", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public Campaign resetStatistics(
+            @PathVariable("id") String id,
+            HttpServletResponse response
+    ) {
+        return campaignService.resetStatistics(id);
     }
 }

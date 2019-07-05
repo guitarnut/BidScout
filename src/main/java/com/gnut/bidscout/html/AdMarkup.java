@@ -2,6 +2,7 @@ package com.gnut.bidscout.html;
 
 import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.Creative;
+import com.gnut.bidscout.model.DisplayAd;
 import com.google.common.base.Strings;
 import com.iab.openrtb.response.Bid;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,21 +53,28 @@ public class AdMarkup {
     @Value("${service.values.host.events}")
     private String HOST;
 
-    public String generateDisplayMarkup(BigDecimal price, String bidRequestId, Campaign campaign, Creative creative, Bid bid) {
-        if (!Strings.isNullOrEmpty(creative.getAdm())) {
-            return buildCustomAdmCreative(price, bidRequestId, campaign, creative, bid);
-        } else if (creative.getW() == 0 && creative.getH() == 0) {
-            return buildDefaultCreative(price, bidRequestId, campaign, creative, bid);
+    public String generateDisplayMarkup(
+            BigDecimal price,
+            String bidRequestId,
+            Campaign campaign,
+            Creative creative,
+            DisplayAd displayAd,
+            Bid bid
+    ) {
+        if (!Strings.isNullOrEmpty(displayAd.getAdm())) {
+            return buildCustomAdmCreative(price, bidRequestId, campaign, creative, displayAd, bid);
+        } else if (displayAd.getWidth() == 0 && displayAd.getHeight() == 0) {
+            return buildDefaultCreative(price, bidRequestId, campaign, creative, displayAd, bid);
         } else {
-            return buildCreativeWithCustomAsset(price, bidRequestId, campaign, creative, bid);
+            return buildCreativeWithCustomAsset(price, bidRequestId, campaign, creative, displayAd, bid);
         }
     }
 
-    private String buildCustomAdmCreative(BigDecimal price, String bidRequestId, Campaign campaign, Creative creative, Bid bid) {
+    private String buildCustomAdmCreative(BigDecimal price, String bidRequestId, Campaign campaign, Creative creative, DisplayAd displayAd, Bid bid) {
         final StringBuilder adm = new StringBuilder();
 
         adm.append(HTML_OPEN)
-                .append(creative.getAdm())
+                .append(displayAd.getAdm())
                 .append(IMPRESSION_IMG_HIDDEN);
 
         String sync = "";
@@ -86,7 +94,7 @@ public class AdMarkup {
                 .replaceAll(HEIGHT_MACRO, String.valueOf(bid.getH()));
     }
 
-    private String buildDefaultCreative(BigDecimal price, String bidRequestId, Campaign campaign, Creative creative, Bid bid) {
+    private String buildDefaultCreative(BigDecimal price, String bidRequestId, Campaign campaign, Creative creative, DisplayAd displayAd, Bid bid) {
         final StringBuilder adm = new StringBuilder();
 
         adm.append(HTML_OPEN)
@@ -116,7 +124,7 @@ public class AdMarkup {
                 .replaceAll(HEIGHT_MACRO, String.valueOf(bid.getH()));
     }
 
-    private String buildCreativeWithCustomAsset(BigDecimal price, String bidRequestId, Campaign campaign, Creative creative, Bid bid) {
+    private String buildCreativeWithCustomAsset(BigDecimal price, String bidRequestId, Campaign campaign, Creative creative, DisplayAd displayAd, Bid bid) {
         final StringBuilder adm = new StringBuilder();
 
         adm.append(HTML_OPEN)
@@ -140,7 +148,7 @@ public class AdMarkup {
                 .replace(IMPRESSION_MACRO, imp)
                 .replace(SYNC_MACRO, sync)
                 .replace(CLICK_MACRO, click)
-                .replace(ASSET_MACRO, creative.getCreativeUrl())
+                .replace(ASSET_MACRO, displayAd.getCreativeUrl())
                 .replaceAll(WIDTH_MACRO, String.valueOf(bid.getW()))
                 .replaceAll(HEIGHT_MACRO, String.valueOf(bid.getH()));
     }

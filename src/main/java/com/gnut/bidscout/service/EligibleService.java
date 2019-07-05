@@ -1,8 +1,11 @@
 package com.gnut.bidscout.service;
 
+import com.gnut.bidscout.db.DisplayAdDao;
+import com.gnut.bidscout.db.VideoAdDao;
 import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.values.TargetFailure;
 import com.google.common.base.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -11,6 +14,29 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class EligibleService {
+    private final DisplayAdDao displayAdDao;
+    private final VideoAdDao videoAdDao;
+
+    @Autowired
+    public EligibleService(DisplayAdDao displayAdDao, VideoAdDao videoAdDao) {
+        this.displayAdDao = displayAdDao;
+        this.videoAdDao = videoAdDao;
+    }
+
+    private Optional<Ad> getAd(Creative.Type type, String creativeId) {
+        if (type == Creative.Type.DISPLAY) {
+            Optional<DisplayAd> displayAd = displayAdDao.findByCreativeId(creativeId);
+            if (displayAd.isPresent()) {
+                return Optional.of(displayAd.get());
+            }
+        } else if (type == Creative.Type.VAST) {
+            Optional<VideoAd> videoAd = videoAdDao.findByCreativeId(creativeId);
+            if (videoAd.isPresent()) {
+                return Optional.of(videoAd.get());
+            }
+        }
+        return Optional.empty();
+    }
 
     public Set<Creative> getEligibleCreatives(
             RequestTargetingData targetingData,
@@ -29,17 +55,23 @@ public class EligibleService {
                 continue;
             }
 
+            final Optional<Ad> ad = getAd(c.getType(), c.getId());
+
+            if (!ad.isPresent()) {
+                continue;
+            }
+
             final Requirements filter = c.getRequirements();
 
             // size targeting
-            if (targetingData.getWidths().contains(c.getW()) && targetingData.getHeights().contains(c.getH())
-                    || c.getW() == 0 && c.getH() == 0) {
+            if (targetingData.getWidths().contains(ad.get().getWidth()) && targetingData.getHeights().contains(ad.get().getHeight())
+                    || ad.get().getWidth() == 0 && ad.get().getHeight() == 0) {
                 AtomicInteger matches = new AtomicInteger(0);
                 targetingData.getWidths().forEach(w -> {
                     int index = targetingData.getWidths().indexOf(w);
-                    if (targetingData.getWidths().get(index) == c.getW() && targetingData.getHeights().get(index) == c.getH()) {
+                    if (targetingData.getWidths().get(index) == ad.get().getWidth() && targetingData.getHeights().get(index) == ad.get().getHeight()) {
                         matches.getAndIncrement();
-                    } else if (c.getW() == 0 && c.getH() == 0) {
+                    } else if (ad.get().getWidth() == 0 && ad.get().getHeight() == 0) {
                         matches.getAndIncrement();
                     }
                 });
@@ -78,7 +110,7 @@ public class EligibleService {
 
             if (!targetingData.getBadv().isEmpty()) {
                 final AtomicInteger count = new AtomicInteger(0);
-                c.getAdDomain().forEach(d -> {
+                ad.get().getAdDomain().forEach(d -> {
                     if (targetingData.getBadv().contains(d)) {
                         count.getAndIncrement();
                     }
@@ -91,7 +123,7 @@ public class EligibleService {
 
             if (!targetingData.getBattr().isEmpty()) {
                 final AtomicInteger count = new AtomicInteger(0);
-                c.getAttr().forEach(a -> {
+                ad.get().getAttr().forEach(a -> {
                     if (targetingData.getBattr().contains(a)) {
                         count.getAndIncrement();
                     }
@@ -219,9 +251,11 @@ public class EligibleService {
         }
 
         if (creative.isPresent()) {
+            Optional<Ad> ad = getAd(creative.get().getType(), creative.get().getId());
+
             if (targetingData.getBattr() != null) {
                 for (int v : targetingData.getBattr()) {
-                    if (creative.get().getAttr().contains(v)) {
+                    if (ad.get().getAttr().contains(v)) {
                         record.getTargetingFailures().put(targetName, TargetFailure.BATTR.value());
                         return false;
                     }
@@ -229,7 +263,7 @@ public class EligibleService {
             }
             if (targetingData.getBadv() != null) {
                 for (String v : targetingData.getBadv()) {
-                    if (creative.get().getAdDomain().contains(v)) {
+                    if (ad.get().getAdDomain().contains(v)) {
                         record.getTargetingFailures().put(targetName, TargetFailure.BADV.value());
                         return false;
                     }
@@ -237,7 +271,7 @@ public class EligibleService {
             }
             if (targetingData.getBcat() != null) {
                 for (String v : targetingData.getBcat()) {
-                    for (String cat : creative.get().getIabCategories()) {
+                    for (String cat : ad.get().getIabCategories()) {
                         if (cat.contains(v) || cat.equals(v)) {
                             record.getTargetingFailures().put(targetName, TargetFailure.IAB_CATEGORY.value());
                             return false;

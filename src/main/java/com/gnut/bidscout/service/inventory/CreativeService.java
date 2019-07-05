@@ -2,28 +2,40 @@ package com.gnut.bidscout.service.inventory;
 
 import com.gnut.bidscout.db.CampaignDao;
 import com.gnut.bidscout.db.CreativeDao;
-import com.gnut.bidscout.model.Campaign;
-import com.gnut.bidscout.model.Creative;
+import com.gnut.bidscout.model.*;
+import com.gnut.bidscout.service.user.AccountService;
 import com.gnut.bidscout.service.user.UserAccountStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @Component
 public class CreativeService {
     private final CreativeDao creativeDao;
     private final CampaignDao campaignDao;
+    private final VastService vastService;
     private final UserAccountStatisticsService statisticsService;
+    private final AccountService accountService;
 
     @Autowired
-    public CreativeService(CreativeDao creativeDao, CampaignDao campaignDao, UserAccountStatisticsService statisticsService) {
+    public CreativeService(
+            CreativeDao creativeDao,
+            CampaignDao campaignDao,
+            VastService vastService,
+            UserAccountStatisticsService statisticsService,
+            AccountService accountService
+    ) {
         this.creativeDao = creativeDao;
         this.campaignDao = campaignDao;
+        this.vastService = vastService;
         this.statisticsService = statisticsService;
+        this.accountService = accountService;
     }
 
-    public Creative saveCreative(Creative creative) {
+    public Creative saveCreative(String id, Creative creative) {
         return creativeDao.save(creative);
     }
 
@@ -45,6 +57,85 @@ public class CreativeService {
                 results.put(c.getId(), c.getName());
             });
             return results;
+        }
+    }
+
+    public Creative createCreative(HttpServletResponse response, Creative c) {
+        Creative creative = creativeDao.findByName(c.getName());
+        if (creative != null || !accountService.addCreative()) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return null;
+        } else {
+            return creativeDao.save(c);
+        }
+    }
+
+    public Requirements getCreativeRequirements(String id) {
+        Optional<Creative> creative = creativeDao.findById(id);
+        if (creative.isPresent()) {
+            return creative.get().getRequirements();
+        } else {
+            return new Requirements();
+        }
+    }
+
+    public Limits getCreativeLimits(String id) {
+        Optional<Creative> creative = creativeDao.findById(id);
+        if (creative.isPresent()) {
+            return creative.get().getLimits();
+        } else {
+            return new Limits();
+        }
+    }
+
+    public Limits saveCreativeLimits(String id, Limits limits) {
+        Optional<Creative> creative = creativeDao.findById(id);
+        if (creative.isPresent()) {
+            creative.get().setLimits(limits);
+            creativeDao.save(creative.get());
+            return limits;
+        } else {
+            return null;
+        }
+    }
+
+    public Requirements saveCreativeRequirements(String id, Requirements requirements) {
+        Optional<Creative> creative = creativeDao.findById(id);
+        if (creative.isPresent()) {
+            creative.get().setRequirements(requirements);
+            creativeDao.save(creative.get());
+            return requirements;
+        } else {
+            return null;
+        }
+    }
+
+    public List<Creative> getCreatives() {
+        List<Creative> creatives = creativeDao.findAll();
+        if (creatives.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            return creatives;
+        }
+    }
+
+    public Creative getCreative(String id) {
+        Optional<Creative> creative = creativeDao.findById(id);
+        if (creative.isPresent()) {
+            return creative.get();
+        } else {
+            return null;
+        }
+    }
+
+    public Creative saveCreative(Creative c) {
+        return creativeDao.save(c);
+    }
+
+    public void deleteCreative(String id) {
+        if (creativeDao.findById(id).isPresent()) {
+            creativeDao.deleteById(id);
+            accountService.deleteCreative();
         }
     }
 
@@ -106,5 +197,15 @@ public class CreativeService {
             creativeDao.deleteById(id);
             statisticsService.removeCreative(account);
         }
+    }
+
+    public Creative resetStatistics(String id) {
+        Optional<Creative> creative = creativeDao.findById(id);
+        if (creative.isPresent()) {
+            creative.get().setStatistics(new Statistics());
+            creativeDao.save(creative.get());
+            return creative.get();
+        }
+        return null;
     }
 }

@@ -14,10 +14,10 @@ public class Campaign implements Advertisment {
     private String cid;
     private String name;
     private String seat;
-    private Limits limits;
+    private Limits limits = new Limits();
     private Flags flags;
     private List<String> creatives = new ArrayList<>();
-    private Requirements requirements;
+    private Requirements requirements = new Requirements();
     private Statistics statistics = new Statistics();
     private String nurl;
     private long impressionExpiry;

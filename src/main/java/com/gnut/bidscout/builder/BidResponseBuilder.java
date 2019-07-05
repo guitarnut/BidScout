@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.gnut.bidscout.db.XmlDao;
 import com.gnut.bidscout.html.AdMarkup;
+import com.gnut.bidscout.model.Ad;
 import com.gnut.bidscout.model.AuctionImp;
 import com.gnut.bidscout.model.Creative;
 import com.gnut.bidscout.model.Xml;
@@ -14,6 +15,7 @@ import com.iab.openrtb.request.BidRequest;
 import com.iab.openrtb.response.Bid;
 import com.iab.openrtb.response.BidResponse;
 import com.iab.openrtb.response.SeatBid;
+import com.iab.openrtb.vast.Vast;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -66,7 +68,7 @@ public class BidResponseBuilder {
             BidRequest bidRequest,
             Set<AuctionImp> auctionImp
     ) {
-        if(auctionImp.isEmpty()) {
+        if (auctionImp.isEmpty()) {
             return null;
         }
 
@@ -74,63 +76,70 @@ public class BidResponseBuilder {
 
         auctionImp.forEach(imp -> {
             final Bid bid = new Bid();
+            final Ad ad = imp.getCreative().getType() == Creative.Type.DISPLAY ? imp.getDisplayAd() : imp.getVideoAd();
+
             final Creative creative = imp.getCreative();
             bid.setId(imp.getImpression().getId());
             bid.setImpid(imp.getImpression().getId());
-            bid.setAdid(creative.getAdId());
-            bid.setAdomain(creative.getAdDomain());
-            bid.setCat(creative.getIabCategories());
-            bid.setAttr(creative.getAttr());
+            bid.setAdid(ad.getAdId());
+            bid.setAdomain(ad.getAdDomain());
+            bid.setCat(ad.getIabCategories());
+            bid.setAttr(ad.getAttr());
             bid.setCid(imp.getCampaign().getCid());
-            bid.setCrid(creative.getCrid());
+            bid.setCrid(ad.getCrid());
             bid.setPrice(imp.getPrice());
 
-            if (creative.getW() == 0 && creative.getH() == 0) {
-                if (creative.getType() == Creative.Type.DISPLAY) {
-                    if (bidRequest.getImp().get(0).getBanner().getW() != null
-                            && bidRequest.getImp().get(0).getBanner().getW() != 0) {
-                        bid.setW(bidRequest.getImp().get(0).getBanner().getW());
-                        bid.setH(bidRequest.getImp().get(0).getBanner().getH());
-                    } else if (bidRequest.getImp().get(0).getBanner().getFormat() != null
-                            && !bidRequest.getImp().get(0).getBanner().getFormat().isEmpty()) {
-                        bid.setW(bidRequest.getImp().get(0).getBanner().getFormat().get(0).getW());
-                        bid.setH(bidRequest.getImp().get(0).getBanner().getFormat().get(0).getH());
-                    }
+            // Todo: Use interface?
+            int w = (creative.getType() == Creative.Type.DISPLAY) ? imp.getDisplayAd().getWidth() : imp.getVideoAd().getWidth();
+            int h = (creative.getType() == Creative.Type.DISPLAY) ? imp.getDisplayAd().getHeight() : imp.getVideoAd().getHeight();
+
+            if (w == 0 && h == 0 && creative.getType() == Creative.Type.DISPLAY) {
+                if (bidRequest.getImp().get(0).getBanner().getW() != null
+                        && bidRequest.getImp().get(0).getBanner().getW() != 0) {
+                    bid.setW(bidRequest.getImp().get(0).getBanner().getW());
+                    bid.setH(bidRequest.getImp().get(0).getBanner().getH());
+                } else if (bidRequest.getImp().get(0).getBanner().getFormat() != null
+                        && !bidRequest.getImp().get(0).getBanner().getFormat().isEmpty()) {
+                    bid.setW(bidRequest.getImp().get(0).getBanner().getFormat().get(0).getW());
+                    bid.setH(bidRequest.getImp().get(0).getBanner().getFormat().get(0).getH());
                 }
             } else {
-                bid.setW(creative.getW());
-                bid.setH(creative.getH());
+                bid.setW(w);
+                bid.setH(h);
             }
 
-            if (creative.getType() == Creative.Type.VPAID || creative.getType() == Creative.Type.VAST) {
-                if (!Strings.isNullOrEmpty(creative.getXml())) {
-                    bid.setAdm(creative.getXml());
-                } else if (!Strings.isNullOrEmpty(creative.getXmlId())) {
-                    Xml xml = xmlDao.findByOwnerAndId(creative.getOwner(), creative.getXmlId());
-                    if (xml != null) {
-                        vastService.addLinearTrackingEventsToCreativeXML(xml.getVast(), bidRequest.getId());
-                        vastService.addVideoClickToCreativeXML(xml.getVast(), bidRequest.getId());
-                        vastService.addImpressionToCreativeXML(
-                                xml.getVast(),
-                                imp.getCampaign().getOwner(),
-                                bidRequest.getId(),
-                                imp.getImpression().getId(),
-                                imp.getCampaign().getId(),
-                                imp.getCreative().getId(),
-                                String.valueOf(imp.getPrice())
-                        );
+            if (creative.getType() == Creative.Type.VAST) {
+                Vast vast = vastService.createVastDocument(imp.getVideoAd());
+                if (vast != null) {
+                    vastService.addLinearTrackingEventsToCreativeXML(vast, bidRequest.getId());
+                    vastService.addVideoClickToCreativeXML(vast, bidRequest.getId());
+                    vastService.addImpressionToCreativeXML(
+                            vast,
+                            imp.getCampaign().getOwner(),
+                            bidRequest.getId(),
+                            imp.getImpression().getId(),
+                            imp.getCampaign().getId(),
+                            imp.getCreative().getId(),
+                            String.valueOf(imp.getPrice())
+                    );
 
-                        String xmlString = "";
-                        try {
-                            xmlString = mapper.writeValueAsString(xml.getVast());
-                        } catch (JsonProcessingException ex) {
-                            // noop
-                        }
-                        bid.setAdm(xmlString);
+                    String xmlString = "";
+                    try {
+                        xmlString = mapper.writeValueAsString(vast);
+                    } catch (JsonProcessingException ex) {
+                        // noop
                     }
+                    bid.setAdm(xmlString);
                 }
             } else {
-                bid.setAdm(adMarkup.generateDisplayMarkup(imp.getPrice(), bidRequest.getId(), imp.getCampaign(), creative, bid));
+                bid.setAdm(adMarkup.generateDisplayMarkup(
+                        imp.getPrice(),
+                        bidRequest.getId(),
+                        imp.getCampaign(),
+                        creative,
+                        imp.getDisplayAd(),
+                        bid
+                ));
             }
 
             if (!Strings.isNullOrEmpty(imp.getSelectedDeal())) {
