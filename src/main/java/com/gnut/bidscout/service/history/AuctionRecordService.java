@@ -1,4 +1,4 @@
-package com.gnut.bidscout.service.auction;
+package com.gnut.bidscout.service.history;
 
 import com.gnut.bidscout.db.AuctionDao;
 import com.gnut.bidscout.model.AuctionRecord;
@@ -35,6 +35,11 @@ public class AuctionRecordService {
             });
         }
         return results;
+    }
+
+    public List<AuctionRecord> getAllAuctionRecords() {
+        final Map<String, AuctionRecord> results = new HashMap<>();
+        return auctionDao.findAll();
     }
 
     public void deleteBid(String account, String id) {

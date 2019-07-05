@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gnut.bidscout.db.AuctionDao;
 import com.gnut.bidscout.db.EventRecordDao;
 import com.gnut.bidscout.model.*;
-import com.gnut.bidscout.service.auction.AuctionRecordService;
+import com.gnut.bidscout.service.history.AuctionRecordService;
 import com.gnut.bidscout.service.auction.ImpressionService;
 import com.gnut.bidscout.service.inventory.CampaignService;
 import com.gnut.bidscout.service.inventory.CreativeService;

@@ -2,6 +2,11 @@ ssh -i bidscout.pem ubuntu@18.222.180.75
 
 Todo:
 
+Handle auth
+Refactor Client controller
+
+Allow default values for vast, campaign, creatives (allow all on campaign, default ads, etc).
+
 Add click tracking to default ad
 Lists for common values (battr, mimes, etc) with descriptions
 Add limits to request QPS with shutoff feature
@@ -12,7 +17,7 @@ Vast tag macros
 Handle multiple creative types
 Handle atomic operations on mongo records
 Mongo record TTL for auctions, impressions, etc
-Delete imps and events when deleting an auction record or vast record
+Delete imps and events when deleting an auction record or vast record, or use nested models
 Handle excessive event and imp pixel fires
 -Handle user sync stuff
 Custom adm issue when editing creative, adm disappears

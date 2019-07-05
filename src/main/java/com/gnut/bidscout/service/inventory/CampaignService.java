@@ -5,6 +5,7 @@ import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.service.EligibleService;
 import com.gnut.bidscout.service.SyncService;
 import com.gnut.bidscout.service.TargetingService;
+import com.gnut.bidscout.service.user.AccountService;
 import com.gnut.bidscout.service.user.UserAccountStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ public class CampaignService {
     private final TargetingService targetingService;
     private final EligibleService eligibleService;
     private final UserAccountStatisticsService statisticsService;
+    private final AccountService accountService;
 
     @Autowired
     public CampaignService(
@@ -28,7 +30,8 @@ public class CampaignService {
             CreativeService creativeService,
             TargetingService targetingService,
             EligibleService eligibleService,
-            UserAccountStatisticsService statisticsService
+            UserAccountStatisticsService statisticsService,
+            AccountService accountService
     ) {
         this.syncService = syncService;
         this.campaignDao = campaignDao;
@@ -36,6 +39,7 @@ public class CampaignService {
         this.targetingService = targetingService;
         this.eligibleService = eligibleService;
         this.statisticsService = statisticsService;
+        this.accountService = accountService;
     }
 
     public void incrementClick(String id) {
@@ -145,12 +149,58 @@ public class CampaignService {
         return campaignDao.findByIdAndOwner(id, account);
     }
 
+    public Campaign getCampaign(String id) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            return campaign.get();
+        } else {
+            return null;
+        }
+    }
+
     public Campaign getCampaignWithCreative(String owner, String id) {
         return campaignDao.findByCreativesContainsAndOwner(id, owner);
     }
 
-    public Campaign saveCampaign(Campaign campaign) {
-        return campaignDao.save(campaign);
+    public Campaign saveCampaign(Campaign c) {
+        Campaign campaign = campaignDao.findByName(c.getName());
+        if (campaign != null) {
+            return campaign;
+        } else {
+            return campaignDao.save(c);
+        }
+    }
+
+    public Campaign saveCampaign(String id, Campaign c) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            c.setId(id);
+            return campaignDao.save(c);
+        } else {
+            return null;
+        }
+    }
+
+    public Limits saveCampaignLimits(String id, Limits limits) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            campaign.get().setLimits(limits);
+            campaignDao.save(campaign.get());
+            return limits;
+        } else {
+            return null;
+        }
+    }
+
+    public Requirements saveCampaignRequirements(String id, Requirements requirements) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            campaign.get().setRequirements(requirements);
+            campaignDao.save(campaign.get());
+            return requirements;
+        } else {
+            return null;
+        }
     }
 
     public Map<String, String> getCampaignNames(String owner) {
@@ -166,10 +216,44 @@ public class CampaignService {
         }
     }
 
+    public List<Campaign> getCampaigns() {
+        List<Campaign> campaigns = campaignDao.findAll();
+        if (campaigns.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            return campaigns;
+        }
+    }
+
     public void deleteCampaign(String id, String account) {
         if (campaignDao.findByIdAndOwner(id, account) != null) {
             campaignDao.deleteById(id);
             statisticsService.removeCampaign(account);
+        }
+    }
+
+    public void deleteCampaign(String id) {
+        if (campaignDao.findById(id).isPresent()) {
+            campaignDao.deleteById(id);
+            accountService.deleteCampaign();
+        }
+    }
+
+    public Requirements getCampaignRequirements(String id) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            return campaign.get().getRequirements();
+        } else {
+            return new Requirements();
+        }
+    }
+
+    public Limits getCampaignLimits(String id) {
+        Optional<Campaign> campaign = campaignDao.findById(id);
+        if (campaign.isPresent()) {
+            return campaign.get().getLimits();
+        } else {
+            return new Limits();
         }
     }
 }
