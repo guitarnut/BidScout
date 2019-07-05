@@ -76,7 +76,7 @@ public class BidRequestService {
 
     public BidResponse handleRequest(String bidder, String campaignId, HttpServletRequest request, HttpServletResponse response) {
         // daily limit met?
-        if (!userStatsService.addBidRequest(bidder)) {
+        if (bidder != null && !userStatsService.addBidRequest(bidder)) {
             return generateNoContentResponse(response);
         }
 

@@ -208,4 +208,12 @@ public class CreativeService {
         }
         return null;
     }
+
+    public void setCreativeType(String id, Creative.Type type) {
+        Optional<Creative> creative = creativeDao.findById(id);
+        if (creative.isPresent()) {
+            creative.get().setType(type);
+            creativeDao.save(creative.get());
+        }
+    }
 }

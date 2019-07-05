@@ -1,9 +1,9 @@
 package com.gnut.bidscout.service.inventory;
 
 import com.gnut.bidscout.db.DisplayAdDao;
+import com.gnut.bidscout.model.Creative;
 import com.gnut.bidscout.model.DisplayAd;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
@@ -13,10 +13,12 @@ import java.util.Optional;
 public class DisplayAdService {
 
     private final DisplayAdDao displayAdDao;
+    private final CreativeService creativeService;
 
     @Autowired
-    public DisplayAdService(DisplayAdDao displayAdDao) {
+    public DisplayAdService(DisplayAdDao displayAdDao, CreativeService creativeService) {
         this.displayAdDao = displayAdDao;
+        this.creativeService = creativeService;
     }
 
     public DisplayAd saveDisplayAd(HttpServletResponse response, String id, DisplayAd displayAd) {
@@ -25,6 +27,7 @@ public class DisplayAdService {
            displayAd.setId(existing.get().getId());
         }
         displayAd.setCreativeId(id);
+        creativeService.setCreativeType(id, Creative.Type.DISPLAY);
         return displayAdDao.save(displayAd);
     }
 

@@ -1,10 +1,12 @@
 package com.gnut.bidscout.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Campaign implements Advertisment {
     @Id
     private String id;

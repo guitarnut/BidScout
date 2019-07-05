@@ -1,23 +1,26 @@
 package com.gnut.bidscout.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Requirements {
     private String id;
     private boolean userMatch;
     private boolean secure;
-    private List<String> publisherWhitelist;
-    private List<String> domainWhitelist;
-    private List<String> bundleWhitelist;
-    private List<String> publisherBlacklist;
-    private List<String> domainBlacklist;
-    private List<String> bundleBlacklist;
+    private List<String> publisherWhitelist = new ArrayList<>();
+    private List<String> domainWhitelist = new ArrayList<>();
+    private List<String> bundleWhitelist = new ArrayList<>();
+    private List<String> publisherBlacklist = new ArrayList<>();
+    private List<String> domainBlacklist = new ArrayList<>();
+    private List<String> bundleBlacklist = new ArrayList<>();
     @Field
-    private List<String> dealIds = Collections.emptyList();
+    private List<String> dealIds = new ArrayList<>();
     private boolean mobile;
     private boolean desktop;
     private boolean inapp;

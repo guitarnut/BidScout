@@ -1,6 +1,5 @@
 package com.gnut.bidscout.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface Ad {

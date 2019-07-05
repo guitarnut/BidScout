@@ -33,7 +33,8 @@ public class AccountService {
                 return true;
             }
         }
-        return false;
+        // Todo: temp
+        return true;
     }
 
     public void deleteCampaign() {
@@ -54,7 +55,8 @@ public class AccountService {
                 return true;
             }
         }
-        return false;
+        // Todo: temp
+        return true;
     }
 
     public void deleteCreative() {

@@ -18,22 +18,22 @@ public class BidRequestController {
         this.service = service;
     }
 
+    @RequestMapping(value="/{campaign}", method = RequestMethod.POST, produces = "application/json")
+    public BidResponse handleBidRequestPostAnyCampaignAnyUser(
+            @PathVariable(value = "campaign") String campaign,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        return service.handleRequest(null, campaign, request, response);
+    }
+
     @RequestMapping(value="/{bidder}/{campaign}", method = RequestMethod.POST, produces = "application/json")
-    public BidResponse handleBidRequestPostWithKey(
+    public BidResponse handleBidRequestPostWithCampaign(
             @PathVariable(value = "bidder") String bidder,
             @PathVariable(value = "campaign") String campaign,
             HttpServletRequest request,
             HttpServletResponse response
     ) {
        return service.handleRequest(bidder, campaign, request, response);
-    }
-
-    @RequestMapping(value="/{bidder}", method = RequestMethod.POST, produces = "application/json")
-    public BidResponse handleBidRequestPost(
-            @PathVariable(value = "bidder") String bidder,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-        return service.handleRequest(bidder, null, request, response);
     }
 }

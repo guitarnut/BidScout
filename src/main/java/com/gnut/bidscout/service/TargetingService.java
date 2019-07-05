@@ -61,7 +61,7 @@ public class TargetingService {
         }
 
         data.setSecure(request.isSecure());
-        data.setBidfloor(imp.getBidfloor());
+        data.setBidfloor(imp.getBidfloor() != null ? imp.getBidfloor() : 0);
         if(bidRequest.getBadv() != null) {
             data.setBadv(bidRequest.getBadv());
         }

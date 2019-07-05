@@ -1,6 +1,7 @@
 package com.gnut.bidscout.service.inventory;
 
 import com.gnut.bidscout.db.VideoAdDao;
+import com.gnut.bidscout.model.Creative;
 import com.gnut.bidscout.model.VideoAd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,10 +13,12 @@ import java.util.Optional;
 public class VideoAdService {
 
     private final VideoAdDao videoAdDao;
+    private final CreativeService creativeService;
 
     @Autowired
-    public VideoAdService(VideoAdDao videoAdDao) {
+    public VideoAdService(VideoAdDao videoAdDao, CreativeService creativeService) {
         this.videoAdDao = videoAdDao;
+        this.creativeService = creativeService;
     }
 
     public VideoAd createVideoAd(HttpServletResponse response, String id, VideoAd videoAd) {
@@ -24,6 +27,7 @@ public class VideoAdService {
             videoAd.setId(existing.get().getId());
         }
         videoAd.setCreativeId(id);
+        creativeService.setCreativeType(id, Creative.Type.VAST);
         return videoAdDao.save(videoAd);
     }
 
