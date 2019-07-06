@@ -54,9 +54,10 @@ public class VastController {
     @RequestMapping(value = "/tag/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public Vast vastTag(
             @PathVariable(value = "id") String id,
+            HttpServletRequest request,
             HttpServletResponse response
     ) {
-        return service.createVastDocument(response, id);
+        return service.createVastDocument(request, response, id);
     }
 
 //    @RequestMapping(value = "/email", method = RequestMethod.GET)

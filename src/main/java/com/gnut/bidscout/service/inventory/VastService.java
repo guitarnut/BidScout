@@ -59,10 +59,37 @@ public class VastService {
         xmlDao.save(xml);
     }
 
-    public Vast createVastDocument(HttpServletResponse response, String id) {
+    public Vast createVastDocument(HttpServletRequest request, HttpServletResponse response, String id) {
         Optional<VideoAd> videoAd = videoAdDao.findById(id);
         if (videoAd.isPresent()) {
-            return createVastDocument(videoAd.get());
+            VideoAd v = videoAd.get();
+            // daily limit met?
+            if (!statisticsService.addVastTagRequest("Admin")) {
+                return null;
+            }
+
+            Vast vast = createVastDocument(videoAd.get());
+
+            long timestamp = System.currentTimeMillis();
+            VastTagRecord vastTagRecord = new VastTagRecord();
+            vastTagRecord.setRequestTimestamp(timestamp);
+            vastTagRecord.setVastName(v.getName());
+            vastTagRecord.setIp(request.getRemoteAddr());
+            vastTagRecord.setUserAgent(request.getHeader("User-Agent"));
+            vastTagRecord.setCookies(request.getHeader("Cookie"));
+            vastTagRecord.setxForwardedFor(request.getHeader("X-Forwarded-For"));
+            vastTagRecord.setHost(request.getHeader("Host"));
+            vastTagRecord.setOwner("Admin");
+
+            if (statisticsService.addVastTagRecord("Admin")) {
+                vastTagRecordDao.save(vastTagRecord);
+            }
+
+            addLinearTrackingEventsToServedVast(vast, vastTagRecord.getId());
+            addVideoClickToServedVast(vast, vastTagRecord.getId());
+            addImpressionToServedVast(vast, vastTagRecord.getId());
+
+            return vast;
         } else {
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return null;

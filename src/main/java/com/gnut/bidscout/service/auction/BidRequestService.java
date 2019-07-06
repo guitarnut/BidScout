@@ -104,6 +104,11 @@ public class BidRequestService {
                 bidRequest = objectMapper.readValue(bidRequestString, BidRequest.class);
                 record.setBidRequest(bidRequest);
                 record.setBidRequestId(bidRequest.getId());
+                if (bidRequest.getSite() != null && bidRequest.getSite().getPublisher() != null) {
+                    record.setPublisher(bidRequest.getSite().getPublisher().getId());
+                } else if (bidRequest.getApp() != null && bidRequest.getApp().getPublisher() != null) {
+                    record.setPublisher(bidRequest.getApp().getPublisher().getId());
+                }
             }
         } catch (IOException ex) {
             // noop
@@ -152,10 +157,11 @@ public class BidRequestService {
 
         if (bidRequestValidator.validateBidRequest(bidRequest, record)) {
             final Set<String> creativesUsedInBids = new HashSet<>();
-            final Iterable<Creative> availableCampaignCreatives = creativeService.getCreatives(campaign.getCreatives());
+            final Iterable<Creative> availableCampaignCreatives = creativeService.getCreatives();
             final BidRequest br = bidRequest;
 
             bidRequest.getImp().forEach(imp -> {
+                final Creative.Type type = imp.getVideo() != null ? Creative.Type.VAST : Creative.Type.DISPLAY;
                 final AuctionImp auctionImp = new AuctionImp();
                 auctionImp.setBidRequest(br);
                 auctionImp.setImpression(imp);
@@ -167,7 +173,7 @@ public class BidRequestService {
                     Creative creative = null;
                     final AtomicBoolean creativeFound = new AtomicBoolean(false);
                     for (Creative c : data.get().getCreatives()) {
-                        if (!creativesUsedInBids.contains(c.getId())) {
+                        if (!creativesUsedInBids.contains(c.getId()) && c.getType() == type) {
                             creativesUsedInBids.add(c.getId());
                             creative = c;
                             creativeFound.getAndSet(true);
@@ -237,7 +243,7 @@ public class BidRequestService {
             record.setBidResponse(bidResponse);
             if (bidResponse != null) {
                 bidResponse.getSeatbid().get(0).getBid().forEach(b -> {
-                    final String markup = "Impression Id: " + b.getId() + "\n" + b.getAdm();
+                    final String markup = b.getAdm();
                     if (Strings.isNullOrEmpty(record.getMarkup())) {
                         record.setMarkup(markup);
                     } else {

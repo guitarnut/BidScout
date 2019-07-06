@@ -7,10 +7,7 @@ import com.gnut.bidscout.service.user.UserAccountStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class AuctionRecordService {
@@ -81,5 +78,10 @@ public class AuctionRecordService {
             });
             statisticsService.removeAllAuctionRecords(account);
         }
+    }
+
+    public List<AuctionRecord> deleteAll() {
+        auctionDao.deleteAll();
+        return Collections.emptyList();
     }
 }

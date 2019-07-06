@@ -43,4 +43,12 @@ public class AuctionRecordController {
     ) {
         service.delete(id);
     }
+
+    @RequestMapping(value = "/auctionrecord/clear", method = RequestMethod.DELETE, produces = "application/json")
+    @ResponseBody
+    public List<AuctionRecord> delete(
+            HttpServletResponse response
+    ) {
+        return service.deleteAll();
+    }
 }

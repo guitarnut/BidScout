@@ -79,7 +79,7 @@ public class UserAccountStatisticsService {
     }
 
     public boolean addVastTagRecord(String user) {
-        UserAccountStatistics account = getRecord(user);
+        UserAccountStatistics account = statisticsDao.findAll().get(0);
         if (account != null && account.getVastRecords() < account.getVastRecordsLimit()) {
             account.setVastRecords(account.getVastRecords() + 1);
             save(account);
@@ -232,7 +232,7 @@ public class UserAccountStatisticsService {
     }
 
     public boolean addVastTagRequest(String user) {
-        UserAccountStatistics account = getRecord(user);
+        UserAccountStatistics account = statisticsDao.findAll().get(0);
         if (account != null) {
             checkTimePeriod(account);
             account.setVastTagRequests(account.getVastTagRequests() + 1);
