@@ -2,6 +2,7 @@ package com.gnut.bidscout.values;
 
 public enum TargetFailure {
     CREATIVES_ALIGNED("No creatives aligned"),
+    CREATIVES_TYPE("No creatives matching inventory type"),
     SIZE_MATCH("No size match"),
     MAX_BID_BELOW_FLOOR("Max bid amount is below floor"),
     MAX_BID_BELOW_FLOOR_AND_DEAL_FLOOR("Max bid is below floor and deal floor"),

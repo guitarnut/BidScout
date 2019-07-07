@@ -5,6 +5,7 @@ import com.gnut.bidscout.model.Limits;
 import com.gnut.bidscout.model.Requirements;
 import com.gnut.bidscout.service.inventory.CampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,26 +26,27 @@ public class CampaignController {
     @ResponseBody
     public Campaign create(
             @RequestBody Campaign campaign,
+            Authentication auth,
             HttpServletResponse response
     ) {
-        return campaignService.createCampaign(response, campaign);
+        return campaignService.createCampaign(auth, response, campaign);
     }
 
     @RequestMapping(value = "/campaign/all", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<Campaign> all(
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return campaignService.getCampaigns();
+        return campaignService.getCampaigns(auth);
     }
 
     @RequestMapping(value = "/campaign/{id}/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Campaign create(
             @PathVariable("id") String id,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return campaignService.getCampaign(id);
+        return campaignService.getCampaign(auth, id);
     }
 
     @RequestMapping(value = "/campaign/{id}/save", method = RequestMethod.POST, produces = "application/json")
@@ -52,18 +54,18 @@ public class CampaignController {
     public Campaign save(
             @PathVariable("id") String id,
             @RequestBody Campaign campaign,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return campaignService.saveCampaign(id, campaign);
+        return campaignService.saveCampaign(auth, id, campaign);
     }
 
     @RequestMapping(value = "/campaign/{id}/delete", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public void delete(
             @PathVariable("id") String id,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        campaignService.deleteCampaign(id);
+        campaignService.deleteCampaign(auth, id);
     }
 
     @RequestMapping(value = "/campaign/{id}/targeting/save", method = RequestMethod.POST, produces = "application/json")
@@ -71,18 +73,18 @@ public class CampaignController {
     public Requirements saveTargeting(
             @PathVariable("id") String id,
             @RequestBody Requirements requirements,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return campaignService.saveCampaignRequirements(id, requirements);
+        return campaignService.saveCampaignRequirements(auth, id, requirements);
     }
 
     @RequestMapping(value = "/campaign/{id}/targeting/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Requirements saveTargeting(
             @PathVariable("id") String id,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return campaignService.getCampaignRequirements(id);
+        return campaignService.getCampaignRequirements(auth, id);
     }
 
     @RequestMapping(value = "/campaign/{id}/pacing/save", method = RequestMethod.POST, produces = "application/json")
@@ -90,18 +92,18 @@ public class CampaignController {
     public Limits savePacing(
             @PathVariable("id") String id,
             @RequestBody Limits limits,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return campaignService.saveCampaignLimits(id, limits);
+        return campaignService.saveCampaignLimits(auth, id, limits);
     }
 
     @RequestMapping(value = "/campaign/{id}/pacing/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Limits savePacing(
             @PathVariable("id") String id,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return campaignService.getCampaignLimits(id);
+        return campaignService.getCampaignLimits(auth, id);
     }
 
     @RequestMapping(value = "/campaign/{id}/creative/add", method = RequestMethod.GET, produces = "application/json")
@@ -109,9 +111,10 @@ public class CampaignController {
     public void addCreative(
             @PathVariable("id") String id,
             @RequestParam("id") String creative,
+            Authentication auth,
             HttpServletResponse response
     ) {
-        campaignService.addCreative(response, id, creative);
+        campaignService.addCreative(auth, response, id, creative);
     }
 
     @RequestMapping(value = "/campaign/{id}/creative/remove", method = RequestMethod.GET, produces = "application/json")
@@ -119,17 +122,18 @@ public class CampaignController {
     public void removeCreative(
             @PathVariable("id") String id,
             @RequestParam("id") String creative,
+            Authentication auth,
             HttpServletResponse response
     ) {
-        campaignService.removeCreative(response, id, creative);
+        campaignService.removeCreative(auth, response, id, creative);
     }
 
     @RequestMapping(value = "/campaign/{id}/statistics/reset", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Campaign resetStatistics(
             @PathVariable("id") String id,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return campaignService.resetStatistics(id);
+        return campaignService.resetStatistics(auth, id);
     }
 }

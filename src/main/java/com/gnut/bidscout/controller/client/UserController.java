@@ -1,4 +1,4 @@
-package com.gnut.bidscout.controller;
+package com.gnut.bidscout.controller.client;
 
 import com.gnut.bidscout.model.UserProfile;
 import com.gnut.bidscout.model.Users;
@@ -6,8 +6,10 @@ import com.gnut.bidscout.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -24,12 +26,13 @@ public class UserController {
     @ResponseBody
     public Users login(
             @RequestBody Users user,
+            HttpServletRequest request,
             HttpServletResponse response
     ) {
-        return service.login(user.getUsername(), response);
+        return service.login(user, request, response);
     }
 
-    @RequestMapping(value = "/create", produces = "application/json")
+    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     @ResponseStatus(value=HttpStatus.OK)
     public Users create(
@@ -40,34 +43,30 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @RequestMapping(value = "/account/get/{id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/account/get", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public UserProfile get(
-            @PathVariable("id") String id,
-            @RequestBody Users user,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return service.getUser(id, user);
+        return service.getUser(auth);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @RequestMapping(value = "/account/delete/{id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/account/delete", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public void delete(
-            @PathVariable("id") String id,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        service.deleteUser(id);
+        service.deleteUser(auth);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @RequestMapping(value = "/account/update/{id}", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/account/update", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public UserProfile update(
-            @PathVariable("id") String id,
             @RequestBody UserProfile user,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return service.updateUser(id, user);
+        return service.updateUser(auth, user);
     }
 }

@@ -1,9 +1,9 @@
 package com.gnut.bidscout.controller.client;
 
-import com.gnut.bidscout.model.Campaign;
 import com.gnut.bidscout.model.DisplayAd;
 import com.gnut.bidscout.service.inventory.DisplayAdService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,26 +24,26 @@ public class DisplayAdController {
     public DisplayAd create(
             @RequestBody DisplayAd displayAd,
             @PathVariable("id") String id,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return displayAdService.saveDisplayAd(response, id, displayAd);
+        return displayAdService.saveDisplayAd(auth, id, displayAd);
     }
 
     @RequestMapping(value = "/display/{id}/delete", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public void delete(
             @PathVariable("id") String id,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        displayAdService.deleteDisplayAd(response, id);
+        displayAdService.deleteDisplayAd(auth, id);
     }
 
     @RequestMapping(value = "/display/{id}/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public DisplayAd view(
             @PathVariable("id") String id,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return displayAdService.getDisplayAd(response, id);
+        return displayAdService.getDisplayAd(auth, id);
     }
 }

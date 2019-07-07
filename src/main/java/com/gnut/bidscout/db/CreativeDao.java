@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface CreativeDao extends MongoRepository<Creative, String > {
     Creative findByIdAndOwner(String id, String account);
-    Creative findByName(String name);
+    Creative findByNameAndOwner(String name, String owner);
     List<Creative> findAllByOwner(String account);
 }

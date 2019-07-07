@@ -8,9 +8,8 @@ import java.util.List;
 
 @Repository
 public interface VastTagRecordDao extends MongoRepository<VastTagRecord, String> {
-    VastTagRecord findFirstByTagRequestId(String id);
     VastTagRecord findFirstById(String id);
-    VastTagRecord findFirstByOwnerAndId(String account, String requestId);
+    VastTagRecord findByOwnerAndId(String account, String requestId);
     List<VastTagRecord> findAllByOwner(String owner);
     void deleteByOwnerAndId(String owner, String id);
     void deleteAllByOwner(String owner);

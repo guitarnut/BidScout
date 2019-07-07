@@ -3,9 +3,9 @@ package com.gnut.bidscout.controller.client;
 import com.gnut.bidscout.model.AuctionRecord;
 import com.gnut.bidscout.service.history.AuctionRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -21,34 +21,34 @@ public class AuctionRecordController {
     @RequestMapping(value = "/auctionrecord/all", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<AuctionRecord> all(
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return service.getAllAuctionRecords();
+        return service.getAllAuctionRecords(auth);
     }
 
     @RequestMapping(value = "/auctionrecord/{id}/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public AuctionRecord view(
             @PathVariable("id") String id,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return service.view(id);
+        return service.view(auth, id);
     }
 
     @RequestMapping(value = "/auctionrecord/{id}/delete", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public void delete(
             @PathVariable("id") String id,
-            HttpServletResponse response
+            Authentication auth
     ) {
-        service.delete(id);
+        service.delete(auth, id);
     }
 
     @RequestMapping(value = "/auctionrecord/clear", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public List<AuctionRecord> delete(
-            HttpServletResponse response
+            Authentication auth
     ) {
-        return service.deleteAll();
+        return service.deleteAll(auth);
     }
 }

@@ -5,6 +5,7 @@ import com.gnut.bidscout.model.AuctionRecord;
 import com.gnut.bidscout.model.VastTagRecord;
 import com.gnut.bidscout.service.user.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,28 +26,25 @@ public class VastTagRecordService {
         this.accountService = accountService;
     }
 
-    public VastTagRecord getVastTagRecord(String id) {
-        return vastTagRecordDao.findFirstById(id);
+    public List<VastTagRecord> getAllVastTagRecords(Authentication auth) {
+        return vastTagRecordDao.findAllByOwner(getAccount(auth));
     }
 
-    public List<VastTagRecord> getAllVastTagRecords() {
-        return vastTagRecordDao.findAll();
+    public VastTagRecord view(String id, Authentication auth) {
+        VastTagRecord a = vastTagRecordDao.findByOwnerAndId(getAccount(auth), id);
+        return a;
     }
 
-    public VastTagRecord view(String id) {
-        Optional<VastTagRecord> a = vastTagRecordDao.findById(id);
-        if (a.isPresent()) {
-            return a.get();
-        } else {
-            return null;
-        }
-    }
-
-    public void delete(String id) {
-        Optional<VastTagRecord> a = vastTagRecordDao.findById(id);
-        if (a.isPresent()) {
+    public void delete(String id, Authentication auth) {
+        VastTagRecord a = vastTagRecordDao.findByOwnerAndId(getAccount(auth), id);
+        if (a != null) {
             vastTagRecordDao.deleteById(id);
-            accountService.deleteVastTagRecord();
+            accountService.deleteVastTagRecord(getAccount(auth));
         }
     }
+
+    private String getAccount(Authentication auth) {
+        return auth.getAuthorities().iterator().next().getAuthority();
+    }
+
 }

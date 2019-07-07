@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface VideoAdDao extends MongoRepository<VideoAd, String> {
+    Optional<VideoAd> findByCreativeIdAndOwner(String creativeId, String owner);
     Optional<VideoAd> findByCreativeId(String creativeId);
 }

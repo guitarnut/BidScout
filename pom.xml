@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.gnut</groupId>
-	<artifactId>bidscout</artifactId>
+	<artifactId>auction-scout</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>bidscout</name>
+	<name>Auction Scout</name>
 	<description>Auction Engine for Ad Tech Testing</description>
 
 	<parent>

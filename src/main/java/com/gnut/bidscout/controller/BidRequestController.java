@@ -18,15 +18,6 @@ public class BidRequestController {
         this.service = service;
     }
 
-    @RequestMapping(value="/{campaign}", method = RequestMethod.POST, produces = "application/json")
-    public BidResponse handleBidRequestPostAnyCampaignAnyUser(
-            @PathVariable(value = "campaign") String campaign,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-        return service.handleRequest(null, campaign, request, response);
-    }
-
     @RequestMapping(value="/{bidder}/{campaign}", method = RequestMethod.POST, produces = "application/json")
     public BidResponse handleBidRequestPostWithCampaign(
             @PathVariable(value = "bidder") String bidder,

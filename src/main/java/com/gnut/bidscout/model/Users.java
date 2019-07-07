@@ -1,9 +1,11 @@
 package com.gnut.bidscout.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Users {
     public enum Role {
         ADMIN("ADMIN"), USER("USER");

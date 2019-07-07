@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface DisplayAdDao extends MongoRepository<DisplayAd, String> {
+    Optional<DisplayAd> findByCreativeIdAndOwner(String creativeId, String owner);
     Optional<DisplayAd> findByCreativeId(String creativeId);
+
 }

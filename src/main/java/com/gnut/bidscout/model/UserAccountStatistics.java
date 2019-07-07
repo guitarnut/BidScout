@@ -4,23 +4,23 @@ public class UserAccountStatistics {
     private String id;
     private String user;
     private int campaigns;
-    private int campaignsLimit = 3;
+    private int campaignsLimit = 10;
     private int creatives;
-    private int creativesLimit = 3;
+    private int creativesLimit = 10;
     private int vast;
-    private int vastLimit = 3;
+    private int vastLimit = 10;
     private int auctionRecords;
-    private int auctionRecordsLimit = 3;
+    private int auctionRecordsLimit = 50;
     private int vastRecords;
-    private int vastRecordsLimit = 3;
+    private int vastRecordsLimit = 50;
     private int vastTagRequests;
-    private int vastTagRequestsLimit = 3;
+    private int vastTagRequestsLimit = 100;
     private int vastTagRequestsOverage;
-    private int vastTagRequestsOverageLimit = 5;
+    private int vastTagRequestsOverageLimit = 10;
     private int bidRequests;
-    private int bidRequestsLimit = 3;
+    private int bidRequestsLimit = 100;
     private int bidRequestsOverage;
-    private int bidRequestsOverageLimit = 5;
+    private int bidRequestsOverageLimit = 10;
     private long periodEnd;
 
     public String getId() {

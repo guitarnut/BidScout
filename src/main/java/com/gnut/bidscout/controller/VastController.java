@@ -19,38 +19,6 @@ public class VastController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/serve/{bidder}/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-    @ResponseBody
-    public Vast serveVastPost(
-            @PathVariable(value = "bidder") String bidder,
-            @PathVariable(value = "id") String id,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-        return service.serveVast(bidder, id, request);
-    }
-
-    @RequestMapping(value = "/serve/{bidder}/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
-    public Vast serveVastGet(
-            @PathVariable(value = "bidder") String bidder,
-            @PathVariable(value = "id") String id,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-        return service.serveVast(bidder, id, request);
-    }
-
-    @RequestMapping(value = "/view/{bidder}/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_XML_VALUE)
-    public Vast getVast(
-            @PathVariable(value = "bidder") String bidder,
-            @PathVariable(value = "id") String id,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-        return service.getVast(bidder, id);
-    }
-
-    // Todo: Handle tag parameters
     @RequestMapping(value = "/tag/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public Vast vastTag(
             @PathVariable(value = "id") String id,
@@ -59,12 +27,4 @@ public class VastController {
     ) {
         return service.createVastDocument(request, response, id);
     }
-
-//    @RequestMapping(value = "/email", method = RequestMethod.GET)
-//    public void getVast(
-//            HttpServletRequest request,
-//            HttpServletResponse response
-//    ) {
-//        service.sendEmail();
-//    }
 }

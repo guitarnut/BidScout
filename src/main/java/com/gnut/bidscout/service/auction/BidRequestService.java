@@ -13,6 +13,7 @@ import com.gnut.bidscout.service.inventory.DisplayAdService;
 import com.gnut.bidscout.service.inventory.VideoAdService;
 import com.gnut.bidscout.service.user.UserAccountStatisticsService;
 import com.gnut.bidscout.values.BidRequestError;
+import com.gnut.bidscout.values.TargetFailure;
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
@@ -76,17 +77,20 @@ public class BidRequestService {
 
     public BidResponse handleRequest(String bidder, String campaignId, HttpServletRequest request, HttpServletResponse response) {
         // daily limit met?
-        if (bidder != null && !userStatsService.addBidRequest(bidder)) {
+        if (campaignId == null || (bidder != null && !userStatsService.addBidRequest(bidder))) {
+            return generateNoContentResponse(response);
+        }
+
+        final Campaign campaign = campaignService.getCampaign(bidder, campaignId);
+        if (campaign != null) {
+            campaign.getStatistics().setRequests(campaign.getStatistics().getRequests() + 1);
+        } else {
             return generateNoContentResponse(response);
         }
 
         BidRequest bidRequest = null;
         BidRequestError bidRequestError = null;
 
-        final Campaign campaign = campaignService.getCampaign(bidder, campaignId);
-        if (campaign != null) {
-            campaign.getStatistics().setRequests(campaign.getStatistics().getRequests() + 1);
-        }
         final AuctionRecord record = new AuctionRecord();
         record.setRequestTimestamp(System.currentTimeMillis());
         record.setIp(request.getRemoteAddr());
@@ -128,10 +132,6 @@ public class BidRequestService {
             bidRequestError = BidRequestError.BID_REQUEST_ID_MISSING;
             record.setBidRequestId("Error " + String.valueOf(System.currentTimeMillis()));
         }
-//        } else if (auctionDao.findFirstByBidRequestIdAndOwner(bidRequest.getId(), record.getOwner()) != null) {
-//            bidRequestError = BidRequestError.BID_REQUEST_ID_NOT_UNIQUE;
-//            saveAuctionRecord = false;
-//        }
 
         if (bidRequestError != null) {
             executorService.submit(() -> {
@@ -157,7 +157,7 @@ public class BidRequestService {
 
         if (bidRequestValidator.validateBidRequest(bidRequest, record)) {
             final Set<String> creativesUsedInBids = new HashSet<>();
-            final Iterable<Creative> availableCampaignCreatives = creativeService.getCreatives();
+            final Iterable<Creative> availableCampaignCreatives = creativeService.getCreatives(campaign.getCreatives());
             final BidRequest br = bidRequest;
 
             bidRequest.getImp().forEach(imp -> {
@@ -233,6 +233,8 @@ public class BidRequestService {
                         executorService.submit(() -> {
                             creativeService.saveCreative(creativeToSave);
                         });
+                    } else {
+                        record.getTargetingFailures().put(campaign.getName(), TargetFailure.CREATIVES_TYPE.value());
                     }
                 }
             });

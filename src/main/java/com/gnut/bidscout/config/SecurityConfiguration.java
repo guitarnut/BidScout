@@ -5,25 +5,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableConfigurationProperties
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
     @Autowired
     MongoUserDetailsService userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors()
-                .and()
-                .csrf().disable()
-                .authorizeRequests().antMatchers("/test/**").permitAll()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests().antMatchers("/health/**").permitAll()
                 .and()
@@ -41,25 +46,51 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers("/sync/**").permitAll()
                 .and()
-                .authorizeRequests().antMatchers("/api/**").permitAll()
-                .and()
-                .authorizeRequests().antMatchers("/bid/**").permitAll()
-                .and()
+//                .authorizeRequests().antMatchers("/api/**").permitAll()
+//                .and()
+//                .authorizeRequests().antMatchers("/bid/**").permitAll()
+//                .and()
                 .authorizeRequests().anyRequest().authenticated()
+                .and()
+                .cors()
                 .and()
                 .httpBasic()
                 .and()
-                .sessionManagement().disable();
+                .csrf().disable();
     }
 
     @Override
-    public void configure(AuthenticationManagerBuilder builder) throws Exception {
-        builder.userDetailsService(userDetailsService);
+    public void configure(AuthenticationManagerBuilder builder) {
+        builder.authenticationProvider(authenticationProvider());
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList(
+                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
+        ));
+        configuration.setAllowedHeaders(Arrays.asList(
+                "authorization", "content-type", "x-auth-token","access-control-allow-origin"
+        ));
+        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
 
@@ -67,11 +98,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 /**
  * @Override protected void configure(HttpSecurity http) throws Exception {
  * <p>
- *     //                .and()
+ * //                .and()
  * //                .authorizeRequests().antMatchers("/bid/**").hasRole(Users.Role.ADMIN.getValue())
- *
- *                 //.antMatchers("/**").access("hasRole('" + Users.Role.ADMIN.getValue() + "')")
- *                 //.anyRequest().authenticated()
+ * <p>
+ * //.antMatchers("/**").access("hasRole('" + Users.Role.ADMIN.getValue() + "')")
+ * //.anyRequest().authenticated()
  * http.authorizeRequests()
  * .antMatchers("/login**").permitAll()
  * .antMatchers("/healthcheck**").permitAll()

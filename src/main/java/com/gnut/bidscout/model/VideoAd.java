@@ -10,6 +10,7 @@ import java.util.List;
 public class VideoAd implements Ad {
     @Id
     private String id;
+    private String owner;
     private String name;
     private String creativeId;
     private List<String> adDomain;
@@ -35,6 +36,14 @@ public class VideoAd implements Ad {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public String getName() {

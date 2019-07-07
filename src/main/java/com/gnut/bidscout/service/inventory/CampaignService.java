@@ -3,44 +3,39 @@ package com.gnut.bidscout.service.inventory;
 import com.gnut.bidscout.db.CampaignDao;
 import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.service.EligibleService;
-import com.gnut.bidscout.service.SyncService;
 import com.gnut.bidscout.service.TargetingService;
 import com.gnut.bidscout.service.user.AccountService;
-import com.gnut.bidscout.service.user.UserAccountStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CampaignService {
-    private final SyncService syncService;
     private final CampaignDao campaignDao;
     private final CreativeService creativeService;
     private final TargetingService targetingService;
     private final EligibleService eligibleService;
-    private final UserAccountStatisticsService statisticsService;
     private final AccountService accountService;
 
     @Autowired
     public CampaignService(
-            SyncService syncService,
             CampaignDao campaignDao,
             CreativeService creativeService,
             TargetingService targetingService,
             EligibleService eligibleService,
-            UserAccountStatisticsService statisticsService,
             AccountService accountService
     ) {
-        this.syncService = syncService;
         this.campaignDao = campaignDao;
         this.creativeService = creativeService;
         this.targetingService = targetingService;
         this.eligibleService = eligibleService;
-        this.statisticsService = statisticsService;
         this.accountService = accountService;
     }
 
@@ -101,33 +96,6 @@ public class CampaignService {
         }
     }
 
-    public void addCreativeToCampaign(String owner, String campaignId, String creativeId) {
-        Campaign campaign = campaignDao.findByIdAndOwner(campaignId, owner);
-        if (campaign != null) {
-            Creative creative = creativeService.getCreative(owner, creativeId);
-            if (creative != null) {
-                List<String> c = campaign.getCreatives();
-                if (c == null) {
-                    c = new ArrayList<>();
-                }
-                c.add(creative.getId());
-                campaign.setCreatives(c);
-                campaignDao.save(campaign);
-            }
-        }
-    }
-
-    public Campaign removeCreativeFromCampaign(String owner, String campaignId, String creativeId) {
-        Campaign campaign = campaignDao.findByIdAndOwner(campaignId, owner);
-        if (campaign != null) {
-            if (campaign.getCreatives() != null) {
-                campaign.getCreatives().remove(creativeId);
-                campaignDao.save(campaign);
-            }
-        }
-        return campaign;
-    }
-
     public Optional<EligibleCampaignData> targetCampaign(
             Campaign campaign,
             AuctionImp auctionImp,
@@ -151,25 +119,17 @@ public class CampaignService {
         return campaignDao.findByIdAndOwner(id, account);
     }
 
-    public Campaign getCampaign(String id) {
-        Optional<Campaign> campaign = campaignDao.findById(id);
-        if (campaign.isPresent()) {
-            return campaign.get();
-        } else {
-            return null;
-        }
+    public Campaign getCampaign(Authentication auth, String id) {
+        return campaignDao.findByIdAndOwner(id, getAccount(auth));
     }
 
-    public Campaign getCampaignWithCreative(String owner, String id) {
-        return campaignDao.findByCreativesContainsAndOwner(id, owner);
-    }
-
-    public Campaign createCampaign(HttpServletResponse response, Campaign c) {
-        Campaign campaign = campaignDao.findByName(c.getName());
+    public Campaign createCampaign(Authentication auth, HttpServletResponse response, Campaign c) {
+        Campaign campaign = campaignDao.findByNameAndOwner(c.getName(), getAccount(auth));
         if (campaign != null || !accountService.addCampaign()) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return null;
         } else {
+            c.setOwner(getAccount(auth));
             return campaignDao.save(c);
         }
     }
@@ -178,53 +138,39 @@ public class CampaignService {
         return campaignDao.save(c);
     }
 
-    public Campaign saveCampaign(String id, Campaign c) {
-        Optional<Campaign> campaign = campaignDao.findById(id);
-        if (campaign.isPresent()) {
-            c.setId(id);
+    public Campaign saveCampaign(Authentication auth, String id, Campaign c) {
+        Campaign campaign = campaignDao.findByIdAndOwner(id, getAccount(auth));
+        if (campaign != null) {
             return campaignDao.save(c);
         } else {
             return null;
         }
     }
 
-    public Limits saveCampaignLimits(String id, Limits limits) {
-        Optional<Campaign> campaign = campaignDao.findById(id);
-        if (campaign.isPresent()) {
-            campaign.get().setLimits(limits);
-            campaignDao.save(campaign.get());
+    public Limits saveCampaignLimits(Authentication auth, String id, Limits limits) {
+        Campaign campaign = campaignDao.findByIdAndOwner(id, getAccount(auth));
+        if (campaign != null) {
+            campaign.setLimits(limits);
+            campaignDao.save(campaign);
             return limits;
         } else {
             return null;
         }
     }
 
-    public Requirements saveCampaignRequirements(String id, Requirements requirements) {
-        Optional<Campaign> campaign = campaignDao.findById(id);
-        if (campaign.isPresent()) {
-            campaign.get().setRequirements(requirements);
-            campaignDao.save(campaign.get());
+    public Requirements saveCampaignRequirements(Authentication auth, String id, Requirements requirements) {
+        Campaign campaign = campaignDao.findByIdAndOwner(id, getAccount(auth));
+        if (campaign != null) {
+            campaign.setRequirements(requirements);
+            campaignDao.save(campaign);
             return requirements;
         } else {
             return null;
         }
     }
 
-    public Map<String, String> getCampaignNames(String owner) {
-        List<Campaign> campaigns = campaignDao.findAllByOwner(owner);
-        if (campaigns.isEmpty()) {
-            return Collections.emptyMap();
-        } else {
-            final Map<String, String> results = new HashMap<>();
-            campaigns.forEach(c -> {
-                results.put(c.getId(), c.getName());
-            });
-            return results;
-        }
-    }
-
-    public List<Campaign> getCampaigns() {
-        List<Campaign> campaigns = campaignDao.findAll();
+    public List<Campaign> getCampaigns(Authentication auth) {
+        List<Campaign> campaigns = campaignDao.findAllByOwner(getAccount(auth));
         if (campaigns.isEmpty()) {
             return Collections.emptyList();
         } else {
@@ -232,70 +178,67 @@ public class CampaignService {
         }
     }
 
-    public void deleteCampaign(String id, String account) {
-        if (campaignDao.findByIdAndOwner(id, account) != null) {
+    public void deleteCampaign(Authentication auth, String id) {
+        if (campaignDao.findByIdAndOwner(id, getAccount(auth)) != null) {
             campaignDao.deleteById(id);
-            statisticsService.removeCampaign(account);
+            accountService.deleteCampaign(getAccount(auth));
         }
     }
 
-    public void deleteCampaign(String id) {
-        if (campaignDao.findById(id).isPresent()) {
-            campaignDao.deleteById(id);
-            accountService.deleteCampaign();
-        }
-    }
-
-    public Requirements getCampaignRequirements(String id) {
-        Optional<Campaign> campaign = campaignDao.findById(id);
-        if (campaign.isPresent()) {
-            return campaign.get().getRequirements();
+    public Requirements getCampaignRequirements(Authentication auth, String id) {
+        Campaign campaign = campaignDao.findByIdAndOwner(id, getAccount(auth));
+        if (campaign != null) {
+            return campaign.getRequirements();
         } else {
             return new Requirements();
         }
     }
 
-    public Limits getCampaignLimits(String id) {
-        Optional<Campaign> campaign = campaignDao.findById(id);
-        if (campaign.isPresent()) {
-            return campaign.get().getLimits();
+    public Limits getCampaignLimits(Authentication auth, String id) {
+        Campaign campaign = campaignDao.findByIdAndOwner(id, getAccount(auth));
+        if (campaign != null) {
+            return campaign.getLimits();
         } else {
             return new Limits();
         }
     }
 
-    public void addCreative(HttpServletResponse response, String id, String creativeId) {
-        Optional<Campaign> campaign = campaignDao.findById(id);
-        if (campaign.isPresent()) {
-            Creative creative = creativeService.getCreative(creativeId);
-            if (creative != null && !campaign.get().getCreatives().contains(creativeId)) {
-                campaign.get().getCreatives().add(creative.getId());
-                campaignDao.save(campaign.get());
+    public void addCreative(Authentication auth, HttpServletResponse response, String id, String creativeId) {
+        Campaign campaign = campaignDao.findByIdAndOwner(id, getAccount(auth));
+        if (campaign != null) {
+            Creative creative = creativeService.getCreative(auth, creativeId);
+            if (creative != null && !campaign.getCreatives().contains(creativeId)) {
+                campaign.getCreatives().add(creative.getId());
+                campaignDao.save(campaign);
             }
         } else {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
     }
 
-    public void removeCreative(HttpServletResponse response, String id, String creativeId) {
-        Optional<Campaign> campaign = campaignDao.findById(id);
-        if (campaign.isPresent()) {
-            if (campaign.get().getCreatives().contains(creativeId)) {
-                campaign.get().getCreatives().remove(creativeId);
-                campaignDao.save(campaign.get());
+    public void removeCreative(Authentication auth, HttpServletResponse response, String id, String creativeId) {
+        Campaign campaign = campaignDao.findByIdAndOwner(id, getAccount(auth));
+        if (campaign != null) {
+            if (campaign.getCreatives().contains(creativeId)) {
+                campaign.getCreatives().remove(creativeId);
+                campaignDao.save(campaign);
             }
         } else {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
     }
 
-    public Campaign resetStatistics(String id) {
-        Optional<Campaign> campaign = campaignDao.findById(id);
-        if (campaign.isPresent()) {
-            campaign.get().setStatistics(new Statistics());
-            campaignDao.save(campaign.get());
-            return campaign.get();
+    public Campaign resetStatistics(Authentication auth, String id) {
+        Campaign campaign = campaignDao.findByIdAndOwner(getAccount(auth), id);
+        if (campaign != null) {
+            campaign.setStatistics(new Statistics());
+            campaignDao.save(campaign);
+            return campaign;
         }
         return null;
+    }
+
+    private String getAccount(Authentication auth) {
+        return auth.getAuthorities().iterator().next().getAuthority();
     }
 }

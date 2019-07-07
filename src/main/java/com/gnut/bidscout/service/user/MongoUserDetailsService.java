@@ -9,14 +9,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class MongoUserDetailsService implements UserDetailsService {
+
+    private final UsersDao repository;
+
     @Autowired
-    private UsersDao repository;
+    public MongoUserDetailsService(UsersDao repository) {
+        this.repository = repository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -25,7 +31,8 @@ public class MongoUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         }
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(r->{
+        authorities.add(new SimpleGrantedAuthority(user.getId()));
+        user.getRoles().forEach(r -> {
             authorities.add(new SimpleGrantedAuthority(r.getValue()));
         });
         return new User(user.getUsername(), user.getPassword(), authorities);

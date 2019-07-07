@@ -5,6 +5,7 @@ import com.gnut.bidscout.model.AuctionRecord;
 import com.gnut.bidscout.service.user.AccountService;
 import com.gnut.bidscout.service.user.UserAccountStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -26,62 +27,28 @@ public class AuctionRecordService {
         this.accountService = accountService;
     }
 
-    public Map<String, AuctionRecord> getListOfAllRecords(String account) {
-        final Map<String, AuctionRecord> results = new HashMap<>();
-        List<AuctionRecord> records = auctionDao.findAllByOwner(account);
-        if (records != null) {
-            records.forEach(r -> {
-                final AuctionRecord auctionRecord = new AuctionRecord();
-                auctionRecord.setBidRequestId(r.getBidRequestId());
-                auctionRecord.setRequestTimestamp(r.getRequestTimestamp());
-                results.put(r.getId(), auctionRecord);
-            });
-        }
-        return results;
+    public List<AuctionRecord> getAllAuctionRecords(Authentication auth) {
+        return auctionDao.findAllByOwner(getAccount(auth));
     }
 
-    public List<AuctionRecord> getAllAuctionRecords() {
-        final Map<String, AuctionRecord> results = new HashMap<>();
-        return auctionDao.findAll();
+    public AuctionRecord view(Authentication auth, String id) {
+        return auctionDao.findByIdAndOwner(id, getAccount(auth));
     }
 
-    public AuctionRecord view(String id) {
-        Optional<AuctionRecord> a = auctionDao.findById(id);
-        if (a.isPresent()) {
-            return a.get();
-        } else {
-            return null;
-        }
-    }
-
-    public void delete(String id) {
-        Optional<AuctionRecord> a = auctionDao.findById(id);
-        if (a.isPresent()) {
+    public void delete(Authentication auth, String id) {
+        AuctionRecord a = auctionDao.findByIdAndOwner(id, getAccount(auth));
+        if (a != null) {
             auctionDao.deleteById(id);
-            accountService.deleteAuctionRecord();
+            accountService.deleteAuctionRecord(getAccount(auth));
         }
     }
 
-    public void deleteBid(String account, String id) {
-        AuctionRecord record = auctionDao.findFirstByIdAndOwner(id, account);
-        if (record != null) {
-            auctionDao.deleteById(id);
-            statisticsService.removeAuctionRecord(account);
-        }
-    }
-
-    public void deleteAllBids(String account) {
-        List<AuctionRecord> allRecords = auctionDao.findAllByOwner(account);
-        if (allRecords != null) {
-            allRecords.forEach(r -> {
-                auctionDao.deleteById(r.getId());
-            });
-            statisticsService.removeAllAuctionRecords(account);
-        }
-    }
-
-    public List<AuctionRecord> deleteAll() {
-        auctionDao.deleteAll();
+    public List<AuctionRecord> deleteAll(Authentication auth) {
+        auctionDao.deleteAllByOwner(getAccount(auth));
         return Collections.emptyList();
+    }
+
+    private String getAccount(Authentication auth) {
+        return auth.getAuthorities().iterator().next().getAuthority();
     }
 }
