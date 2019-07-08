@@ -3,6 +3,7 @@ package com.gnut.bidscout.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -27,7 +28,7 @@ public class Users {
     private String password;
     private String firstName;
     private String lastName;
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
     private boolean enabled;
     private long created;
     private long lastLogin;
@@ -37,8 +38,8 @@ public class Users {
     private String zip;
     private String email;
     private String phone;
-    private List<String> ipAccess;
-    private List<String> uaAccess;
+    private List<String> ipAccess = new ArrayList<>();
+    private List<String> uaAccess = new ArrayList<>();
     private List<Long> dateAccess;
     private int failedLoginAttemptCount;
 
