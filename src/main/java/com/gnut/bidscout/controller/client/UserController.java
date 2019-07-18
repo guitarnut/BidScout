@@ -42,7 +42,7 @@ public class UserController {
         return service.createUser(user, response);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/account/get", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public UserProfile get(
@@ -51,7 +51,7 @@ public class UserController {
         return service.getUser(auth);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/account/delete", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public void delete(
@@ -60,7 +60,7 @@ public class UserController {
         service.deleteUser(auth);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    //@PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/account/update", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public UserProfile update(

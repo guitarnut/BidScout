@@ -1,5 +1,6 @@
 package com.gnut.bidscout.controller.client;
 
+import com.gnut.bidscout.model.AuctionRecord;
 import com.gnut.bidscout.model.VastTagRecord;
 import com.gnut.bidscout.service.history.VastTagRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/vasttagrecord")
 public class VastRecordController {
     private final VastTagRecordService service;
 
@@ -19,7 +20,7 @@ public class VastRecordController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/vasttagrecord/all", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/all", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<VastTagRecord> all(
             Authentication auth
@@ -27,7 +28,7 @@ public class VastRecordController {
         return service.getAllVastTagRecords(auth);
     }
 
-    @RequestMapping(value = "/vasttagrecord/{id}/view", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/{id}/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public VastTagRecord view(
             @PathVariable("id") String id,
@@ -36,12 +37,20 @@ public class VastRecordController {
         return service.view(id, auth);
     }
 
-    @RequestMapping(value = "/vasttagrecord/{id}/delete", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public void delete(
             @PathVariable("id") String id,
             Authentication auth
     ) {
         service.delete(id, auth);
+    }
+
+    @RequestMapping(value = "/clear", method = RequestMethod.DELETE, produces = "application/json")
+    @ResponseBody
+    public List<VastTagRecord> delete(
+            Authentication auth
+    ) {
+        return service.deleteAll(auth);
     }
 }

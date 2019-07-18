@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/creative")
 public class CreativeController {
 
     private final CreativeService creativeService;
@@ -22,7 +22,7 @@ public class CreativeController {
         this.creativeService = creativeService;
     }
 
-    @RequestMapping(value = "/creative/create", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public Creative create(
             @RequestBody Creative creative,
@@ -32,7 +32,7 @@ public class CreativeController {
         return creativeService.createCreative(auth, response, creative);
     }
 
-    @RequestMapping(value = "/creative/all", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/all", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<Creative> all(
             Authentication auth
@@ -40,7 +40,7 @@ public class CreativeController {
         return creativeService.getCreatives(auth);
     }
 
-    @RequestMapping(value = "/creative/{id}/view", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/{id}/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Creative create(
             @PathVariable("id") String id,
@@ -49,7 +49,7 @@ public class CreativeController {
         return creativeService.getCreative(auth, id);
     }
 
-    @RequestMapping(value = "/creative/{id}/save", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/{id}/save", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public Creative save(
             @PathVariable("id") String id,
@@ -59,7 +59,7 @@ public class CreativeController {
         return creativeService.saveCreative(auth, id, creative);
     }
 
-    @RequestMapping(value = "/creative/{id}/delete", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public void delete(
             @PathVariable("id") String id,
@@ -68,7 +68,7 @@ public class CreativeController {
         creativeService.deleteCreative(id, auth);
     }
 
-    @RequestMapping(value = "/creative/{id}/targeting/save", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/{id}/targeting/save", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public Requirements saveTargeting(
             @PathVariable("id") String id,
@@ -78,7 +78,7 @@ public class CreativeController {
         return creativeService.saveCreativeRequirements(auth, id, requirements);
     }
 
-    @RequestMapping(value = "/creative/{id}/targeting/view", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/{id}/targeting/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Requirements saveTargeting(
             @PathVariable("id") String id,
@@ -87,7 +87,7 @@ public class CreativeController {
         return creativeService.getCreativeRequirements(auth, id);
     }
 
-    @RequestMapping(value = "/creative/{id}/pacing/save", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/{id}/pacing/save", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public Limits savePacing(
             @PathVariable("id") String id,
@@ -97,7 +97,7 @@ public class CreativeController {
         return creativeService.saveCreativeLimits(auth, id, limits);
     }
 
-    @RequestMapping(value = "/creative/{id}/pacing/view", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/{id}/pacing/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Limits savePacing(
             @PathVariable("id") String id,
@@ -106,7 +106,7 @@ public class CreativeController {
         return creativeService.getCreativeLimits(auth, id);
     }
 
-    @RequestMapping(value = "/creative/{id}/statistics/reset", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/{id}/statistics/reset", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Creative resetStatistics(
             @PathVariable("id") String id,

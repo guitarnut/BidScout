@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/display")
 public class DisplayAdController {
 
     private final DisplayAdService displayAdService;
@@ -19,7 +19,7 @@ public class DisplayAdController {
         this.displayAdService = displayAdService;
     }
 
-    @RequestMapping(value = "/display/{id}/save", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/{id}/save", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public DisplayAd create(
             @RequestBody DisplayAd displayAd,
@@ -29,7 +29,7 @@ public class DisplayAdController {
         return displayAdService.saveDisplayAd(auth, id, displayAd);
     }
 
-    @RequestMapping(value = "/display/{id}/delete", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public void delete(
             @PathVariable("id") String id,
@@ -38,7 +38,7 @@ public class DisplayAdController {
         displayAdService.deleteDisplayAd(auth, id);
     }
 
-    @RequestMapping(value = "/display/{id}/view", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/{id}/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public DisplayAd view(
             @PathVariable("id") String id,

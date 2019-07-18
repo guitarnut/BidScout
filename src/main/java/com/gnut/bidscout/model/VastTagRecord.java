@@ -6,7 +6,8 @@ public class VastTagRecord {
     @Id
     private String id;
     private String vastName;
-    private String tagRequestId;
+    private String tagId;
+    private String requestId;
     private long requestTimestamp;
     private long responseTimestamp;
     private String markup;
@@ -35,12 +36,20 @@ public class VastTagRecord {
         this.vastName = vastName;
     }
 
-    public String getTagRequestId() {
-        return tagRequestId;
+    public String getTagId() {
+        return tagId;
     }
 
-    public void setTagRequestId(String tagRequestId) {
-        this.tagRequestId = tagRequestId;
+    public void setTagId(String tagRequestId) {
+        this.tagId = tagRequestId;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
     public long getRequestTimestamp() {

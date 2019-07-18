@@ -19,7 +19,7 @@ public class VideoEventService {
     }
 
     public void recordVastTagEvent(String id, String event, long cb, HttpServletRequest request) {
-        final VastTagRecord vastTagRecord = vastTagRecordDao.findFirstById(id);
+        final VastTagRecord vastTagRecord = vastTagRecordDao.findFirstByRequestId(id);
         if (vastTagRecord != null) {
             final EventRecord eventRecord = new EventRecord();
             eventRecord.setEvent(event);
@@ -35,5 +35,9 @@ public class VideoEventService {
 
             eventRecordDao.save(eventRecord);
         }
+    }
+
+    public void deleteVastTagEvent(String id) {
+
     }
 }

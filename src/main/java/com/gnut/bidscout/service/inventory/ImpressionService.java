@@ -1,12 +1,11 @@
-package com.gnut.bidscout.service.auction;
+package com.gnut.bidscout.service.inventory;
 
 import com.gnut.bidscout.cache.ImpressionCache;
 import com.gnut.bidscout.db.ImpressionDao;
 import com.gnut.bidscout.model.ImpressionRecord;
-import com.gnut.bidscout.service.inventory.CampaignService;
-import com.gnut.bidscout.service.inventory.CreativeService;
 import com.gnut.bidscout.service.SyncService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,12 +35,12 @@ public class ImpressionService {
         this.impressionCache = impressionCache;
     }
 
-    public List<ImpressionRecord> getImpressions(String id, String bidId) {
-        return impressionDao.findAllByOwnerAndBidRequestId(id, bidId);
+    public List<ImpressionRecord> getImpressions(Authentication auth, String bidId) {
+        return impressionDao.findAllByOwnerAndBidRequestId(getAccount(auth), bidId);
     }
 
-    public List<ImpressionRecord> getVastImpressions(String account, String id) {
-        return impressionDao.findAllByVastTagRequestId(id);
+    public List<ImpressionRecord> getVastImpressions(Authentication auth, String id) {
+        return impressionDao.findAllByOwnerAndVastTagRequestId(getAccount(auth), id);
     }
 
     public void handleRequest(
@@ -169,5 +168,19 @@ public class ImpressionService {
 
         impressionDao.save(record);
         response.setStatus(204);
+    }
+
+    private String getAccount(Authentication auth) {
+        return auth.getAuthorities().iterator().next().getAuthority();
+    }
+
+    public void deleteVastTagRecordImpression(String id) {
+        List<ImpressionRecord> records = impressionDao.findAllByVastTagRequestId(id);
+        records.forEach(impressionDao::delete);
+    }
+
+    public void deleteAuctionRecordImpression(String id) {
+        List<ImpressionRecord> records = impressionDao.findAllByBidRequestId(id);
+        records.forEach(impressionDao::delete);
     }
 }

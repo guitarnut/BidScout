@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping(value = "/api")
+@RequestMapping(value = "/api/account")
 public class AccountController {
 
     private final AccountService service;
@@ -22,7 +22,7 @@ public class AccountController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/account/statistics/view", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/statistics/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public UserAccountStatistics view(
             Authentication auth

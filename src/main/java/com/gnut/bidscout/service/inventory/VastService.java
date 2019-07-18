@@ -15,6 +15,7 @@ import com.iab.openrtb.vast.ad.Impression;
 import com.iab.openrtb.vast.ad.creative.linear.Linear;
 import com.iab.openrtb.vast.ad.creative.linear.VideoClicks;
 import com.iab.openrtb.vast.ad.creative.linear.mediafiles.MediaFile;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -58,6 +59,8 @@ public class VastService {
 
             long timestamp = System.currentTimeMillis();
             VastTagRecord vastTagRecord = new VastTagRecord();
+            vastTagRecord.setTagId(id);
+            vastTagRecord.setRequestId(new ObjectId().toString());
             vastTagRecord.setRequestTimestamp(timestamp);
             vastTagRecord.setVastName(v.getName());
             vastTagRecord.setIp(request.getRemoteAddr());
@@ -65,15 +68,15 @@ public class VastService {
             vastTagRecord.setCookies(request.getHeader("Cookie"));
             vastTagRecord.setxForwardedFor(request.getHeader("X-Forwarded-For"));
             vastTagRecord.setHost(request.getHeader("Host"));
-            vastTagRecord.setOwner("Admin");
+            vastTagRecord.setOwner(videoAd.get().getOwner());
 
             if (statisticsService.addVastTagRecord("Admin")) {
                 vastTagRecordDao.save(vastTagRecord);
             }
 
-            addLinearTrackingEventsToServedVast(vast, vastTagRecord.getId());
-            addVideoClickToServedVast(vast, vastTagRecord.getId());
-            addImpressionToServedVast(vast, vastTagRecord.getId());
+            addLinearTrackingEventsToServedVast(vast, vastTagRecord.getRequestId());
+            addVideoClickToServedVast(vast, vastTagRecord.getRequestId());
+            addImpressionToServedVast(vast, vastTagRecord.getRequestId());
 
             return vast;
         } else {
@@ -95,13 +98,17 @@ public class VastService {
         mediaFile.setDelivery(v.getDelivery());
         mediaFile.setType(v.getType());
         mediaFile.setBitrate(String.valueOf(v.getBitrate()));
-        mediaFile.setMinBitrate(String.valueOf(v.getMinBitrate()));
-        mediaFile.setMaxBitrate(String.valueOf(v.getMaxBitrate()));
+        if (v.getMinBitrate() > 0) {
+            mediaFile.setMinBitrate(String.valueOf(v.getMinBitrate()));
+        }
+        if (v.getMaxBitrate() > 0) {
+            mediaFile.setMaxBitrate(String.valueOf(v.getMaxBitrate()));
+        }
         mediaFile.setWidth(String.valueOf(v.getWidth()));
         mediaFile.setHeight(String.valueOf(v.getHeight()));
         mediaFile.setScalable(String.valueOf(v.isScalable()));
         mediaFile.setCodec(v.getCodec());
-        mediaFile.setApiFramework("TEMP");
+//        mediaFile.setApiFramework("TEMP");
         mediaFile.setValue(v.getVideoFile());
 
         linear.setMediaFile(Arrays.asList(mediaFile));

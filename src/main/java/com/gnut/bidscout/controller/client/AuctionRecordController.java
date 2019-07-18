@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auctionrecord")
 public class AuctionRecordController {
     private final AuctionRecordService service;
 
@@ -18,7 +18,7 @@ public class AuctionRecordController {
         this.service = service;
     }
 
-    @RequestMapping(value = "/auctionrecord/all", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/all", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<AuctionRecord> all(
             Authentication auth
@@ -26,7 +26,7 @@ public class AuctionRecordController {
         return service.getAllAuctionRecords(auth);
     }
 
-    @RequestMapping(value = "/auctionrecord/{id}/view", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/{id}/view", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public AuctionRecord view(
             @PathVariable("id") String id,
@@ -35,7 +35,7 @@ public class AuctionRecordController {
         return service.view(auth, id);
     }
 
-    @RequestMapping(value = "/auctionrecord/{id}/delete", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/{id}/delete", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public void delete(
             @PathVariable("id") String id,
@@ -44,7 +44,7 @@ public class AuctionRecordController {
         service.delete(auth, id);
     }
 
-    @RequestMapping(value = "/auctionrecord/clear", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/clear", method = RequestMethod.DELETE, produces = "application/json")
     @ResponseBody
     public List<AuctionRecord> delete(
             Authentication auth

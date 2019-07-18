@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 public class HealthController {
 
     @RequestMapping(value="/server", method = RequestMethod.GET, produces = "application/json")
-    public void handleBidRequestPostWithKey(
+    public void healthCheck(
             HttpServletResponse response
     ) {
         response.setStatus(204);
