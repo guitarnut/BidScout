@@ -125,7 +125,7 @@ public class CampaignService {
 
     public Campaign createCampaign(Authentication auth, HttpServletResponse response, Campaign c) {
         Campaign campaign = campaignDao.findByNameAndOwner(c.getName(), getAccount(auth));
-        if (campaign != null || !accountService.addCampaign()) {
+        if (campaign != null || !accountService.addCampaign(getAccount(auth))) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return null;
         } else {

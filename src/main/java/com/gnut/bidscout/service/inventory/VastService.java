@@ -5,7 +5,7 @@ import com.gnut.bidscout.db.VastTagRecordDao;
 import com.gnut.bidscout.db.VideoAdDao;
 import com.gnut.bidscout.model.VastTagRecord;
 import com.gnut.bidscout.model.VideoAd;
-import com.gnut.bidscout.service.user.UserAccountStatisticsService;
+import com.gnut.bidscout.service.user.AccountStatisticsService;
 import com.iab.openrtb.vast.Ad;
 import com.iab.openrtb.vast.InLine;
 import com.iab.openrtb.vast.Vast;
@@ -31,14 +31,14 @@ public class VastService {
     private final VastTagRecordDao vastTagRecordDao;
     private final VideoAdDao videoAdDao;
     private final VideoEventsBuilder eventsBuilder;
-    private final UserAccountStatisticsService statisticsService;
+    private final AccountStatisticsService statisticsService;
 
     @Autowired
     public VastService(
             VastTagRecordDao vastTagRecordDao,
             VideoAdDao videoAdDao,
             VideoEventsBuilder eventsBuilder,
-            UserAccountStatisticsService statisticsService
+            AccountStatisticsService statisticsService
     ) {
         this.vastTagRecordDao = vastTagRecordDao;
         this.videoAdDao = videoAdDao;

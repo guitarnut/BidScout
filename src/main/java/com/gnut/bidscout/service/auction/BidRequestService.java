@@ -11,7 +11,7 @@ import com.gnut.bidscout.service.inventory.CampaignService;
 import com.gnut.bidscout.service.inventory.CreativeService;
 import com.gnut.bidscout.service.inventory.DisplayAdService;
 import com.gnut.bidscout.service.inventory.VideoAdService;
-import com.gnut.bidscout.service.user.UserAccountStatisticsService;
+import com.gnut.bidscout.service.user.AccountStatisticsService;
 import com.gnut.bidscout.values.BidRequestError;
 import com.gnut.bidscout.values.TargetFailure;
 import com.google.common.base.Charsets;
@@ -47,7 +47,7 @@ public class BidRequestService {
     private final BidResponseService bidResponseService;
     private final BidRequestValidator bidRequestValidator;
     private final AuctionDao auctionDao;
-    private final UserAccountStatisticsService userStatsService;
+    private final AccountStatisticsService userStatsService;
 
     static {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -63,7 +63,7 @@ public class BidRequestService {
             BidResponseService bidResponseService,
             BidRequestValidator bidRequestValidator,
             AuctionDao auctionDao,
-            UserAccountStatisticsService userStatsService
+            AccountStatisticsService userStatsService
     ) {
         this.campaignService = campaignService;
         this.creativeService = creativeService;

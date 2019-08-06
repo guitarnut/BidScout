@@ -4,7 +4,7 @@ import com.gnut.bidscout.db.CampaignDao;
 import com.gnut.bidscout.db.CreativeDao;
 import com.gnut.bidscout.model.*;
 import com.gnut.bidscout.service.user.AccountService;
-import com.gnut.bidscout.service.user.UserAccountStatisticsService;
+import com.gnut.bidscout.service.user.AccountStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -18,7 +18,7 @@ public class CreativeService {
     private final CreativeDao creativeDao;
     private final CampaignDao campaignDao;
     private final VastService vastService;
-    private final UserAccountStatisticsService statisticsService;
+    private final AccountStatisticsService statisticsService;
     private final AccountService accountService;
 
     @Autowired
@@ -26,7 +26,7 @@ public class CreativeService {
             CreativeDao creativeDao,
             CampaignDao campaignDao,
             VastService vastService,
-            UserAccountStatisticsService statisticsService,
+            AccountStatisticsService statisticsService,
             AccountService accountService
     ) {
         this.creativeDao = creativeDao;
@@ -52,7 +52,7 @@ public class CreativeService {
 
     public Creative createCreative(Authentication auth, HttpServletResponse response, Creative c) {
         Creative creative = creativeDao.findByNameAndOwner(c.getName(), getAccount(auth));
-        if (creative != null || !accountService.addCreative()) {
+        if (creative != null || !accountService.addCreative(getAccount(auth))) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return null;
         } else {
